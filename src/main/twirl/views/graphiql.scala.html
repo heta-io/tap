@@ -1,0 +1,45 @@
+@(assets: AssetsFinder)
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="sangria,scala,graphql,playframework,graphiql" />
+
+    <link rel="shortcut icon" type="image/png" href="@assets.path("images/favicon.png")">
+
+    <title>Explore TAP with GraphiQL</title>
+
+    <link href="@assets.path("css/graphiql.css")" rel="stylesheet" />
+
+    @*<script src="@assets.path("js/jsfetch.min.js")"></script>*@
+    <script src="@assets.path("js/react.min.js")"></script>
+    <script src="@assets.path("js/react-dom.min.js")"></script>
+    <script src="@assets.path("js/graphiql.min.js")"></script>
+    <script src="@assets.path("js/jquery.min.js")"></script>
+
+    <style>
+            body {
+              height: 100%;
+              margin: 0;
+              width: 100%;
+              overflow: hidden;
+            }
+            #graphiql {
+              height: 100vh;
+            }
+    </style>
+
+    <script src="@assets.path("js/app-graphiql.js")"></script>
+  </head>
+
+  <body>
+    <div id="graphiql">Loading...</div>
+
+    <script>
+            renderGraphiql(document.getElementById('graphiql'))
+    </script>
+  </body>
+</html>
