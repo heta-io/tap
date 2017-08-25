@@ -2,4 +2,6 @@
 
 # sangria-play-demo
 
-An example play application with sangria GraphQL.
+An example play application with [Sangria GraphQL](http://sangria-graphql.org).
+
+Includes [GraphiQL](https://github.com/graphql/graphiql) for interacting with the server.
