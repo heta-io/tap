@@ -14,11 +14,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-name := "sangria-test"
+name := "tap-graphql"
 
-version := "0.1"
+version := "3.0.0"
 
 scalaVersion := "2.12.3"
+
+organization := "au.edu.utscic"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
