@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-name := "tap-graphql"
+name := "tap-test-repo"
 
 version := "3.0.0"
 
@@ -35,3 +35,14 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.0-SNAP9" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.1" % "test"
 )
+
+//Enable this only for local builds - disabled for Travis
+enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
+dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
+
+//Generate build info file
+//Disable for travis CI
+enablePlugins(BuildInfoPlugin)
+buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+buildInfoPackage := "org.goingok"
+buildInfoOptions += BuildInfoOption.BuildTime
