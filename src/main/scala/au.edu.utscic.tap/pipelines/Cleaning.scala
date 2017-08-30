@@ -1,8 +1,23 @@
+// Copyright (C) 2017 the original author or authors.
+// See the LICENCE.txt file distributed with this work for additional
+// information regarding copyright ownership.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package au.edu.utscic.tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import akka.util.ByteString
 
 /*****************************************
   *  Cleaning
@@ -18,64 +33,64 @@ object Cleaning  {
     *      for cleaning
     */
   object Pipeline { //Flow[ByteString,String,NotUsed]
-    val revealInvisible = utf8Str via visibleWhitespace via replaceControl
-    val simplify = utf8Str via simplifyQuotes via simplifyHyphens
-    val lengthPreserve = utf8Str via simplifyWhitespace via replaceControl
-    val utfMinimal = utf8Str via simplifyWhitespace via stripControl via reduceSpace
-    val utfSimplify = utf8Str via simplifyWhitespace via simplifyQuotes via simplifyHyphens via stripControlExtended via reduceSpace
-    val asciiOnly = utfSimplify via stripNonAscii
+    val revealInvisible:Flow[String,String,NotUsed] = utf8Str via visibleWhitespace via replaceControl
+    val simplify:Flow[String,String,NotUsed] = utf8Str via simplifyQuotes via simplifyHyphens
+    val lengthPreserve:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via replaceControl
+    val utfMinimal:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via stripControl via reduceSpace
+    val utfSimplify:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via simplifyQuotes via simplifyHyphens via stripControlExtended via reduceSpace
+    val asciiOnly:Flow[String,String,NotUsed] = utfSimplify via stripNonAscii
 
   }
 
   val utf8Str:Flow[String,String,NotUsed] = Flow[String].map(str => str) //.map(_.utf8String)
 
-  val visibleWhitespace = Flow[String].map { str =>
+  val visibleWhitespace:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.replaceAll(White.rgx_space,Replace.dot) // Spaces
       .replaceAll(White.rgx_line,Replace.not) // Line endings
   }
 
-  val replaceControl = Flow[String].map { str =>
+  val replaceControl:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.map {c =>
       if(CharFilter.controlExt(c)) Replace.qmk else c
     }.mkString
   }
 
-  val simplifyWhitespace = Flow[String].map { str =>
+  val simplifyWhitespace:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.replaceAll(White.rgx_space,White.sp)
       .replaceAll(White.rgx_line,White.nl)
   }
 
-  val simplifyQuotes = Flow[String].map { str =>
+  val simplifyQuotes:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.replaceAll(Quote.rgx_dblCurl,Quote.doubleQuote)
       .replaceAll(Quote.rgx_sglCurl,Quote.singleQuote)
   }
 
-  val simplifyHyphens = Flow[String].map { str =>
+  val simplifyHyphens:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.replaceAll(Hyphen.rgx_hyphens,Hyphen.ascii)
   }
 
-  val stripControl = Flow[String].map { str =>
+  val stripControl:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.filterNot(CharFilter.allControl)
   }
 
-  val stripControlExtended = Flow[String].map { str =>
+  val stripControlExtended:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.filterNot(CharFilter.controlExt)
   }
 
-  val stripNonAscii = Flow[String].map { str =>
+  val stripNonAscii:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.filterNot(CharFilter.above127)
   }
 
-  val reduceSpace = Flow[String].map { str =>
+  val reduceSpace:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.foldLeft("") { (s:String,c:Char) =>
       if(White.isSpace(c)) { //will end with space
-        if(s.endsWith(White.sp) || s.endsWith(White.nl)) s
-        else s + White.sp
+        if(s.endsWith(White.sp) || s.endsWith(White.nl)) { s }
+        else { s + White.sp }
       } else if(White.isLineEnd(c)) { //will end with newline
-        if(s.endsWith(White.sp)) s.dropRight(1) + White.nl
-        else if(s.endsWith(White.nl)) s
-        else s + c
-      } else s + c
+        if(s.endsWith(White.sp)) { s.dropRight(1) + White.nl }
+        else if(s.endsWith(White.nl)) { s }
+        else { s + c }
+      } else { s + c }
     }
   }
 
@@ -93,8 +108,8 @@ object Cleaning  {
     val rgx_line = s"$nl|$cr"
     val rgx_all = s"$rgx_space|$rgx_line"
 
-    def isSpace(c:Char) = sp.contains(c) || nb.contains(c) || tab.contains(c)
-    def isLineEnd(c:Char) = nl.contains(c) || cr.contains(c)
+    def isSpace(c:Char):Boolean = sp.contains(c) || nb.contains(c) || tab.contains(c)
+    def isLineEnd(c:Char):Boolean = nl.contains(c) || cr.contains(c)
   }
 
   object Replace {
@@ -128,13 +143,13 @@ object Cleaning  {
   }
 
   object CharFilter {
-    val notNewline = (c:Char) => c != White.nl.head
-    val lowerControl = (c:Char) => (c <= '\u001f') && notNewline(c)
-    val middleControl = (c:Char) => c >= '\u007f' && c <= '\u009f'
-    val allControl = (c:Char) => lowerControl(c) || middleControl(c)
-    val extended = (c:Char) => c >= '\u0100'
-    val controlExt = (c:Char) => extended(c) || allControl(c)
-    val above127 = (c:Char) => c > '\u007e'
+    val notNewline:(Char) => Boolean = (c:Char) => c != White.nl.head
+    val lowerControl:(Char) => Boolean = (c:Char) => (c <= '\u001f') && notNewline(c)
+    val middleControl:(Char) => Boolean = (c:Char) => c >= '\u007f' && c <= '\u009f'
+    val allControl:(Char) => Boolean = (c:Char) => lowerControl(c) || middleControl(c)
+    val extended:(Char) => Boolean = (c:Char) => c >= '\u0100'
+    val controlExt:(Char) => Boolean = (c:Char) => extended(c) || allControl(c)
+    val above127:(Char) => Boolean = (c:Char) => c > '\u007e'
   }
 
 }

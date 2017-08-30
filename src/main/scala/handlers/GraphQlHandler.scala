@@ -16,17 +16,16 @@
 
 package handlers
 
-import models.{MessageSpecification, TapSpecification}
-import models.MessageSpecification.MessageRepo
+import models.TapSpecification
 import models.TapSpecification.TapActions
 import play.api.libs.json.JsObject
 import play.api.mvc.Result
 import play.api.mvc.Results.{BadRequest, InternalServerError, Ok}
 import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
+import sangria.marshalling.playJson.{PlayJsonInputUnmarshallerJObject, PlayJsonResultMarshaller}
 import sangria.parser.{QueryParser, SyntaxError}
 import sangria.schema.Schema
-import sangria.marshalling.playJson.{PlayJsonInputUnmarshallerJObject, PlayJsonResultMarshaller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,8 +37,6 @@ import scala.util.{Failure, Success}
 
 object GraphQlHandler {
 
-  //lazy val schema:Schema[MessageRepo,Unit] = MessageSpecification.schema
-  //lazy val repo:MessageRepo = MessageSpecification.repo
   lazy val schema:Schema[TapActions,Unit] = TapSpecification.schema
   lazy val actions:TapActions = TapSpecification.actions
 

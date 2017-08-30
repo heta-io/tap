@@ -16,10 +16,7 @@
 
 package au.edu.utscic.tap.nlp.factorie
 
-import javax.inject.{Inject, Singleton}
-
 import cc.factorie.app.nlp.{Document, DocumentAnnotatorPipeline, parse, pos}
-import com.google.inject.ImplementedBy
 import models.AnalyticsResult
 import play.api.Logger.logger
 

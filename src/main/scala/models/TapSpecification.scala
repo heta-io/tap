@@ -16,12 +16,11 @@
 
 package models
 
-import javax.inject.Inject
-
-import au.edu.utscic.tap.nlp.factorie.{Annotation}
+import au.edu.utscic.tap.nlp.factorie.Annotation
 import handlers.TextAnalysisHandler
 import sangria.macros.derive.{ObjectTypeDescription, deriveObjectType}
 import sangria.schema.{Argument, Field, ObjectType, OptionType, Schema, StringType, fields}
+import TextAnalysisHandler.{analyse,VISIBLE,CLEAN,CLEAN_PRESERVE,CLEAN_MINIMAL,CLEAN_ASCII}
 
 import scala.concurrent.Future
 
@@ -32,7 +31,7 @@ import scala.concurrent.Future
 object TapSpecification {
 
   class TapActions {
-    import TextAnalysisHandler._
+
     def visible(text:String):Future[AnalyticsResult] = analyse(text,VISIBLE)
     def clean(text:String):Future[AnalyticsResult] = analyse(text,CLEAN)
     def cleanPreserve(text:String):Future[AnalyticsResult] = analyse(text,CLEAN_PRESERVE)
@@ -43,7 +42,8 @@ object TapSpecification {
 
   val qStr = Argument("text", StringType)
 
-  implicit val AnalyticsResultType:ObjectType[Unit,AnalyticsResult] = deriveObjectType[Unit,AnalyticsResult](ObjectTypeDescription("This is the analytics result"))
+  implicit val AnalyticsResultType:ObjectType[Unit,AnalyticsResult] =
+    deriveObjectType[Unit,AnalyticsResult](ObjectTypeDescription("This is the analytics result"))
 
   val QueryType = ObjectType("Query", fields[TapActions,Unit](
     Field("visible",OptionType(AnalyticsResultType),
