@@ -16,6 +16,9 @@
 
 package models
 
+import javax.inject.Inject
+
+import au.edu.utscic.tap.nlp.factorie.{Annotation}
 import handlers.TextAnalysisHandler
 import sangria.macros.derive.{ObjectTypeDescription, deriveObjectType}
 import sangria.schema.{Argument, Field, ObjectType, OptionType, Schema, StringType, fields}
@@ -25,9 +28,8 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 29/8/17.
   */
+
 object TapSpecification {
-
-
 
   class TapActions {
     import TextAnalysisHandler._
@@ -36,6 +38,7 @@ object TapSpecification {
     def cleanPreserve(text:String):Future[AnalyticsResult] = analyse(text,CLEAN_PRESERVE)
     def cleanMinimal(text:String):Future[AnalyticsResult] = analyse(text,CLEAN_MINIMAL)
     def cleanAscii(text:String):Future[AnalyticsResult] = analyse(text,CLEAN_ASCII)
+    def tokens(text:String):Future[AnalyticsResult] = Annotation.tokenise(text)
   }
 
   val qStr = Argument("text", StringType)
@@ -67,6 +70,11 @@ object TapSpecification {
       description = Some("Returns ascii safe cleaned text"),
       arguments = qStr :: Nil,
       resolve = c => c.ctx.cleanAscii(c arg qStr)
+    ),
+    Field("tokens",OptionType(AnalyticsResultType),
+      description = Some("Returns a list of tokens from the text"),
+      arguments = qStr :: Nil,
+      resolve = c => c.ctx.tokens(c arg qStr)
     )
   ))
 

@@ -1,4 +1,4 @@
-package au.edu.utscic.tap.data.nlp
+package au.edu.utscic.tap.nlp
 
 /**
   * Created by andrew@andrewresearch.net on 19/5/17.

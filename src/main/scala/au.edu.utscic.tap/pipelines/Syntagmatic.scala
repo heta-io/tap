@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Framing, Source}
 import akka.util.ByteString
 import au.edu.utscic.tap.data.StringTypes.{DocumentStr, SectionStr}
-import au.edu.utscic.tap.data.nlp.{NlpBuilders, NlpDocument, NlpSentence}
+import au.edu.utscic.tap.nlp.{NlpBuilders, NlpDocument, NlpSentence}
 import au.edu.utscic.tap.data.{TapDocument, TapSection, TapSentence, TapTags}
 
 /**
@@ -22,7 +22,7 @@ object Syntagmatic {
 
   }
 
-  import au.edu.utscic.tap.data.nlp.openNlp.OpenNlpImplicits._
+  import au.edu.utscic.tap.nlp.openNlp.OpenNlpImplicits._
 
 
 

@@ -1,4 +1,4 @@
-package au.edu.utscic.tap.data.nlp.nlp4j
+package au.edu.utscic.tap.nlp.nlp4j
 
 import java.io.InputStream
 import java.util

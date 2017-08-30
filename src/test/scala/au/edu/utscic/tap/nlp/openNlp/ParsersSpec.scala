@@ -1,4 +1,4 @@
-package au.edu.utscic.tap.data.nlp.openNlp
+package au.edu.utscic.tap.nlp.openNlp
 
 import au.edu.utscic.tap.UnitSpec
 
