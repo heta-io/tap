@@ -27,7 +27,7 @@ object Cleaning  {
 
   }
 
-  val utf8Str:Flow[ByteString,String,NotUsed] = Flow[ByteString].map(_.utf8String)
+  val utf8Str:Flow[String,String,NotUsed] = Flow[String].map(str => str) //.map(_.utf8String)
 
   val visibleWhitespace = Flow[String].map { str =>
     str.replaceAll(White.rgx_space,Replace.dot) // Spaces

@@ -109,15 +109,28 @@ $(function (global) {
         "# Press the run button above, or Cmd-Enter to execute the query, and the result\n" +
         "# will appear in the pane to the right.\n\n" +
         "\n" +
-        "query MessagesWithSubString($input:String!) {\n" +
-        "  message(text:$input) {\n" +
-        "    text\n" +
+        "# Text Analytics Pipeline\n" +
+        "\n" +
+        "query CleanText($input: String!) {\n" +
+        "  clean(text:$input) {\n" +
+        "    result\n" +
+        "    #message\n" +
+        "    #link\n" +
+        "  }\n" +
+        "  cleanPreserve(text:$input) {\n" +
+        "    result\n" +
+        "  }\n" +
+        "  cleanMinimal(text:$input) {\n" +
+        "    result\n" +
+        "  }\n" +
+        "  cleanAscii(text:$input) {\n" +
+        "    result\n" +
         "  }\n" +
         "}\n" +
         "\n" +
-        "query AllMessages {\n" +
-        "  messages {\n" +
-        "    text\n" +
+        "query MakeVisible($input: String!) {\n" +
+        "  visible(text:$input) {\n" +
+        "    result\n" +
         "  }\n" +
         "}"
       }),

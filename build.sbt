@@ -67,12 +67,12 @@ resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
 
 
 //Enable this only for local builds - disabled for Travis
-enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
+//enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
+//dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
 
 //Generate build info file
 //Disable for travis CI
-enablePlugins(BuildInfoPlugin)
-buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
-buildInfoPackage := "org.goingok"
-buildInfoOptions += BuildInfoOption.BuildTime
+//enablePlugins(BuildInfoPlugin)
+//buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+//buildInfoPackage := "org.goingok"
+//buildInfoOptions += BuildInfoOption.BuildTime
