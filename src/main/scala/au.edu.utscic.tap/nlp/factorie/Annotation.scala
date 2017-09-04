@@ -17,7 +17,7 @@
 package au.edu.utscic.tap.nlp.factorie
 
 import cc.factorie.app.nlp.{Document, DocumentAnnotatorPipeline, parse, pos}
-import models.AnalyticsResult
+import models.QueryResults.{AnalyticsResult, StringResult, TokensAnalyticsResult, TokensResult}
 import play.api.Logger.logger
 
 import scala.concurrent.Future
@@ -34,13 +34,13 @@ import scala.concurrent.Future
 
   import au.edu.utscic.tap.TapStreamContext._
 
-  def tokenise(text:String):Future[AnalyticsResult] = Future {
+  def tokenise(text: String): Future[TokensAnalyticsResult] = Future {
     val doc = new Document(text)
     annotator.process(doc)
-    val results = doc.tokens.map( t =>
-      t.lemmaString
-    ).mkString("|")
-    AnalyticsResult(results,Some("This was parsed by factorie"))
+    val tokens = doc.tokens
+    val lemmas = doc.tokens.map(_.lemmaString).toList
+    val postags = doc.tokens.map(_.posTag.value.toString).toList
+    TokensAnalyticsResult(TokensResult(tokens.size, lemmas, postags), Some("This was parsed by factorie"))
   }
 
 }

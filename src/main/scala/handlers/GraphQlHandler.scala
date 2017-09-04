@@ -16,8 +16,7 @@
 
 package handlers
 
-import models.TapSpecification
-import models.TapSpecification.TapActions
+import models.QuerySchema
 import play.api.libs.json.JsObject
 import play.api.mvc.Result
 import play.api.mvc.Results.{BadRequest, InternalServerError, Ok}
@@ -37,8 +36,8 @@ import scala.util.{Failure, Success}
 
 object GraphQlHandler {
 
-  lazy val schema:Schema[TapActions,Unit] = TapSpecification.schema
-  lazy val actions:TapActions = TapSpecification.actions
+  lazy val schema:Schema[QueryActions,Unit] = QuerySchema.createSchema
+  lazy val actions:QueryActions = new QueryActions
 
   def process(query:String,name:Option[String],variables:JsObject):Future[Result] = QueryParser.parse(query) match {
     case Success(queryAst) => executeGraphQLQuery(queryAst, name, variables)

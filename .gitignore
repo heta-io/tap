@@ -72,3 +72,4 @@ src/test/scala-2.12/
 /lib/nlpfactorie_2.12-0.1.jar
 /lib/cc.factorie.app.nlp.all-models-1.0.0.jar
 /lib/
+/src/main/scala/au.edu.utscic.tap/zzz/

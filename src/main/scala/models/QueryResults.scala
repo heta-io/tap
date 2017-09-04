@@ -16,8 +16,34 @@
 
 package models
 
+import java.time.OffsetDateTime
+
 /**
   * Created by andrew@andrewresearch.net on 29/8/17.
   */
 
-case class AnalyticsResult(result:String,message:Option[String] = None,link:Option[String] = None)
+object QueryResults {
+
+  trait Result {
+    val timestamp: String = OffsetDateTime.now().toString
+  }
+
+  case class StringResult(text: String) extends Result
+
+  case class TokensResult(count: Int, lemmas: List[String], postags: List[String]) extends Result
+
+  trait AnalyticsResult {
+    val result: Result
+    val message: Option[String] = None
+    val link: Option[String] = None
+  }
+
+  case class StringAnalyticsResult(result:StringResult,message: Option[String] = None, link: Option[String] = None)
+
+  case class TokensAnalyticsResult(result:TokensResult,message: Option[String] = None, link: Option[String] = None)
+
+
+
+
+
+}
