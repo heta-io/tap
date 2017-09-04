@@ -1,6 +1,6 @@
-package au.edu.utscic.tap.data.nlp.openNlp
+package au.edu.utscic.tap.nlp.openNlp
 
-import au.edu.utscic.tap.data.nlp.{NlpDocument, DocumentConverter, NlpSentence, SentenceConverter}
+import au.edu.utscic.tap.nlp.{NlpDocument, DocumentConverter, NlpSentence, SentenceConverter}
 
 /**
   * Created by andrew@andrewresearch.net on 19/5/17.

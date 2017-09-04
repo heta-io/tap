@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-name := "tap-test-repo"
+name := "tap"
 
 version := "3.0.1"
 
@@ -67,8 +67,21 @@ resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
 
 
 //Enable this only for local builds - disabled for Travis
-//enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-//dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
+enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
+dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
+
+javaOptions in Universal ++= Seq(
+  // -J params will be added as jvm parameters
+  "-J-Xmx2048m",
+  "-J-Xms512m"
+
+  // others will be added as app parameters
+//  "-Dproperty=true",
+//  "-port=8080",
+
+  // you can access any build setting/task here
+  //s"-version=${version.value}"
+)
 
 //Generate build info file
 //Disable for travis CI

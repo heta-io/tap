@@ -68,3 +68,8 @@ src/test/scala-2.12/
 /target/scala-2.12/test-classes/
 /target/resolution-cache/
 /target/streams/
+/logs/
+/lib/nlpfactorie_2.12-0.1.jar
+/lib/cc.factorie.app.nlp.all-models-1.0.0.jar
+/lib/
+/src/main/scala/au.edu.utscic.tap/zzz/

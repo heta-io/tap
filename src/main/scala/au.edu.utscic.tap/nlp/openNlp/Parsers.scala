@@ -1,4 +1,4 @@
-package au.edu.utscic.tap.data.nlp.openNlp
+package au.edu.utscic.tap.nlp.openNlp
 
 import opennlp.tools.cmdline.parser.ParserTool
 import opennlp.tools.lemmatizer.{LemmatizerME, LemmatizerModel}

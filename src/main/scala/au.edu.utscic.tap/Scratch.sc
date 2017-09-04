@@ -1,20 +1,13 @@
-//import au.edu.utscic.tap.analysis.rhetorical.LexicalNodeParser
+import cc.factorie.app.nlp._
+var doc = new Document("Education is the most powerful weapon which you can use to change the world.")
+val annotator = DocumentAnnotatorPipeline(pos.OntonotesForwardPosTagger, parse.WSJTransitionBasedParser)
+annotator.process(doc)
+for (token <- doc.tokens)
+  println("%-10s %-5s %-4d %-7s".format(token.string, token.posTag.categoryValue, token.parseParentIndex, token.parseLabel.categoryValue))
+println(s"Tokens: ${doc.tokens.size}")
 
-import au.edu.utscic.tap.data.nlp.openNlp.Parsers
-
-//LexicalNodeParser.parseSentence("Hello, this is a test!")
-
-
-
-
-getClass.getResourceAsStream("/nlp4j-dep-config.xml")
-
-//val athanorExists = try {
-//  Class.forName("com.xerox.jatanor.JAtanor")
-//  true
-//} catch {
-//  case e: ClassNotFoundException => {
-//    println("ERROR: Athanor is not available. Rhetorical parsing won't be possible")
-//    false
-//  }
-//}
+doc.owplString(annotator)
+doc.asSection.sentences.foreach { s =>
+  val tree = s.parse.toString()
+  println(tree)
+}

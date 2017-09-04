@@ -19,7 +19,7 @@ package handlers
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import au.edu.utscic.tap.pipelines.{Cleaning, TextPipeline}
-import models.AnalyticsResult
+import models.QueryResults.{AnalyticsResult, StringAnalyticsResult, StringResult}
 
 import scala.concurrent.Future
 
@@ -54,6 +54,6 @@ object TextAnalysisHandler {
 
   import au.edu.utscic.tap.TapStreamContext._
 
-  def analyse(text:String,pipeline:TapPipe):Future[AnalyticsResult] = TextPipeline(text,pipeline).run.map(AnalyticsResult(_))
+  def analyse(text:String,pipeline:TapPipe):Future[StringAnalyticsResult] = TextPipeline(text,pipeline).run.map( str => StringAnalyticsResult(StringResult(str)))
 
 }
