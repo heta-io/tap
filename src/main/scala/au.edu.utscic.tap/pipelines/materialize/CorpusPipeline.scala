@@ -1,4 +1,4 @@
-package au.edu.utscic.tap.pipelines
+package au.edu.utscic.tap.pipelines.materialize
 
 /**
   * Created by andrew@andrewresearch.net on 19/5/17.
@@ -7,13 +7,13 @@ package au.edu.utscic.tap.pipelines
 import java.nio.file.Path
 
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
-import au.edu.utscic.tap.TapStreamContext
 import au.edu.utscic.tap.io.Local
+import au.edu.utscic.tap.pipelines.materialize.PipelineContext.materializer
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class CorpusPipeline[A,B](source:Source[Path,A],flow:Flow[Path,Future[Local.CorpusFile],B]) extends Pipeline {
-  import TapStreamContext._
   val sink = Sink.seq[Future[Local.CorpusFile]].mapMaterializedValue(_.map(Future.sequence(_)).flatten)
   val pipeline =  source.via(flow).toMat(sink)(Keep.right)
   def run = pipeline.run()

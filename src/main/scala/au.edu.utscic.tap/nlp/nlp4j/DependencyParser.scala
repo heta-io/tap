@@ -10,7 +10,7 @@ import java.util
 //import edu.emory.mathcs.nlp.component.template.{NLPComponent, OnlineComponent}
 //import edu.emory.mathcs.nlp.component.template.node.NLPNode
 //import edu.emory.mathcs.nlp.component.tokenizer.{EnglishTokenizer, Tokenizer}
-//import edu.emory.mathcs.nlp.component.tokenizer.token.{Token, TokenIndex}
+//import edu.emory.mathcs.nlp.component.tokenizer.token.{TapToken, TokenIndex}
 //import edu.emory.mathcs.nlp.decode.NLPDecoder
 //import edu.emory.mathcs.nlp.models._
 

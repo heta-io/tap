@@ -18,32 +18,18 @@ package models
 
 import java.time.OffsetDateTime
 
-/**
-  * Created by andrew@andrewresearch.net on 29/8/17.
-  */
+import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab}
 
 object QueryResults {
 
   trait Result {
+    val analytics: Any
     val timestamp: String = OffsetDateTime.now().toString
-  }
-
-  case class StringResult(text: String) extends Result
-
-  case class TokensResult(count: Int, lemmas: List[String], postags: List[String]) extends Result
-
-  trait AnalyticsResult {
-    val result: Result
     val message: Option[String] = None
-    val link: Option[String] = None
   }
-
-  case class StringAnalyticsResult(result:StringResult,message: Option[String] = None, link: Option[String] = None)
-
-  case class TokensAnalyticsResult(result:TokensResult,message: Option[String] = None, link: Option[String] = None)
-
-
-
-
-
+  case class StringResult(analytics:String) extends Result
+  case class StringListResult(analytics:List[String]) extends Result
+  case class SentencesResult(analytics:List[TapSentence]) extends Result
+  case class VocabResult(analytics:TapVocab) extends Result
+  case class MetricsResult(analytics:TapMetrics) extends Result
 }
