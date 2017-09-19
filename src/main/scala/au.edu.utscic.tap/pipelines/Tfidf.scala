@@ -3,7 +3,7 @@ package au.edu.utscic.tap.pipelines
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Zip}
 import au.edu.utscic.tap.analysis.textshapes.TfIdfShape
-import au.edu.utscic.tap.data.{TapDocument, TapSection}
+import au.edu.utscic.tap.data.{OldTapDocument, OldTapSection}
 import io.nlytx.commons.ranking.TfIdf
 
 import scala.collection.immutable.ListMap

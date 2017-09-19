@@ -16,9 +16,7 @@
 
 package handlers
 
-import au.edu.utscic.tap.nlp.factorie.Annotation
-import handlers.TextAnalysisHandler.{CLEAN, CLEAN_ASCII, CLEAN_MINIMAL, CLEAN_PRESERVE, VISIBLE, analyse}
-import models.QueryResults.{StringAnalyticsResult, TokensAnalyticsResult}
+import models.QueryResults._
 
 import scala.concurrent.Future
 
@@ -27,10 +25,21 @@ import scala.concurrent.Future
   */
 class QueryActions {
 
-  def visible(text:String):Future[StringAnalyticsResult] = analyse(text,VISIBLE)
-  def clean(text:String):Future[StringAnalyticsResult] = analyse(text,CLEAN)
-  def cleanPreserve(text:String):Future[StringAnalyticsResult] = analyse(text,CLEAN_PRESERVE)
-  def cleanMinimal(text:String):Future[StringAnalyticsResult] = analyse(text,CLEAN_MINIMAL)
-  def cleanAscii(text:String):Future[StringAnalyticsResult] = analyse(text,CLEAN_ASCII)
-  def tokens(text:String):Future[TokensAnalyticsResult] = Annotation.tokenise(text)
+  def visible(text:String):Future[StringResult] = TextAnalysisHandler.visible(text)
+  def clean(text:String):Future[StringResult] = TextAnalysisHandler.clean(text)
+  def cleanPreserve(text:String):Future[StringResult] = TextAnalysisHandler.cleanPreserve(text)
+  def cleanMinimal(text:String):Future[StringResult] = TextAnalysisHandler.cleanMinimal(text)
+  def cleanAscii(text:String):Future[StringResult] = TextAnalysisHandler.cleanAscii(text)
+
+  def sentences(text:String):Future[SentencesResult] = TextAnalysisHandler.sentences(text)
+  def vocabulary(text:String):Future[VocabResult] = TextAnalysisHandler.vocabulary(text)
+  def metrics(text:String):Future[MetricsResult] = TextAnalysisHandler.metrics(text)
+
+  def moves(text:String):Future[StringListResult] = ExternalAnalysisHandler.analyseWithAthanor(text)
+
+  //TODO Still to Implement
+  def expressions(text:String):Future[StringResult] = TextAnalysisHandler.expressions(text)
+  def spelling(text:String):Future[StringResult] = TextAnalysisHandler.spelling(text)
+  def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
+
 }

@@ -9,6 +9,8 @@ import akka.util.ByteString
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import au.edu.utscic.tap.pipelines.materialize.PipelineContext.materializer
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by andrew@andrewresearch.net on 1/3/17.
@@ -16,8 +18,6 @@ import scala.concurrent.duration._
 object Local {
 
   import akka.stream.scaladsl._
-
-  import au.edu.utscic.tap.TapStreamContext._
 
   def directorySource(directory: String):Source[Path,NotUsed] = {
 

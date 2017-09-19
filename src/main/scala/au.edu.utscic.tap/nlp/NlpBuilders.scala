@@ -7,7 +7,7 @@ object NlpBuilders {
   def document[T](text: String)(implicit toDoc: DocumentConverter[T]): NlpDocument = {
     toDoc.fromText(text)
   }
-  def sentence[T](text: String)(implicit toSentence: SentenceConverter[T]): NlpSentence = {
+  def sentence[T](text: String)(implicit toSentence: SentenceConverter[T]): OldNlpSentence = {
     toSentence.fromText(text)
   }
 }

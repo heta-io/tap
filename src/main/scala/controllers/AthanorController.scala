@@ -14,20 +14,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package controllers
+//package controllers
 
-import javax.inject.Inject
-
-import play.api.libs.ws.WSClient
-import play.api.mvc.{Action, AnyContent, InjectedController}
-
-/**
-  * Created by andrew@andrewresearch.net on 22/8/17.
-  */
-
-class DefaultController @Inject() (assets: AssetsFinder) extends InjectedController {
-
-  def index:Action[AnyContent] = Action {
-    Ok(views.html.index())
-  }
-}
+//import javax.inject.Inject
+//
+//import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
+//import play.api.mvc.Controller
+//
+//import scala.concurrent.ExecutionContext.Implicits.global
+//import scala.concurrent.Future
+//import scala.concurrent.duration.DurationInt
+//
+///**
+//  * Created by andrew@andrewresearch.net on 19/9/17.
+//  */
+//
+//class AthanorController @Inject()(ws: WSClient) extends Controller {
+//
+//
+//}

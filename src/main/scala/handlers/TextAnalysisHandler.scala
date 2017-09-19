@@ -18,42 +18,67 @@ package handlers
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import au.edu.utscic.tap.pipelines.{Cleaning, TextPipeline}
-import models.QueryResults.{AnalyticsResult, StringAnalyticsResult, StringResult}
+import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab}
+import au.edu.utscic.tap.pipelines.materialize.TextPipeline
+import au.edu.utscic.tap.pipelines.{Cleaning, Parsing}
+import models.QueryResults._
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
 object TextAnalysisHandler {
 
+  type Pipe[A] = Flow[String,A,NotUsed]
+  type StringAnalyser = (String) => Future[StringResult]
+  type StringListAnalyser = (String) => Future[StringListResult]
+  type SentenceAnalyser = (String) => Future[SentencesResult]
+  type VocabAnalyser = (String) => Future[VocabResult]
+  type MetricsAnalyser = (String) => Future[MetricsResult]
+
+  type StrConverter = (Future[String]) => Future[StringResult]
+  type SentConverter = (Future[List[TapSentence]]) => Future[SentencesResult]
+  type VocabConverter = (Future[TapVocab]) => Future[VocabResult]
+  type MetricsConverter = (Future[TapMetrics]) => Future[MetricsResult]
+
+  private implicit val asStringResult:StrConverter = (a:Future[String]) => a.map( s => StringResult(s))
+  private implicit val asSentencesResult:SentConverter = (a:Future[List[TapSentence]]) => a.map(ts => SentencesResult(ts))
+  private implicit val asVocabResult:VocabConverter = (a:Future[TapVocab]) => a.map(v => VocabResult(v))
+  private implicit val asMetricsResult:MetricsConverter = (a:Future[TapMetrics]) => a.map(m => MetricsResult(m))
+
+  private def analyse[A](text:String,pipeline:Pipe[A]):Future[A] = TextPipeline(text,pipeline).run
+
+  val visible:StringAnalyser        = (text:String) => analyse[String](text,Cleaning.Pipeline.revealInvisible)
+  val clean:StringAnalyser          = (text:String) => analyse[String](text,Cleaning.Pipeline.utfSimplify)
+  val cleanPreserve:StringAnalyser  = (text:String) => analyse[String](text,Cleaning.Pipeline.lengthPreserve)
+  val cleanMinimal:StringAnalyser   = (text:String) => analyse[String](text,Cleaning.Pipeline.utfMinimal)
+  val cleanAscii:StringAnalyser     = (text:String) => analyse[String](text,Cleaning.Pipeline.asciiOnly)
+
+  val sentences:SentenceAnalyser    = (text:String) => analyse[List[TapSentence]](text,Parsing.Pipeline.sentences)
+  val vocabulary:VocabAnalyser      = (text:String) => analyse[TapVocab](text,Parsing.Pipeline.vocab)
+  val metrics:MetricsAnalyser       = (text:String) => analyse[TapMetrics](text,Parsing.Pipeline.metrics)
+
+  val expressions:StringAnalyser    = (text:String) => dummyResult(text)
+  val spelling:StringAnalyser       = (text:String) => dummyResult(text)
+  val shape:StringAnalyser          = (text:String) => dummyResult(text)
+
+  def dummyResult(text:String):Future[String] = Future {
+    "This features is not implemented yet"
+  }
+
+  /*
+  val expressions:ExpressionAnalyser = (text:String) => analyse[Expressions](text,Expression.Pipeline.all)
+
+  val moves:RhetoricalAnalyser      = (text:String) => analyse[Moves](text,Rhetorical.Pipeline.moves)
+
+  val spelling:SpellingAnalyser     = (text:String) => analyse[Spelling](text,Spelling.Pipeline.metrics)
+
+  val shape:ShapeAnalyser           = (text:String) => analyse[Shape](text,TextShape.Pipeline.shape)
+   */
 
 
-  type TapPipe = Flow[String,String,NotUsed]
 
-  val VISIBLE:TapPipe = Cleaning.Pipeline.revealInvisible
-  val CLEAN:TapPipe = Cleaning.Pipeline.utfSimplify
-  val CLEAN_PRESERVE:TapPipe = Cleaning.Pipeline.lengthPreserve
-  val CLEAN_MINIMAL:TapPipe = Cleaning.Pipeline.utfMinimal
-  val CLEAN_ASCII:TapPipe = Cleaning.Pipeline.asciiOnly
-
-  //val SYNTAGMATIC:TapPipe = Syntagmatic.Pipeline.sectionise
-  //val RHETORICAL:TapPipe = CLEAN.via(Rhetorical.Pipeline.sentenceMoves)
-  //val VOCAB:TapPipe = CLEAN.via(SYNTAGMATIC).via(Vocab.pipeline))
-
-  //      //case "complexity" => getAnalysis[AllComplexity]("complexityAggregator",msg,sender)
-  ////      case "expressions" => getAnalysis[AllExpressions]("expressionAnalyser",msg,sender)
-  ////      case "metrics" => getAnalysis[AllMetrics]("metricsAnalyser",msg,sender)
-  ////      case "pos" => getAnalysis[AllPosStats]("posAnalyser",msg,sender)
-  ////      case "spelling" => getAnalysis[AllSpelling]("spellingAnalyser",msg,sender)
-  ////      case "syllables" => getAnalysis[AllSyllables]("syllableAnalyser",msg,sender)
-  ////      case "vocab" => getAnalysis[AllVocab]("vocabAnalyser",msg,sender)
-  ////      case "xip" => getAnalysis[DocumentXip]("xipAnalyser",msg,sender)
-  ////      case "textShape" => getAnalysis[String]("textshapeAnalyser",msg,sender)
-
-  import au.edu.utscic.tap.TapStreamContext._
-
-  def analyse(text:String,pipeline:TapPipe):Future[StringAnalyticsResult] = TextPipeline(text,pipeline).run.map( str => StringAnalyticsResult(StringResult(str)))
 
 }

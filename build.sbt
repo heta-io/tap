@@ -24,18 +24,20 @@ organization := "au.edu.utscic"
 
 //Scala library versions
 val sangriaVersion = "1.3.0"
-val playJsonVersion = "2.6.3"
+val playJsonVersion = "2.6.5"
 val sangriaJsonVersion = "1.0.3"
 val akkaStreamVersion = "2.5.4"
 val scalatestVersion = "3.2.0-SNAP9"
-val scalatestPlayVersion = "3.1.1"
+val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 //Java library versions
-val openNlpVersion = "1.8.1"
+val openNlpVersion = "1.8.2"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
 PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
+libraryDependencies += ws     //Http client
+libraryDependencies += guice  //Dependency injection
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
@@ -58,7 +60,7 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-libraryDependencies += guice
+
 libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDependencies ++ testDependencies
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
