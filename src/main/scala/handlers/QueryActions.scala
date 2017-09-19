@@ -16,7 +16,7 @@
 
 package handlers
 
-import models.QueryResults.{MetricsResult, SentencesResult, StringResult, VocabResult}
+import models.QueryResults._
 
 import scala.concurrent.Future
 
@@ -35,10 +35,11 @@ class QueryActions {
   def vocabulary(text:String):Future[VocabResult] = TextAnalysisHandler.vocabulary(text)
   def metrics(text:String):Future[MetricsResult] = TextAnalysisHandler.metrics(text)
 
+  def moves(text:String):Future[StringListResult] = ExternalAnalysisHandler.analyseWithAthanor(text)
+
   //TODO Still to Implement
   def expressions(text:String):Future[StringResult] = TextAnalysisHandler.expressions(text)
-  def moves(text:String):Future[StringResult] = TextAnalysisHandler.moves
-  def spelling(text:String):Future[StringResult] = TextAnalysisHandler.spelling
-  def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape
+  def spelling(text:String):Future[StringResult] = TextAnalysisHandler.spelling(text)
+  def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
 
 }

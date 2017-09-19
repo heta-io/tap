@@ -33,6 +33,7 @@ object QuerySchema {
     implicit val ResultType:InterfaceType[Unit,Result] = InterfaceType(
       "Result", fields[Unit, Result](Field("timestamp", StringType, resolve = _.value.timestamp)))
     implicit val StringResultType:ObjectType[Unit,StringResult] = deriveObjectType[Unit,StringResult](Interfaces(ResultType))
+    implicit val StringListResultType:ObjectType[Unit,StringListResult] = deriveObjectType[Unit,StringListResult](Interfaces(ResultType))
     implicit val TokenType:ObjectType[Unit,TapToken] = deriveObjectType[Unit,TapToken]()
     implicit val SentenceType:ObjectType[Unit,TapSentence] = deriveObjectType[Unit,TapSentence]()
     implicit val SentencesResultType:ObjectType[Unit,SentencesResult] = deriveObjectType[Unit,SentencesResult](Interfaces(ResultType))
@@ -62,7 +63,9 @@ object QuerySchema {
       Field("metrics",OptionType(MetricsResultType), description = Some("Returns metrics for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.metrics(c arg inputText)),
       Field("expression",OptionType(StringResultType), description = Some("This is a stub for a feature not implemented"), arguments = inputText :: Nil,
-        resolve = c => c.ctx.metrics(c arg inputText))
+        resolve = c => c.ctx.expressions(c arg inputText)),
+      Field("moves",OptionType(StringListResultType), description = Some("Returns a list of moves for the input text"), arguments = inputText :: Nil,
+        resolve = c => c.ctx.moves(c arg inputText))
     ))
 
     Schema(QueryType)

@@ -21,7 +21,7 @@ import akka.stream.scaladsl.Flow
 import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab}
 import au.edu.utscic.tap.pipelines.materialize.TextPipeline
 import au.edu.utscic.tap.pipelines.{Cleaning, Parsing}
-import models.QueryResults.{MetricsResult, SentencesResult, StringResult, VocabResult}
+import models.QueryResults._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -33,6 +33,7 @@ object TextAnalysisHandler {
 
   type Pipe[A] = Flow[String,A,NotUsed]
   type StringAnalyser = (String) => Future[StringResult]
+  type StringListAnalyser = (String) => Future[StringListResult]
   type SentenceAnalyser = (String) => Future[SentencesResult]
   type VocabAnalyser = (String) => Future[VocabResult]
   type MetricsAnalyser = (String) => Future[MetricsResult]
@@ -56,19 +57,16 @@ object TextAnalysisHandler {
   val cleanAscii:StringAnalyser     = (text:String) => analyse[String](text,Cleaning.Pipeline.asciiOnly)
 
   val sentences:SentenceAnalyser    = (text:String) => analyse[List[TapSentence]](text,Parsing.Pipeline.sentences)
-
   val vocabulary:VocabAnalyser      = (text:String) => analyse[TapVocab](text,Parsing.Pipeline.vocab)
-
   val metrics:MetricsAnalyser       = (text:String) => analyse[TapMetrics](text,Parsing.Pipeline.metrics)
 
-  val FEATURE_NOT_IMPLEMENTED = "This features is not implemented yet"
-  val expressions:StringAnalyser    = (text:String) => Future(StringResult(FEATURE_NOT_IMPLEMENTED))
+  val expressions:StringAnalyser    = (text:String) => dummyResult(text)
+  val spelling:StringAnalyser       = (text:String) => dummyResult(text)
+  val shape:StringAnalyser          = (text:String) => dummyResult(text)
 
-  val moves:StringAnalyser          = (text:String) => Future(StringResult(FEATURE_NOT_IMPLEMENTED))
-
-  val spelling:StringAnalyser       = (text:String) => Future(StringResult(FEATURE_NOT_IMPLEMENTED))
-
-  val shape:StringAnalyser          = (text:String) => Future(StringResult(FEATURE_NOT_IMPLEMENTED))
+  def dummyResult(text:String):Future[String] = Future {
+    "This features is not implemented yet"
+  }
 
   /*
   val expressions:ExpressionAnalyser = (text:String) => analyse[Expressions](text,Expression.Pipeline.all)
@@ -79,6 +77,7 @@ object TextAnalysisHandler {
 
   val shape:ShapeAnalyser           = (text:String) => analyse[Shape](text,TextShape.Pipeline.shape)
    */
+
 
 
 

@@ -36,6 +36,8 @@ val openNlpVersion = "1.8.2"
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
 PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
+libraryDependencies += ws     //Http client
+libraryDependencies += guice  //Dependency injection
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
@@ -58,7 +60,7 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-libraryDependencies += guice
+
 libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDependencies ++ testDependencies
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")

@@ -28,7 +28,7 @@ object QueryResults {
     val message: Option[String] = None
   }
   case class StringResult(analytics:String) extends Result
-  case class StringListResult(analytics:List[String]) extends Result
+  case class StringListResult(analytics:List[List[String]]) extends Result
   case class SentencesResult(analytics:List[TapSentence]) extends Result
   case class VocabResult(analytics:TapVocab) extends Result
   case class MetricsResult(analytics:TapMetrics) extends Result
