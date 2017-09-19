@@ -74,6 +74,7 @@ object ExternalAnalysisHandler {
       (response.json).as[AthanorMsg].results
     }
 
+
     //result.foreach(s => logger.warn(s"Response: $s"))
 
 
