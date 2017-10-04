@@ -70,9 +70,17 @@ scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
 
-//Documentation
+//Documentation - run ;paradox;copyDocs
 enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
 paradoxTheme := Some(builtinParadoxTheme("generic"))
+//Task for copying to root level docs folder (for GitHub pages)
+val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
+copyDocsTask := {
+  val docSource = new File("target/paradox/site/main")
+  val docDest = new File("docs")
+  //if(docDest.exists) IO.delete(docDest)
+  IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
+}
 //scalacOptions in Paradox ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
 //enablePlugins(SiteScaladocPlugin) //Include Scaladoc with scala-site documentation
