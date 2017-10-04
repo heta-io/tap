@@ -70,6 +70,12 @@ scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
 
+//Documentation
+enablePlugins(SiteScaladocPlugin) //Include Scaladoc with scala-site documentation
+enablePlugins(ParadoxSitePlugin)
+paradoxTheme := Some(builtinParadoxTheme("generic"))
+enablePlugins(GhpagesPlugin)
+git.remoteRepo := "git@github.com:uts-cic/tap.git"
 
 //Enable this only for local builds - disabled for Travis
 enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
