@@ -16,7 +16,7 @@
 
 name := "tap"
 
-version := "3.0.2"
+version := "3.0.3"
 
 scalaVersion := "2.12.3"
 
@@ -24,9 +24,10 @@ organization := "au.edu.utscic"
 
 //Scala library versions
 val sangriaVersion = "1.3.0"
-val playJsonVersion = "2.6.5"
+val playJsonVersion = "2.6.6"
+val twirlApiVersion = "1.3.12"
 val sangriaJsonVersion = "1.0.3"
-val akkaStreamVersion = "2.5.4"
+val akkaStreamVersion = "2.5.6"
 val scalatestVersion = "3.2.0-SNAP9"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
@@ -42,6 +43,7 @@ libraryDependencies += guice  //Dependency injection
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
+  "com.typesafe.play" %% "twirl-api" % twirlApiVersion,
   "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
 )
 
