@@ -70,6 +70,17 @@ scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
 
+//Documentation
+enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
+paradoxTheme := Some(builtinParadoxTheme("generic"))
+//scalacOptions in Paradox ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
+
+//enablePlugins(SiteScaladocPlugin) //Include Scaladoc with scala-site documentation
+//siteSourceDirectory := sourceDirectory.value / "docs" // target.value / "docs"
+//enablePlugins(ParadoxSitePlugin)
+//sourceDirectory in Paradox := sourceDirectory.value / "src/main/paradox"
+//enablePlugins(GhpagesPlugin)
+//git.remoteRepo := "git@github.com:uts-cic/tap.git"
 
 //Enable this only for local builds - disabled for Travis
 enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
