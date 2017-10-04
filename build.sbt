@@ -16,7 +16,7 @@
 
 name := "tap"
 
-version := "3.0.3"
+version := "3.0.4"
 
 scalaVersion := "2.12.3"
 
@@ -28,7 +28,7 @@ val playJsonVersion = "2.6.6"
 val twirlApiVersion = "1.3.12"
 val sangriaJsonVersion = "1.0.3"
 val akkaStreamVersion = "2.5.6"
-val scalatestVersion = "3.2.0-SNAP9"
+val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 //Java library versions
@@ -57,6 +57,7 @@ val generalDependencies = Seq(
 )
 
 val testDependencies = Seq(
+  "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlayVersion % "test",
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
