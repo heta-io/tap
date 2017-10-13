@@ -1,7 +1,7 @@
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 //Play framework
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.5")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.6")
 
 //Dependency management
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.1")
