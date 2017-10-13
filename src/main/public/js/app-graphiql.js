@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-$(function (global) {
-  /**
-   * This GraphiQL example illustrates how to use some of GraphiQL's props
-   * in order to enable reading and updating the URL parameters, making
-   * link sharing of queries a little bit easier.
-   *
-   * This is only one example of this kind of feature, GraphiQL exposes
-   * various React params to enable interesting integrations.
-   */
+/* Current Graphiql version: 0.11.5 */
 
-    // Parse the search string to get url parameters.
 
   var instructions = "# Welcome to GraphiQL\n" +
     "#\n" +
@@ -114,100 +105,101 @@ $(function (global) {
     "}\n" +
     "\n"
 
-    var exampleVariables = "{\"input\": \"I didn't take any time to review the subject outline nor did I log onto UTS Online to review any supporting information to provide context, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"}"
+  var exampleVariables = "{\"input\": \"I didn't take any time to review the subject outline nor did I log onto UTS Online to review any supporting information to provide context, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"}"
 
 
 
-  var search = window.location.search;
-  var parameters = {
-    variables: exampleVariables
-  };
-  search.substr(1).split('&').forEach(function (entry) {
-    var eq = entry.indexOf('=');
-    if (eq >= 0) {
-      parameters[decodeURIComponent(entry.slice(0, eq))] =
-        decodeURIComponent(entry.slice(eq + 1));
+/**
+ * This GraphiQL example illustrates how to use some of GraphiQL's props
+ * in order to enable reading and updating the URL parameters, making
+ * link sharing of queries a little bit easier.
+ *
+ * This is only one example of this kind of feature, GraphiQL exposes
+ * various React params to enable interesting integrations.
+ */
+  // Parse the search string to get url parameters.
+var search = window.location.search;
+var parameters = {};
+parameters.variables = exampleVariables;
+parameters.query = exampleQueries;
+
+search.substr(1).split('&').forEach(function (entry) {
+  var eq = entry.indexOf('=');
+  if (eq >= 0) {
+    parameters[decodeURIComponent(entry.slice(0, eq))] =
+      decodeURIComponent(entry.slice(eq + 1));
+  }
+});
+// if variables was provided, try to format it.
+if (parameters.variables) {
+  try {
+    parameters.variables =
+      JSON.stringify(JSON.parse(parameters.variables), null, 2);
+  } catch (e) {
+    // Do nothing, we want to display the invalid JSON as a string, rather
+    // than present an error.
+  }
+}
+// When the query and variables string is edited, update the URL bar so
+// that it can be easily shared
+function onEditQuery(newQuery) {
+  parameters.query = newQuery;
+  updateURL();
+}
+function onEditVariables(newVariables) {
+  parameters.variables = newVariables;
+  updateURL();
+}
+function onEditOperationName(newOperationName) {
+  parameters.operationName = newOperationName;
+  updateURL();
+}
+function updateURL() {
+  var newSearch = '?' + Object.keys(parameters).filter(function (key) {
+    return Boolean(parameters[key]);
+  }).map(function (key) {
+    return encodeURIComponent(key) + '=' +
+      encodeURIComponent(parameters[key]);
+  }).join('&');
+  history.replaceState(null, null, newSearch);
+}
+// Defines a GraphQL fetcher using the fetch API. You're not required to
+// use fetch, and could instead implement graphQLFetcher however you like,
+// as long as it returns a Promise or Observable.
+function graphQLFetcher(graphQLParams) {
+  // This example expects a GraphQL server at the path /graphql.
+  // Change this to point wherever you host your GraphQL server.
+  return fetch('/graphql', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(graphQLParams),
+    credentials: 'include',
+  }).then(function (response) {
+    return response.text();
+  }).then(function (responseBody) {
+    try {
+      return JSON.parse(responseBody);
+    } catch (error) {
+      return responseBody;
     }
   });
-
-  // if variables was provided, try to format it.
-  if (parameters.variables) {
-    try {
-      parameters.variables =
-        JSON.stringify(JSON.parse(query.variables), null, 2);
-    } catch (e) {
-      // Do nothing
-    }
-  }
-
-  // When the query and variables string is edited, update the URL bar so
-  // that it can be easily shared
-  function onEditQuery(newQuery) {
-    parameters.query = newQuery;
-    updateURL();
-  }
-
-  function onEditVariables(newVariables) {
-    parameters.variables = newVariables;
-    updateURL();
-  }
-
-  function updateURL() {
-    var newSearch = '?' + Object.keys(parameters).map(function (key) {
-      return encodeURIComponent(key) + '=' +
-        encodeURIComponent(parameters[key]);
-    }).join('&');
-    history.replaceState(null, null, newSearch);
-  }
-
-  // Defines a GraphQL fetcher using the fetch API.
-  function graphQLFetcher(graphQLParams) {
-    return fetch(window.location.origin + '/graphql', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(graphQLParams),
-      credentials: 'include'
-    }).then(function (response) {
-      return response.text();
-    }).then(function (responseBody) {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
-  }
-
-  function setupZoom(percent) {
-    $('html > head').append($('<style>body {zoom: ' + percent + '%;}</style>'))
-  }
-
-  if (parameters['zoom']) {
-    setupZoom(parameters['zoom'])
-  }
-
-  if (parameters["hideVariables"]) {
-    $('html > head').append($('<style>.variable-editor {display: none !important}</style>'))
-  }
-
-
-
-  global.renderGraphiql = function (elem) {
-    // Render <GraphiQL /> into the body.
-    ReactDOM.render(
-      React.createElement(GraphiQL, {
-        fetcher: graphQLFetcher,
-        query: parameters.query,
-        variables: parameters.variables,
-        response: parameters.response,
-        onEditQuery: onEditQuery,
-        onEditVariables: onEditVariables,
-        defaultQuery: instructions + exampleQueries
-      }),
-      elem
-    );
-  }
-}(window))
+}
+// Render <GraphiQL /> into the body.
+// See the README in the top level of this module to learn more about
+// how you can customize GraphiQL by providing different values or
+// additional child elements.
+ReactDOM.render(
+  React.createElement(GraphiQL, {
+    fetcher: graphQLFetcher,
+    query: parameters.query,
+    variables: parameters.variables,
+    operationName: parameters.operationName,
+    onEditQuery: onEditQuery,
+    onEditVariables: onEditVariables,
+    onEditOperationName: onEditOperationName
+  }),
+  document.getElementById('graphiql')
+);

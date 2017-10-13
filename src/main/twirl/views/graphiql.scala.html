@@ -14,32 +14,17 @@
 
     <link href="@assets.path("css/graphiql.css")" rel="stylesheet" />
 
-    @*<script src="@assets.path("js/jsfetch.min.js")"></script>*@
     <script src="@assets.path("js/react.min.js")"></script>
     <script src="@assets.path("js/react-dom.min.js")"></script>
     <script src="@assets.path("js/graphiql.min.js")"></script>
-    <script src="@assets.path("js/jquery.min.js")"></script>
 
-    <style>
-            body {
-              height: 100%;
-              margin: 0;
-              width: 100%;
-              overflow: hidden;
-            }
-            #graphiql {
-              height: 100vh;
-            }
-    </style>
-
-    <script src="@assets.path("js/app-graphiql.js")"></script>
   </head>
 
   <body>
     <div id="graphiql">Loading...</div>
-
-    <script>
-            renderGraphiql(document.getElementById('graphiql'))
-    </script>
+    <script src="@assets.path("js/app-graphiql.js")"></script>
+    @*<script>*@
+            @*renderGraphiql(document.getElementById('graphiql'))*@
+    @*</script>*@
   </body>
 </html>
