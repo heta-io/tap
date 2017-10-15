@@ -98,13 +98,74 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
 <h3><a href="#developer-docs" name="developer-docs" class="anchor"><span class="anchor-link"></span></a>Developer docs</h3>
-<p>This is the developer documentation</p>
+<h4><a href="#project-structure" name="project-structure" class="anchor"><span class="anchor-link"></span></a>Project Structure</h4>
+<p>Although TAP is a Play project, the project structure is that of a Maven/sbt project and does not follow the Play default project structure.</p>
+<p>The build.sbt file indicates that we are using an alternative project structure to Play.</p>
+<pre><code>    disablePlugins(PlayLayoutPlugin)
+    PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
+</code></pre>
+<p>For more details, see the &ldquo;Default SBT Layout&rdquo; section in the &ldquo;Anatomy of a Play Application&rdquo; chapter in the Play 2.6 Documentation:</p>
+<pre><code>    [play-project-anatomy](https://playframework.com/documentation/2.6.x/Anatomy)
+</code></pre>
+<h4><a href="#running-of-the-command-line" name="running-of-the-command-line" class="anchor"><span class="anchor-link"></span></a>Running of the Command Line</h4>
+<p>Refer to <a href="./user.md">user-documentaton</a></p>
+<h4><a href="#setting-the-tap-project-in-intellij-idea" name="setting-the-tap-project-in-intellij-idea" class="anchor"><span class="anchor-link"></span></a>Setting the TAP project in Intellij IDEA</h4>
+<p>An IDE provides a more convenient and efficient way of doing development. The Intellij IDEA is preferred because of its Scala support, and relative ease of use.</p>
+<ol>
+  <li>
+    <p>Check that the Scala and SBT plugins are installed.  Install them if they are missing.</p>
+    <pre><code> File-Settings-Plugins
+</code></pre>
+  </li>
+  <li>
+    <p>Import the project into Intellij IDEA</p>
+    <pre><code> File - New - Project from Existing sources
+
+ Navigate to the build.sbt file in the tap directory where you cloned the project source code.
+</code></pre>
+  </li>
+  <li>
+    <p>Ensure the JVM has enough memory to work with (-Xmx2048M -Xss1M -Xmx512M)</p>
+    <pre><code> File - Settings - Other Settings - SBT - VM Parameters
+</code></pre>
+  </li>
+  <li>
+    <p>Add the library dependencies</p>
+    <pre><code> File - Project Structure - Modules
+
+ Point to and add the jars you imported into the lib directory:
+
+ cc.factorie.app.nlp.all-models-1.0.0.jar
+ nlpfactorie_2.12-0.1.jar
+</code></pre>
+  </li>
+  <li>
+    <p>Run Tap</p>
+    <pre><code>Run - Run Tap
+</code></pre>
+  </li>
+</ol>
 <div class="source-github">
 The source code for this page can be found <a href="https://github.com/uts-cic/tap/tree/master/src/main/paradox/developer.md">here</a>.
 </div>
 
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="developer.html#developer-docs" class="header">Developer docs</a>
+  <ul>
+    <li><a href="developer.html#project-structure" class="header">Project Structure</a></li>
+    <li><a href="developer.html#running-of-the-command-line" class="header">Running of the Command Line</a></li>
+    <li><a href="developer.html#setting-the-tap-project-in-intellij-idea" class="header">Setting the TAP project in Intellij IDEA</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
 </div>
 </div>
 
