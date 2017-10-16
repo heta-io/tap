@@ -17,10 +17,14 @@
 package au.edu.utscic.tap.pipelines
 
 import akka.NotUsed
-import akka.stream.scaladsl.Flow
-import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab, TermCount}
+import akka.stream.FlowShape
+import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Source}
+import au.edu.utscic.tap.data._
 import au.edu.utscic.tap.nlp.factorie.Annotator
 import cc.factorie.app.nlp.Document
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
@@ -28,35 +32,60 @@ import cc.factorie.app.nlp.Document
 object Parsing {
 
   object Pipeline {
-    val sentences:Flow[String,List[TapSentence],NotUsed] = makeDocument via tapSentences
-    val vocab:Flow[String,TapVocab,NotUsed] = makeDocument via tapSentences via tapVocab
-    val metrics:Flow[String,TapMetrics,NotUsed] = makeDocument via tapSentences via tapMetrics
+    val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
+    val vocab: Flow[String, TapVocab, NotUsed] = makeDocument via tapSentences via tapVocab
+    val metrics: Flow[String, TapMetrics, NotUsed] = makeDocument via tapSentences via tapMetrics
+    val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
   }
 
-  val makeDocument:Flow[String,Document,NotUsed] = Flow[String].map(str => Annotator.document(str))
+  val makeDocument: Flow[String, Document, NotUsed] = Flow[String].map(str => Annotator.document(str))
 
-  val tapSentences:Flow[Document,List[TapSentence],NotUsed] =
+  val tapSentences: Flow[Document, List[TapSentence], NotUsed] =
     Flow[Document]
-    .map(doc => Annotator.sentences(doc))
-    .map(sentList => Annotator.tapSentences(sentList))
+      .map(doc => Annotator.sentences(doc))
+      .map(sentList => Annotator.tapSentences(sentList))
 
-  val tapVocab:Flow[List[TapSentence],TapVocab,NotUsed] =
+  val tapVocab: Flow[List[TapSentence], TapVocab, NotUsed] =
     Flow[List[TapSentence]]
       .map { lst =>
         lst.flatMap(_.tokens)
           .map(_.term.toLowerCase)
-          .groupBy((term:String) => term)
+          .groupBy((term: String) => term)
           .mapValues(_.length)
       }.map { m =>
-        val lst:List[TermCount] = m.toList.map{case (k,v) => TermCount(k,v)}
-        TapVocab(m.size,lst)
-      }
+      val lst: List[TermCount] = m.toList.map { case (k, v) => TermCount(k, v) }
+      TapVocab(m.size, lst)
+    }
 
-  val tapMetrics:Flow[List[TapSentence],TapMetrics,NotUsed] =
+  val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] =
     Flow[List[TapSentence]]
-    .map { lst =>
-      lst.map(_.length)
-    }.map( lst => TapMetrics(lst.sum))
+      .map { lst =>
+        lst.map(_.length)
+      }.map(lst => TapMetrics(lst.sum))
+
+  val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] =
+    Flow[List[TapSentence]].mapAsync[List[TapExpressions]](3) { lst =>
+      val results = lst.map { sent =>
+        for {
+            ae <- Expressions.affect(sent.tokens)
+            ee <- Expressions.epistemic(sent.tokens)
+            me <- Expressions.modal(sent.tokens)
+        } yield (TapExpressions(ae, ee, me, sent.idx))
+      }
+      Future.sequence(results)
+    }
+
+//      .map { lst =>
+//        lst.mapAsync[TapExpressions](3) { sent =>
+//          val allTokens: Vector[TapToken] = sent.tokens
+//          for {
+//            ae <- Expressions.affect(allTokens)
+//            ee <- Expressions.epistemic(allTokens)
+//            me <- Expressions.modal(allTokens)
+//
+//          } yield (TapExpressions(ae, ee, me))
+//        }
+//      }
 }
 
 /*

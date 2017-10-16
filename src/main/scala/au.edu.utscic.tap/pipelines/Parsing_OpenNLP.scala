@@ -19,7 +19,7 @@ package au.edu.utscic.tap.pipelines
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Framing, Source}
 import akka.util.ByteString
-import au.edu.utscic.tap.data.StringTypes.{DocumentStr, SectionStr}
+import au.edu.utscic.tap.data.CustomTypes.{DocumentStr, SectionStr}
 import au.edu.utscic.tap.nlp.{NlpBuilders, NlpDocument, OldNlpSentence}
 import au.edu.utscic.tap.data.{OldTapDocument, OldTapSection, OldTapSentence, OldTapTags}
 
