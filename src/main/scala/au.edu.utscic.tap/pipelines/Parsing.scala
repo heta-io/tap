@@ -36,6 +36,7 @@ object Parsing {
     val vocab: Flow[String, TapVocab, NotUsed] = makeDocument via tapSentences via tapVocab
     val metrics: Flow[String, TapMetrics, NotUsed] = makeDocument via tapSentences via tapMetrics
     val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
+    val syllables: Flow[String,List[TapSyllables],NotUsed] = makeDocument via tapSentences via tapSyllables
   }
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String].map(str => Annotator.document(str))
@@ -75,17 +76,38 @@ object Parsing {
       Future.sequence(results)
     }
 
-//      .map { lst =>
-//        lst.mapAsync[TapExpressions](3) { sent =>
-//          val allTokens: Vector[TapToken] = sent.tokens
-//          for {
-//            ae <- Expressions.affect(allTokens)
-//            ee <- Expressions.epistemic(allTokens)
-//            me <- Expressions.modal(allTokens)
-//
-//          } yield (TapExpressions(ae, ee, me))
-//        }
-//      }
+  val tapSyllables: Flow[List[TapSentence],List[TapSyllables], NotUsed] =
+    Flow[List[TapSentence]].map { lst =>
+      lst.map { sent =>
+        val counts = sent.tokens.map( t => countSyllables(t.term.toLowerCase)).filterNot(_ == 0)
+        val avg = counts.sum / (sent.tokens.length).toDouble
+        TapSyllables(sent.idx,avg,counts)
+      }
+    }
+
+  private def countSyllables(word:String): Int = {
+    val CLE = "([^aeiouy_]le)"
+    val CVCE = "([^aeiou_]{1}[aeiouy]{1}[^aeiouy_]{1,2}e)"
+    //val VVN = "([aiouCVLEN]{1,2}[ns])"
+    val CVVC = "([^aeiou_][aeiou]{2}[^aeiouy_])"
+    val CVC = "([^aeiou_][aeiouy][^aeiou_])"
+    val CVV = "([^aeiou_][aeiou][aeiouy])"
+    val VC = "([aeiou][^aeiou_])"
+    val VR = "([aeiouyr]{1,2})"
+    val C = "([^aeiou_])"
+
+    word
+      .replaceAll("um","_")
+      .replaceAll("([aeo])r","_")
+      .replaceAll(CLE,"_")
+      .replaceAll(CVCE,"_")
+      .replaceAll(CVVC,"_")
+      .replaceAll(CVC,"_")
+      .replaceAll(CVV,"_")
+      .replaceAll(VC,"_")
+      .replaceAll(VR,"_")
+      .replaceAll(C,"").length
+  }
 }
 
 /*

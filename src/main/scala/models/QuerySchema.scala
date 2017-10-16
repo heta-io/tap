@@ -46,6 +46,8 @@ object QuerySchema {
     implicit val TapExpressionType:ObjectType[Unit,TapExpression] = deriveObjectType[Unit,TapExpression]()
     implicit val TapExpressionsType:ObjectType[Unit,TapExpressions] = deriveObjectType[Unit,TapExpressions]()
     implicit val ExpressionsResultType:ObjectType[Unit,ExpressionsResult] = deriveObjectType[Unit,ExpressionsResult](Interfaces(ResultType))
+    implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
+    implicit val SyllablesResultType:ObjectType[Unit,SyllablesResult] = deriveObjectType[Unit,SyllablesResult](Interfaces(ResultType))
 
     val inputText:Argument[String] = Argument("text", StringType)
 
@@ -68,6 +70,8 @@ object QuerySchema {
         resolve = c => c.ctx.metrics(c arg inputText)),
       Field("expressions",OptionType(ExpressionsResultType), description = Some("Returns expressions for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.expressions(c arg inputText)),
+      Field("syllables",OptionType(SyllablesResultType), description = Some("Returns syllable counts for text"), arguments = inputText :: Nil,
+        resolve = c => c.ctx.syllables(c arg inputText)),
       Field("moves",OptionType(StringListResultType), description = Some("Returns a list of moves for the input text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.moves(c arg inputText))
     ))

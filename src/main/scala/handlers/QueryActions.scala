@@ -35,6 +35,7 @@ class QueryActions {
   def vocabulary(text:String):Future[VocabResult] = TextAnalysisHandler.vocabulary(text)
   def metrics(text:String):Future[MetricsResult] = TextAnalysisHandler.metrics(text)
   def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
+  def syllables(text:String):Future[SyllablesResult] = TextAnalysisHandler.syllables(text)
 
   def moves(text:String):Future[StringListResult] = ExternalAnalysisHandler.analyseWithAthanor(text)
 
