@@ -18,7 +18,7 @@ package models
 
 import java.time.OffsetDateTime
 
-import au.edu.utscic.tap.data.{TapExpressions, TapMetrics, TapSentence, TapVocab}
+import au.edu.utscic.tap.data._
 
 object QueryResults {
 
@@ -33,4 +33,5 @@ object QueryResults {
   case class VocabResult(analytics:TapVocab) extends Result
   case class MetricsResult(analytics:TapMetrics) extends Result
   case class ExpressionsResult(analytics:List[TapExpressions]) extends Result
+  case class SyllablesResult(analytics:List[TapSyllables]) extends Result
 }
