@@ -44,12 +44,13 @@ import play.api.Logger.logger
   }
 
   def tapSentences(sentences:List[Sentence]):List[TapSentence] = {
-    sentences.map { s =>
+    sentences.zipWithIndex.map { case(s,idx) =>
       val tokens = s.tokens.toList.map { t =>
         //val pt = t.parseLabel.printName
-        TapToken(t.string,t.lemmaString,t.posTag.value.toString,t.parseParentIndex,0,t.parseLabel.value.toString())
-      }
-      TapSentence(tokens,s.start,s.end,s.length)
+
+        TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,t.parseParentIndex,0,t.parseLabel.value.toString())
+      }.toVector
+      TapSentence(tokens, s.start, s.end, s.length, idx)
     }
   }
 

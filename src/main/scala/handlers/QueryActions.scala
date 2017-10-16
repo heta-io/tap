@@ -34,11 +34,12 @@ class QueryActions {
   def sentences(text:String):Future[SentencesResult] = TextAnalysisHandler.sentences(text)
   def vocabulary(text:String):Future[VocabResult] = TextAnalysisHandler.vocabulary(text)
   def metrics(text:String):Future[MetricsResult] = TextAnalysisHandler.metrics(text)
+  def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
 
   def moves(text:String):Future[StringListResult] = ExternalAnalysisHandler.analyseWithAthanor(text)
 
   //TODO Still to Implement
-  def expressions(text:String):Future[StringResult] = TextAnalysisHandler.expressions(text)
+
   def spelling(text:String):Future[StringResult] = TextAnalysisHandler.spelling(text)
   def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
 

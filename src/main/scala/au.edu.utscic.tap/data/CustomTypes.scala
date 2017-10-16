@@ -17,6 +17,17 @@
 package au.edu.utscic.tap.data
 
 /**
-  * Created by andrew@andrewresearch.net on 29/8/17.
+  * Created by andrew@andrewresearch.net on 30/6/17.
   */
-case class TapToken(idx:Int, term:String, lemma:String, postag:String, parent:Int, child:Int, deptype:String)
+
+object CustomTypes {
+
+  type DocumentStr = String
+  type SectionStr = String
+  type SentenceStr = String
+
+  type AffectExpression = TapExpression
+  type EpistemicExpression = TapExpression
+  type ModalExpression = TapExpression
+
+}
