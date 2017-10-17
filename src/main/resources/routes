@@ -2,6 +2,8 @@ GET   /         controllers.DefaultController.index
 
 GET   /graphiql  controllers.GraphQlController.graphiql
 
+GET   /health  controllers.HealthController.health
+
 + nocsrf # This should be removed once graphiql is passing tokens
 POST  /graphql  controllers.GraphQlController.graphql
 
