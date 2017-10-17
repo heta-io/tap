@@ -17,10 +17,14 @@
 package au.edu.utscic.tap.pipelines
 
 import akka.NotUsed
-import akka.stream.scaladsl.Flow
-import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab, TermCount}
+import akka.stream.FlowShape
+import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Source}
+import au.edu.utscic.tap.data._
 import au.edu.utscic.tap.nlp.factorie.Annotator
 import cc.factorie.app.nlp.Document
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
@@ -28,35 +32,82 @@ import cc.factorie.app.nlp.Document
 object Parsing {
 
   object Pipeline {
-    val sentences:Flow[String,List[TapSentence],NotUsed] = makeDocument via tapSentences
-    val vocab:Flow[String,TapVocab,NotUsed] = makeDocument via tapSentences via tapVocab
-    val metrics:Flow[String,TapMetrics,NotUsed] = makeDocument via tapSentences via tapMetrics
+    val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
+    val vocab: Flow[String, TapVocab, NotUsed] = makeDocument via tapSentences via tapVocab
+    val metrics: Flow[String, TapMetrics, NotUsed] = makeDocument via tapSentences via tapMetrics
+    val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
+    val syllables: Flow[String,List[TapSyllables],NotUsed] = makeDocument via tapSentences via tapSyllables
   }
 
-  val makeDocument:Flow[String,Document,NotUsed] = Flow[String].map(str => Annotator.document(str))
+  val makeDocument: Flow[String, Document, NotUsed] = Flow[String].map(str => Annotator.document(str))
 
-  val tapSentences:Flow[Document,List[TapSentence],NotUsed] =
+  val tapSentences: Flow[Document, List[TapSentence], NotUsed] =
     Flow[Document]
-    .map(doc => Annotator.sentences(doc))
-    .map(sentList => Annotator.tapSentences(sentList))
+      .map(doc => Annotator.sentences(doc))
+      .map(sentList => Annotator.tapSentences(sentList))
 
-  val tapVocab:Flow[List[TapSentence],TapVocab,NotUsed] =
+  val tapVocab: Flow[List[TapSentence], TapVocab, NotUsed] =
     Flow[List[TapSentence]]
       .map { lst =>
         lst.flatMap(_.tokens)
           .map(_.term.toLowerCase)
-          .groupBy((term:String) => term)
+          .groupBy((term: String) => term)
           .mapValues(_.length)
       }.map { m =>
-        val lst:List[TermCount] = m.toList.map{case (k,v) => TermCount(k,v)}
-        TapVocab(m.size,lst)
-      }
+      val lst: List[TermCount] = m.toList.map { case (k, v) => TermCount(k, v) }
+      TapVocab(m.size, lst)
+    }
 
-  val tapMetrics:Flow[List[TapSentence],TapMetrics,NotUsed] =
+  val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] =
     Flow[List[TapSentence]]
-    .map { lst =>
-      lst.map(_.length)
-    }.map( lst => TapMetrics(lst.sum))
+      .map { lst =>
+        lst.map(_.length)
+      }.map(lst => TapMetrics(lst.sum))
+
+  val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] =
+    Flow[List[TapSentence]].mapAsync[List[TapExpressions]](3) { lst =>
+      val results = lst.map { sent =>
+        for {
+            ae <- Expressions.affect(sent.tokens)
+            ee <- Expressions.epistemic(sent.tokens)
+            me <- Expressions.modal(sent.tokens)
+        } yield (TapExpressions(ae, ee, me, sent.idx))
+      }
+      Future.sequence(results)
+    }
+
+  val tapSyllables: Flow[List[TapSentence],List[TapSyllables], NotUsed] =
+    Flow[List[TapSentence]].map { lst =>
+      lst.map { sent =>
+        val counts = sent.tokens.map( t => countSyllables(t.term.toLowerCase)).filterNot(_ == 0)
+        val avg = counts.sum / (sent.tokens.length).toDouble
+        TapSyllables(sent.idx,avg,counts)
+      }
+    }
+
+  private def countSyllables(word:String): Int = {
+    val CLE = "([^aeiouy_]le)"
+    val CVCE = "([^aeiou_]{1}[aeiouy]{1}[^aeiouy_]{1,2}e)"
+    //val VVN = "([aiouCVLEN]{1,2}[ns])"
+    val CVVC = "([^aeiou_][aeiou]{2}[^aeiouy_])"
+    val CVC = "([^aeiou_][aeiouy][^aeiou_])"
+    val CVV = "([^aeiou_][aeiou][aeiouy])"
+    val VC = "([aeiou][^aeiou_])"
+    val VR = "([aeiouyr]{1,2})"
+    val C = "([^aeiou_])"
+
+    word
+      .replaceAll("um","_")
+      .replaceAll("([aeo])r","_")
+      .replaceAll(CLE,"_")
+      .replaceAll(CVCE,"_")
+      .replaceAll(CVVC,"_")
+      .replaceAll(CVC,"_")
+      .replaceAll(CVV,"_")
+      .replaceAll(VC,"_")
+      .replaceAll(VR,"_")
+      .replaceAll(C,"").length
+  }
 }
 
 /*

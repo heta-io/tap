@@ -18,7 +18,7 @@ package handlers
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import au.edu.utscic.tap.data.{TapMetrics, TapSentence, TapVocab}
+import au.edu.utscic.tap.data._
 import au.edu.utscic.tap.pipelines.materialize.TextPipeline
 import au.edu.utscic.tap.pipelines.{Cleaning, Parsing}
 import models.QueryResults._
@@ -37,16 +37,22 @@ object TextAnalysisHandler {
   type SentenceAnalyser = (String) => Future[SentencesResult]
   type VocabAnalyser = (String) => Future[VocabResult]
   type MetricsAnalyser = (String) => Future[MetricsResult]
+  type ExpressionsAnalyser = (String) => Future[ExpressionsResult]
+  type SyllablesAnalyser = (String) => Future[SyllablesResult]
 
   type StrConverter = (Future[String]) => Future[StringResult]
   type SentConverter = (Future[List[TapSentence]]) => Future[SentencesResult]
   type VocabConverter = (Future[TapVocab]) => Future[VocabResult]
   type MetricsConverter = (Future[TapMetrics]) => Future[MetricsResult]
+  type ExpressionsConverter = (Future[List[TapExpressions]]) => Future[ExpressionsResult]
+  type SyllablesConverter = (Future[List[TapSyllables]]) => Future[SyllablesResult]
 
   private implicit val asStringResult:StrConverter = (a:Future[String]) => a.map( s => StringResult(s))
   private implicit val asSentencesResult:SentConverter = (a:Future[List[TapSentence]]) => a.map(ts => SentencesResult(ts))
   private implicit val asVocabResult:VocabConverter = (a:Future[TapVocab]) => a.map(v => VocabResult(v))
   private implicit val asMetricsResult:MetricsConverter = (a:Future[TapMetrics]) => a.map(m => MetricsResult(m))
+  private implicit val asExpressionsResult:ExpressionsConverter = (a:Future[List[TapExpressions]]) => a.map(e => ExpressionsResult(e))
+  private implicit val asSyllablesResult:SyllablesConverter = (a:Future[List[TapSyllables]]) => a.map(s => SyllablesResult(s))
 
   private def analyse[A](text:String,pipeline:Pipe[A]):Future[A] = TextPipeline(text,pipeline).run
 
@@ -60,7 +66,9 @@ object TextAnalysisHandler {
   val vocabulary:VocabAnalyser      = (text:String) => analyse[TapVocab](text,Parsing.Pipeline.vocab)
   val metrics:MetricsAnalyser       = (text:String) => analyse[TapMetrics](text,Parsing.Pipeline.metrics)
 
-  val expressions:StringAnalyser    = (text:String) => dummyResult(text)
+  val expressions:ExpressionsAnalyser    = (text:String) => analyse[List[TapExpressions]](text,Parsing.Pipeline.expressions)
+  val syllables:SyllablesAnalyser   = (text:String) => analyse[List[TapSyllables]](text,Parsing.Pipeline.syllables)
+
   val spelling:StringAnalyser       = (text:String) => dummyResult(text)
   val shape:StringAnalyser          = (text:String) => dummyResult(text)
 
@@ -69,9 +77,6 @@ object TextAnalysisHandler {
   }
 
   /*
-  val expressions:ExpressionAnalyser = (text:String) => analyse[Expressions](text,Expression.Pipeline.all)
-
-  val moves:RhetoricalAnalyser      = (text:String) => analyse[Moves](text,Rhetorical.Pipeline.moves)
 
   val spelling:SpellingAnalyser     = (text:String) => analyse[Spelling](text,Spelling.Pipeline.metrics)
 

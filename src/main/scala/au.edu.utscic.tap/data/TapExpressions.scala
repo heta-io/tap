@@ -16,14 +16,10 @@
 
 package au.edu.utscic.tap.data
 
+import au.edu.utscic.tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
+
 /**
-  * Created by andrew@andrewresearch.net on 30/6/17.
+  * Created by andrew@andrewresearch.net on 16/10/17.
   */
 
-object StringTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
-}
+case class TapExpressions(affect: Vector[AffectExpression], epistemic: Vector[EpistemicExpression], modal: Vector[ModalExpression], sentIdx: Int)

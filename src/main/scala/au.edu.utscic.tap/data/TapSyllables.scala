@@ -17,6 +17,7 @@
 package au.edu.utscic.tap.data
 
 /**
-  * Created by andrew@andrewresearch.net on 29/8/17.
+  * Created by andrew@andrewresearch.net on 16/10/17.
   */
-case class TapToken(idx:Int, term:String, lemma:String, postag:String, parent:Int, child:Int, deptype:String)
+
+case class TapSyllables(sentIdx: Int, avgSyllables: Double, counts: Vector[Int])

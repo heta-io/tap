@@ -31,7 +31,8 @@ object QuerySchema {
   def createSchema:Schema[QueryActions,Unit] = {
 
     implicit val ResultType:InterfaceType[Unit,Result] = InterfaceType(
-      "Result", fields[Unit, Result](Field("timestamp", StringType, resolve = _.value.timestamp)))
+      "Result", fields[Unit, Result](Field("timestamp", StringType, resolve = _.value.timestamp))
+    )
     implicit val StringResultType:ObjectType[Unit,StringResult] = deriveObjectType[Unit,StringResult](Interfaces(ResultType))
     implicit val StringListResultType:ObjectType[Unit,StringListResult] = deriveObjectType[Unit,StringListResult](Interfaces(ResultType))
     implicit val TokenType:ObjectType[Unit,TapToken] = deriveObjectType[Unit,TapToken]()
@@ -42,6 +43,11 @@ object QuerySchema {
     implicit val VocabResultType:ObjectType[Unit,VocabResult] = deriveObjectType[Unit,VocabResult](Interfaces(ResultType))
     implicit val MetricsType:ObjectType[Unit,TapMetrics] = deriveObjectType[Unit,TapMetrics]()
     implicit val MetricsResultType:ObjectType[Unit,MetricsResult] = deriveObjectType[Unit,MetricsResult](Interfaces(ResultType))
+    implicit val TapExpressionType:ObjectType[Unit,TapExpression] = deriveObjectType[Unit,TapExpression]()
+    implicit val TapExpressionsType:ObjectType[Unit,TapExpressions] = deriveObjectType[Unit,TapExpressions]()
+    implicit val ExpressionsResultType:ObjectType[Unit,ExpressionsResult] = deriveObjectType[Unit,ExpressionsResult](Interfaces(ResultType))
+    implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
+    implicit val SyllablesResultType:ObjectType[Unit,SyllablesResult] = deriveObjectType[Unit,SyllablesResult](Interfaces(ResultType))
 
     val inputText:Argument[String] = Argument("text", StringType)
 
@@ -56,14 +62,16 @@ object QuerySchema {
         resolve = c => c.ctx.cleanMinimal(c arg inputText)),
       Field("cleanAscii",OptionType(StringResultType), description = Some("Returns ascii safe cleaned text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.cleanAscii(c arg inputText)),
-      Field("sentences",OptionType(SentencesResultType), description = Some("Returns sentences for text"), arguments = inputText :: Nil,
+      Field("annotations",OptionType(SentencesResultType), description = Some("Returns sentences for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.sentences(c arg inputText)),
       Field("vocabulary",OptionType(VocabResultType), description = Some("Returns vocabulary for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.vocabulary(c arg inputText)),
       Field("metrics",OptionType(MetricsResultType), description = Some("Returns metrics for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.metrics(c arg inputText)),
-      Field("expression",OptionType(StringResultType), description = Some("This is a stub for a feature not implemented"), arguments = inputText :: Nil,
+      Field("expressions",OptionType(ExpressionsResultType), description = Some("Returns expressions for text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.expressions(c arg inputText)),
+      Field("syllables",OptionType(SyllablesResultType), description = Some("Returns syllable counts for text"), arguments = inputText :: Nil,
+        resolve = c => c.ctx.syllables(c arg inputText)),
       Field("moves",OptionType(StringListResultType), description = Some("Returns a list of moves for the input text"), arguments = inputText :: Nil,
         resolve = c => c.ctx.moves(c arg inputText))
     ))
