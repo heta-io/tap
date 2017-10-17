@@ -29,7 +29,7 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-object Parsing {
+object Sentences {
 
   object Pipeline {
     val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
@@ -37,6 +37,7 @@ object Parsing {
     val metrics: Flow[String, TapMetrics, NotUsed] = makeDocument via tapSentences via tapMetrics
     val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
     val syllables: Flow[String,List[TapSyllables],NotUsed] = makeDocument via tapSentences via tapSyllables
+    val spelling: Flow[String,List[TapSpelling],NotUsed] = makeDocument via tapSentences via tapSpelling
   }
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String].map(str => Annotator.document(str))
@@ -82,6 +83,13 @@ object Parsing {
         val counts = sent.tokens.map( t => countSyllables(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / (sent.tokens.length).toDouble
         TapSyllables(sent.idx,avg,counts)
+      }
+    }
+
+  val tapSpelling: Flow[List[TapSentence],List[TapSpelling],NotUsed] =
+    Flow[List[TapSentence]].map { lst =>
+      lst.map { sent =>
+        TapSpelling(sent.idx,Spelling.check(sent.original))
       }
     }
 

@@ -1,3 +1,5 @@
+import scala.reflect.ClassTag
+
 /*
  * Copyright 2016-2017 original author or authors
  *
@@ -14,8 +16,6 @@
  * limitations under the License.
  */
 
-val test = Some("")
-val test2 = None
 
-test.nonEmpty
-test2.nonEmpty
+
+

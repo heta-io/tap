@@ -50,7 +50,7 @@ import play.api.Logger.logger
 
         TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,t.parseParentIndex,0,t.parseLabel.value.toString())
       }.toVector
-      TapSentence(tokens, s.start, s.end, s.length, idx)
+      TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
     }
   }
 

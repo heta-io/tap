@@ -33,6 +33,7 @@ val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 //Java library versions
 val openNlpVersion = "1.8.2"
+val langToolVersion = "3.9"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
@@ -49,7 +50,8 @@ val apiDependencies = Seq(
 
 val analyticsDependencies = Seq(
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
-  "org.apache.opennlp" % "opennlp-tools" % openNlpVersion
+  "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
+  "org.languagetool" % "language-en" % langToolVersion
 )
 
 val generalDependencies = Seq(

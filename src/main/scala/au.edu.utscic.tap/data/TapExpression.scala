@@ -20,4 +20,4 @@ package au.edu.utscic.tap.data
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
 
-case class TapExpression(text: String, startIdx: Int, endIdx: Int)
+case class TapExpression(text: String, startIdx: Int, endIdx: Int) extends TapAnalytics

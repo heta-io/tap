@@ -48,6 +48,8 @@ object Results {
 
   case class ExpressionsResult(analytics: List[TapExpressions]) extends Result
 
+  case class SpellingResult(analytics: List[TapSpelling]) extends Result
+
   @GraphQLName("syllables")
   @GraphQLDescription("Get syllable counts and averages.")
   case class SyllablesResult(analytics: List[TapSyllables]) extends Result
@@ -69,5 +71,7 @@ object Results {
     implicit val TapExpressionType:ObjectType[Unit,TapExpression] = deriveObjectType[Unit,TapExpression]()
     implicit val TapExpressionsType:ObjectType[Unit,TapExpressions] = deriveObjectType[Unit,TapExpressions]()
     implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
+    implicit val TapSpellingType:ObjectType[Unit,TapSpelling] = deriveObjectType[Unit,TapSpelling]()
+    implicit val TapSpellType:ObjectType[Unit,TapSpell] = deriveObjectType[Unit,TapSpell]()
   }
 }
