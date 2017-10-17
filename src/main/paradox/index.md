@@ -1,30 +1,11 @@
-@@@ index
+@@toc { depth=2 }
 
-* [Users](user.md)
-* [Developers](developer.md)
+@@@ index
+* [Overview](overview/index.md)
+* [Users](user/index.md)
+* [Developers](developer/index.md)
 
 @@@
-
-# TAP
-
-### Text Analytics Pipeline
-
-Some info about the text analytics pipeline
-
-### About this documentation
-
-How to navigate the docs
-
-### Quick Start
-
-How to get up and running with TAP
-
-### Contributing
-
-How to make a contribution to the development of TAP
-
-### License
-
 
 ---
 
