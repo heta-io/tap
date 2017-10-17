@@ -11,4 +11,4 @@ TAP is the server side code for a full stack: [AWA](http://awa.uts.edu.au), a we
 
 # Documentation
 
-See the current [docs](./docs/overview/index.html).
+See the current [docs](https://uts-cic.github.io/tap/).
