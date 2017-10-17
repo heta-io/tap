@@ -57,13 +57,15 @@
     "  }\n" +
     "}\n" +
     "\n" +
-    "query Sentences($input: String!) {\n" +
-    "  sentences(text:$input) {\n" +
+    "query Annotations($input: String!) {\n" +
+    "  annotations(text:$input) {\n" +
     "    analytics {\n" +
+    "      idx\n" +
     "      start\n" +
     "      end\n" +
     "      length\n" +
     "      tokens {\n" +
+    "        idx\n" +
     "        term\n" +
     "        lemma\n" +
     "        postag\n" +
@@ -103,9 +105,48 @@
     "    analytics\n" +
     "  }\n" +
     "}\n" +
+    "\n" +
+    "query Expressions($input:String!) {\n" +
+    "  expressions(text:$input) {\n" +
+    "    analytics {\n" +
+    "      sentIdx\n" +
+    "      affect{\n" +
+    "        text\n" +
+    "      }\n" +
+    "      epistemic {\n" +
+    "        text\n" +
+    "        startIdx\n" +
+    "        endIdx\n" +
+    "      }\n" +
+    "      modal {\n" +
+    "        text\n" +
+    "      }\n" +
+    "    }\n" +
+    "  }\n" +
+    "}\n" +
+    "\n" +
+    "query Expressions2($input2:String!) {\n" +
+    "  expressions(text:$input2) {\n" +
+    "    analytics {\n" +
+    "      sentIdx\n" +
+    "      affect{\n" +
+    "        text\n" +
+    "      }\n" +
+    "      epistemic {\n" +
+    "        text\n" +
+    "        startIdx\n" +
+    "        endIdx\n" +
+    "      }\n" +
+    "      modal {\n" +
+    "        text\n" +
+    "      }\n" +
+    "    }\n" +
+    "  }\n" +
+    "}" +
     "\n"
 
-  var exampleVariables = "{\"input\": \"I didn't take any time to review the subject outline nor did I log onto UTS Online to review any supporting information to provide context, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"}"
+  var exampleVariables = "{\"input\": \"I didn't take any time to review the subject outline nor did I log onto UTS Online to review any supporting information to provide context, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
+    "\"input2\": \"Although I wasn't certain, I did believe that I was doing the right thing. Next time I will be sure.\"}"
 
 
 
