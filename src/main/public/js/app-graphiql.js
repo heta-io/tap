@@ -143,6 +143,17 @@
     "    }\n" +
     "  }\n" +
     "}" +
+    "\n" +
+    "query Syllables($input:String!) {\n" +
+    "  syllables(text:$input) {\n" +
+    "    analytics {\n" +
+    "      sentIdx\n" +
+    "      avgSyllables\n" +
+    "      counts\n" +
+    "    }\n" +
+    "    timestamp\n" +
+    "  }\n" +
+    "}" +
     "\n"
 
   var exampleVariables = "{\"input\": \"I didn't take any time to review the subject outline nor did I log onto UTS Online to review any supporting information to provide context, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
