@@ -16,11 +16,8 @@
 
 package handlers
 
-import akka.NotUsed
-import akka.stream.scaladsl.Flow
-import au.edu.utscic.tap.data._
 import au.edu.utscic.tap.pipelines.materialize.TextPipeline
-import au.edu.utscic.tap.pipelines.{Cleaning, Parsing}
+import au.edu.utscic.tap.pipelines.{Cleaning, Sentences}
 import models.Results._
 
 import scala.concurrent.Future
@@ -31,59 +28,28 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 object TextAnalysisHandler {
 
-  type Pipe[A] = Flow[String,A,NotUsed]
-  type StringAnalyser = (String) => Future[StringResult]
-  type StringListAnalyser = (String) => Future[StringListResult]
-  type SentenceAnalyser = (String) => Future[SentencesResult]
-  type VocabAnalyser = (String) => Future[VocabResult]
-  type MetricsAnalyser = (String) => Future[MetricsResult]
-  type ExpressionsAnalyser = (String) => Future[ExpressionsResult]
-  type SyllablesAnalyser = (String) => Future[SyllablesResult]
+  def visible(text:String):Future[StringResult]       = TextPipeline(text,Cleaning.Pipeline.revealInvisible).run.map(StringResult(_))
+  def clean(text:String):Future[StringResult]         = TextPipeline(text,Cleaning.Pipeline.utfSimplify).run.map(StringResult(_))
+  def cleanPreserve(text:String):Future[StringResult] = TextPipeline(text,Cleaning.Pipeline.lengthPreserve).run.map(StringResult(_))
+  def cleanMinimal(text:String):Future[StringResult]  = TextPipeline(text,Cleaning.Pipeline.utfMinimal).run.map(StringResult(_))
+  def cleanAscii(text:String):Future[StringResult]    = TextPipeline(text,Cleaning.Pipeline.asciiOnly).run.map(StringResult(_))
 
-  type StrConverter = (Future[String]) => Future[StringResult]
-  type SentConverter = (Future[List[TapSentence]]) => Future[SentencesResult]
-  type VocabConverter = (Future[TapVocab]) => Future[VocabResult]
-  type MetricsConverter = (Future[TapMetrics]) => Future[MetricsResult]
-  type ExpressionsConverter = (Future[List[TapExpressions]]) => Future[ExpressionsResult]
-  type SyllablesConverter = (Future[List[TapSyllables]]) => Future[SyllablesResult]
+  def sentences(text:String):Future[SentencesResult]      = TextPipeline(text,Sentences.Pipeline.sentences).run.map(SentencesResult(_))
+  def expressions(text:String):Future[ExpressionsResult]  = TextPipeline(text,Sentences.Pipeline.expressions).run.map(ExpressionsResult(_))
+  def syllables(text:String):Future[SyllablesResult]      = TextPipeline(text,Sentences.Pipeline.syllables).run.map(SyllablesResult(_))
+  def spelling(text:String):Future[SpellingResult]        = TextPipeline(text,Sentences.Pipeline.spelling).run.map(SpellingResult(_))
 
-  private implicit val asStringResult:StrConverter = (a:Future[String]) => a.map( s => StringResult(s))
-  private implicit val asSentencesResult:SentConverter = (a:Future[List[TapSentence]]) => a.map(ts => SentencesResult(ts))
-  private implicit val asVocabResult:VocabConverter = (a:Future[TapVocab]) => a.map(v => VocabResult(v))
-  private implicit val asMetricsResult:MetricsConverter = (a:Future[TapMetrics]) => a.map(m => MetricsResult(m))
-  private implicit val asExpressionsResult:ExpressionsConverter = (a:Future[List[TapExpressions]]) => a.map(e => ExpressionsResult(e))
-  private implicit val asSyllablesResult:SyllablesConverter = (a:Future[List[TapSyllables]]) => a.map(s => SyllablesResult(s))
+  def vocabulary(text:String):Future[VocabResult]      = TextPipeline(text,Sentences.Pipeline.vocab).run.map(VocabResult(_))
+  def metrics(text:String):Future[MetricsResult]       = TextPipeline(text,Sentences.Pipeline.metrics).run.map(MetricsResult(_))
 
-  private def analyse[A](text:String,pipeline:Pipe[A]):Future[A] = TextPipeline(text,pipeline).run
 
-  val visible:StringAnalyser        = (text:String) => analyse[String](text,Cleaning.Pipeline.revealInvisible)
-  val clean:StringAnalyser          = (text:String) => analyse[String](text,Cleaning.Pipeline.utfSimplify)
-  val cleanPreserve:StringAnalyser  = (text:String) => analyse[String](text,Cleaning.Pipeline.lengthPreserve)
-  val cleanMinimal:StringAnalyser   = (text:String) => analyse[String](text,Cleaning.Pipeline.utfMinimal)
-  val cleanAscii:StringAnalyser     = (text:String) => analyse[String](text,Cleaning.Pipeline.asciiOnly)
+  //TODO To be implemented
+  def shape(text:String):Future[StringResult]   = dummyResult(text)
 
-  val sentences:SentenceAnalyser    = (text:String) => analyse[List[TapSentence]](text,Parsing.Pipeline.sentences)
-  val vocabulary:VocabAnalyser      = (text:String) => analyse[TapVocab](text,Parsing.Pipeline.vocab)
-  val metrics:MetricsAnalyser       = (text:String) => analyse[TapMetrics](text,Parsing.Pipeline.metrics)
 
-  val expressions:ExpressionsAnalyser    = (text:String) => analyse[List[TapExpressions]](text,Parsing.Pipeline.expressions)
-  val syllables:SyllablesAnalyser   = (text:String) => analyse[List[TapSyllables]](text,Parsing.Pipeline.syllables)
-
-  val spelling:StringAnalyser       = (text:String) => dummyResult(text)
-  val shape:StringAnalyser          = (text:String) => dummyResult(text)
-
-  def dummyResult(text:String):Future[String] = Future {
-    "This features is not implemented yet"
+  def dummyResult(text:String):Future[StringResult] = Future {
+    StringResult("This features is not implemented yet")
   }
-
-  /*
-
-  val spelling:SpellingAnalyser     = (text:String) => analyse[Spelling](text,Spelling.Pipeline.metrics)
-
-  val shape:ShapeAnalyser           = (text:String) => analyse[Shape](text,TextShape.Pipeline.shape)
-   */
-
-
 
 
 }

@@ -64,6 +64,9 @@ object GraphqlSchema {
     Field("syllables", deriveObjectType[Unit,SyllablesResult](Interfaces[Unit,SyllablesResult](ResultType)),
       Some("Counts syllables in words and calculates averages for sentences"),
       arguments = inputText :: Nil, resolve = c => c.ctx.syllables(c.arg(inputText))),
+    Field("spelling", deriveObjectType[Unit,SpellingResult](Interfaces[Unit,SpellingResult](ResultType)),
+      Some("Returns spelling errors and suggestions for each sentence"),
+      arguments = inputText :: Nil, resolve = c => c.ctx.spelling(c.arg(inputText))),
     Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
       description = Some("Returns a list of moves for the input text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.moves(c arg inputText))
@@ -82,9 +85,10 @@ object GraphqlSchema {
     def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
     def syllables(text:String):Future[SyllablesResult]  = TextAnalysisHandler.syllables(text)
     def moves(text:String):Future[StringListResult]     = ExternalAnalysisHandler.analyseWithAthanor(text)
+    def spelling(text:String):Future[SpellingResult]      = TextAnalysisHandler.spelling(text)
 
     //TODO Still to Implement
-    def spelling(text:String):Future[StringResult] = TextAnalysisHandler.spelling(text)
+
     def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
   }
 

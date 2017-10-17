@@ -17,6 +17,8 @@
 package au.edu.utscic.tap.data
 
 /**
-  * Created by andrew@andrewresearch.net on 6/9/17.
+  * Created by andrew@andrewresearch.net on 17/10/17.
   */
-case class TapSentence(original:String, tokens: Vector[TapToken], start: Int, end: Int, length: Int, idx: Int)
+trait TapAnalytics {
+
+}
