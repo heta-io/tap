@@ -21,7 +21,7 @@ import akka.stream.scaladsl.Flow
 import au.edu.utscic.tap.data._
 import au.edu.utscic.tap.pipelines.materialize.TextPipeline
 import au.edu.utscic.tap.pipelines.{Cleaning, Parsing}
-import models.QueryResults._
+import models.Results._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

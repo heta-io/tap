@@ -20,7 +20,7 @@ import java.io.File
 
 import au.edu.utscic.tap.pipelines.materialize.PipelineContext.{executor, materializer}
 import com.typesafe.config.ConfigFactory
-import models.QueryResults.StringListResult
+import models.Results.StringListResult
 import play.api.{Configuration, Environment, Mode}
 import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfig, AhcWSClientConfigFactory}
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
