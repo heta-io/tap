@@ -91,10 +91,20 @@
     "  }\n" +
     "}\n" +
     "\n" +
-    "query Metrics($input: String!) {\n" +
-    "  metrics(text:$input) {\n" +
+    "query Metrics($input2: String!) {\n" +
+    "  metrics(text:$input2) {\n" +
     "    analytics {\n" +
-    "      wordCount\n" +
+    "      sentences\n" +
+    "      tokens\n" +
+    "      words\n" +
+    "      characters\n" +
+    "      punctuation\n" +
+    "      whitespace\n" +
+    "      sentWordCounts\n" +
+    "      averageSentWordCount\n" +
+    "      wordLengths\n" +
+    "      averageWordLength\n" +
+    "      averageSentWordLength\n" +
     "    }\n" +
     "    timestamp\n" +
     "  }\n" +
@@ -142,8 +152,7 @@
     "      }\n" +
     "    }\n" +
     "  }\n" +
-    "}" +
-    "\n" +
+    "}\n" +
     "query Syllables($input:String!) {\n" +
     "  syllables(text:$input) {\n" +
     "    analytics {\n" +
@@ -152,6 +161,22 @@
     "      counts\n" +
     "    }\n" +
     "    timestamp\n" +
+    "  }\n" +
+    "}\n" +
+    "query Spelling($input2:String!) {\n" +
+    "  spelling(text:$input2) {\n" +
+    "    timestamp\n" +
+    "    message\n" +
+    "    querytime\n" +
+    "    analytics {\n" +
+    "      sentIdx\n" +
+    "      spelling {\n" +
+    "        message\n" +
+    "        suggestions\n" +
+    "        start\n" +
+    "        end\n" +
+    "      }\n" +
+    "    }\n" +
     "  }\n" +
     "}" +
     "\n"

@@ -62,8 +62,30 @@ object Sentences {
   val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] =
     Flow[List[TapSentence]]
       .map { lst =>
-        lst.map(_.length)
-      }.map(lst => TapMetrics(lst.sum))
+        lst.map { s =>
+          val tokens:Int = s.tokens.length
+          val characters:Int = s.original.length
+          val punctuation:Int = s.tokens.count(_.isPunctuation)
+          val words:Int = (tokens - punctuation)
+          val wordLengths:Vector[Int] = s.tokens.filterNot(_.isPunctuation).map(_.term.length)
+          val totalWordChars = wordLengths.sum
+          val whitespace:Int = s.original.count(_.toString.matches("\\s"))
+          val averageWordLength:Double = wordLengths.sum / words.toDouble
+          (tokens,words,characters,punctuation,whitespace,wordLengths,averageWordLength)
+        }
+      }
+      .map { res =>
+        val sentCount:Int = res.length
+        val sentWordCounts = res.map(_._2).toVector
+        val wordCount = sentWordCounts.sum
+        val averageSentWordCount = wordCount / sentCount.toDouble
+        val wordLengths = res.map(_._6).toVector
+        val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
+        val averageSentWordLength = res.map(_._7).toVector
+
+        TapMetrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
+          sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
+      }
 
   val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] =
     Flow[List[TapSentence]].mapAsync[List[TapExpressions]](3) { lst =>

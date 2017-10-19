@@ -19,4 +19,16 @@ package au.edu.utscic.tap.data
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-case class TapMetrics(wordCount:Int)
+case class TapMetrics(
+                       sentences:Int,
+                       tokens:Int,
+                       words:Int,
+                       characters:Int,
+                       punctuation:Int,
+                       whitespace:Int,
+                       sentWordCounts:Vector[Int],
+                       averageSentWordCount:Double,
+                       wordLengths:Vector[Vector[Int]],
+                       averageWordLength: Double,
+                       averageSentWordLength: Vector[Double]
+                       )
