@@ -20,7 +20,7 @@ import java.io.File
 
 import au.edu.utscic.tap.pipelines.materialize.PipelineContext.{executor, materializer}
 import com.typesafe.config.ConfigFactory
-import models.Results.StringListResult
+import models.Results.{StringListResult, StringResult}
 import play.api.{Configuration, Environment, Mode}
 import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfig, AhcWSClientConfigFactory}
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
@@ -71,15 +71,13 @@ object ExternalAnalysisHandler {
     val result:Future[List[List[String]]] = futureResponse.map { response =>
       response.json.as[AthanorMsg].results
     }
-
-
-    //result.foreach(s => logger.warn(s"Response: $s"))
-
-
-    //logger.warn(s"analyseWithAthanor not implemented. Returning dummy result. Text received:\n $text")
-    //val dummyResult:List[List[String]] = List(List("Moves","Not","Implemented"),List("Sentence","Two"))
-    //StringListResult(dummyResult)
+    
     result.map(s => StringListResult(s))
   }
+
+//  def analyseWithXip(text:String):Future[StringResult] = Future {
+//
+//    StringResult("")
+//  }
 
 }

@@ -3,7 +3,7 @@ package au.edu.utscic.tap.services.analytics.analysers
 /**
   * Created by andrew@andrewresearch.net on 9/1/17.
   */
-class TextshapeAnalyser extends Analyser {
+//class TextshapeAnalyser extends Analyser {
 
 //  import context._
 //
@@ -16,6 +16,6 @@ class TextshapeAnalyser extends Analyser {
 //    Future(TextShape(cs,ds,densities))
 //  }
 
-}
+//}
 
-case class TextShape(numChunks:Int,numDensities:Int,densities:List[Double])
+//case class TextShape(numChunks:Int,numDensities:Int,densities:List[Double])

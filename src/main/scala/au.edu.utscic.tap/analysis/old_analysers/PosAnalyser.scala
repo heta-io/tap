@@ -1,28 +1,5 @@
 package au.edu.utscic.tap.services.analytics.analysers
 
-/**
-  * Created by andrew@andrewresearch.net on 13/07/2016.
-  */
-
-import akka.actor.{Actor, ActorLogging}
-
-class PosAnalyser extends Actor with ActorLogging {
-
-  override def preStart() = {
-    log.debug("Starting PosAnalyser")
-    //val startup = Annotating("pre-load models")
-  }
-  override def preRestart(reason: Throwable, message: Option[Any]) {
-    log.error(reason, "Restarting PosAnalyser due to [{}] when processing [{}]",
-      reason.getMessage, message.getOrElse(""))
-  }
-
-  def receive = {
-//    case text:String => sender ! posStats(text)
-//    case request:ParagraphRequest => sender ! paragraphPosStats(request)
-//    case request:DocumentRequest => sender ! documentPosStats(request)
-    case _ => sender ! "Invalid input"
-  }
 
   /*
   def posStats(text:String):Future[AllPosStats] = {
@@ -53,5 +30,4 @@ class PosAnalyser extends Actor with ActorLogging {
      DocumentPosStats(0,0,Map(),namedEntities)
   }
 */
-}
 
