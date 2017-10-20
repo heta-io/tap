@@ -16,6 +16,8 @@
 
 package models
 
+import javax.inject.Inject
+
 import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
 
@@ -25,22 +27,22 @@ import scala.concurrent.Future
   * Created by andrew@andrewresearch.net on 20/10/17.
   */
 
-class GraphqlActions {
+class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler) {
 
-  def visible(text:String):Future[StringResult]       = TextAnalysisHandler.visible(text)
-  def clean(text:String):Future[StringResult]         = TextAnalysisHandler.clean(text)
-  def cleanPreserve(text:String):Future[StringResult] = TextAnalysisHandler.cleanPreserve(text)
-  def cleanMinimal(text:String):Future[StringResult]  = TextAnalysisHandler.cleanMinimal(text)
-  def cleanAscii(text:String):Future[StringResult]    = TextAnalysisHandler.cleanAscii(text)
-  def sentences(text:String):Future[SentencesResult]  = TextAnalysisHandler.sentences(text)
-  def vocabulary(text:String):Future[VocabResult]     = TextAnalysisHandler.vocabulary(text)
-  def metrics(text:String):Future[MetricsResult]      = TextAnalysisHandler.metrics(text)
-  def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
-  def syllables(text:String):Future[SyllablesResult]  = TextAnalysisHandler.syllables(text)
-  def moves(text:String):Future[StringListResult]     = ExternalAnalysisHandler.analyseWithAthanor(text)
-  def spelling(text:String):Future[SpellingResult]      = TextAnalysisHandler.spelling(text)
+  def visible(text:String):Future[StringResult]       = textAnalysisHandler.visible(text)
+  def clean(text:String):Future[StringResult]         = textAnalysisHandler.clean(text)
+  def cleanPreserve(text:String):Future[StringResult] = textAnalysisHandler.cleanPreserve(text)
+  def cleanMinimal(text:String):Future[StringResult]  = textAnalysisHandler.cleanMinimal(text)
+  def cleanAscii(text:String):Future[StringResult]    = textAnalysisHandler.cleanAscii(text)
+  def sentences(text:String):Future[SentencesResult]  = textAnalysisHandler.sentences(text)
+  def vocabulary(text:String):Future[VocabResult]     = textAnalysisHandler.vocabulary(text)
+  def metrics(text:String):Future[MetricsResult]      = textAnalysisHandler.metrics(text)
+  def expressions(text:String):Future[ExpressionsResult] = textAnalysisHandler.expressions(text)
+  def syllables(text:String):Future[SyllablesResult]  = textAnalysisHandler.syllables(text)
+  def moves(text:String):Future[StringListResult]     = externalAnalysisHandler.analyseWithAthanor(text)
+  def spelling(text:String):Future[SpellingResult]      = textAnalysisHandler.spelling(text)
 
   //TODO Still to Implement
 
-  def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
+  def shape(text:String):Future[StringResult] = textAnalysisHandler.shape(text)
 }

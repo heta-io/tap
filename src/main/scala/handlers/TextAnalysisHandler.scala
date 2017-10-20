@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
-object TextAnalysisHandler {
+class TextAnalysisHandler {
 
   def visible(text:String):Future[StringResult]       = TextPipeline(text,Cleaning.Pipeline.revealInvisible).run.map(StringResult(_))
   def clean(text:String):Future[StringResult]         = TextPipeline(text,Cleaning.Pipeline.utfSimplify).run.map(StringResult(_))
