@@ -29,11 +29,11 @@ import scala.concurrent.Future
   * Created by andrew@andrewresearch.net on 31/8/17.
   */
 
-object GraphqlSchema {
+class GraphqlSchema {
 
   val inputText:Argument[String] = Argument("text", StringType)
 
-  val allFields = fields[Actions,Unit](
+  val allFields = fields[GraphqlActions,Unit](
     Field("visible", StringResultType,
       Some("Returns the text showing nonstandard characters"),
       arguments = inputText :: Nil, resolve = c => c.ctx.visible(c arg inputText)),
@@ -72,27 +72,7 @@ object GraphqlSchema {
       arguments = inputText :: Nil, resolve = c => c.ctx.moves(c arg inputText))
   )
 
-  class Actions {
+  def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",allFields))
 
-    def visible(text:String):Future[StringResult]       = TextAnalysisHandler.visible(text)
-    def clean(text:String):Future[StringResult]         = TextAnalysisHandler.clean(text)
-    def cleanPreserve(text:String):Future[StringResult] = TextAnalysisHandler.cleanPreserve(text)
-    def cleanMinimal(text:String):Future[StringResult]  = TextAnalysisHandler.cleanMinimal(text)
-    def cleanAscii(text:String):Future[StringResult]    = TextAnalysisHandler.cleanAscii(text)
-    def sentences(text:String):Future[SentencesResult]  = TextAnalysisHandler.sentences(text)
-    def vocabulary(text:String):Future[VocabResult]     = TextAnalysisHandler.vocabulary(text)
-    def metrics(text:String):Future[MetricsResult]      = TextAnalysisHandler.metrics(text)
-    def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
-    def syllables(text:String):Future[SyllablesResult]  = TextAnalysisHandler.syllables(text)
-    def moves(text:String):Future[StringListResult]     = ExternalAnalysisHandler.analyseWithAthanor(text)
-    def spelling(text:String):Future[SpellingResult]      = TextAnalysisHandler.spelling(text)
-
-    //TODO Still to Implement
-
-    def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
-  }
-
-  def create:Schema[Actions,Unit] = Schema(ObjectType("Query",allFields))
-  def actions:Actions = new Actions
 
 }

@@ -1,0 +1,46 @@
+/*
+ * Copyright 2016-2017 original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package models
+
+import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
+import models.Results._
+
+import scala.concurrent.Future
+
+/**
+  * Created by andrew@andrewresearch.net on 20/10/17.
+  */
+
+class GraphqlActions {
+
+  def visible(text:String):Future[StringResult]       = TextAnalysisHandler.visible(text)
+  def clean(text:String):Future[StringResult]         = TextAnalysisHandler.clean(text)
+  def cleanPreserve(text:String):Future[StringResult] = TextAnalysisHandler.cleanPreserve(text)
+  def cleanMinimal(text:String):Future[StringResult]  = TextAnalysisHandler.cleanMinimal(text)
+  def cleanAscii(text:String):Future[StringResult]    = TextAnalysisHandler.cleanAscii(text)
+  def sentences(text:String):Future[SentencesResult]  = TextAnalysisHandler.sentences(text)
+  def vocabulary(text:String):Future[VocabResult]     = TextAnalysisHandler.vocabulary(text)
+  def metrics(text:String):Future[MetricsResult]      = TextAnalysisHandler.metrics(text)
+  def expressions(text:String):Future[ExpressionsResult] = TextAnalysisHandler.expressions(text)
+  def syllables(text:String):Future[SyllablesResult]  = TextAnalysisHandler.syllables(text)
+  def moves(text:String):Future[StringListResult]     = ExternalAnalysisHandler.analyseWithAthanor(text)
+  def spelling(text:String):Future[SpellingResult]      = TextAnalysisHandler.spelling(text)
+
+  //TODO Still to Implement
+
+  def shape(text:String):Future[StringResult] = TextAnalysisHandler.shape(text)
+}

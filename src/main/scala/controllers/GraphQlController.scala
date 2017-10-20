@@ -18,8 +18,7 @@ package controllers
 
 import javax.inject.Inject
 
-
-import models.GraphqlSchema
+import models.{GraphqlActions, GraphqlSchema}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, InjectedController, Result}
 import sangria.ast.Document
@@ -36,7 +35,9 @@ import scala.util.{Failure, Success}
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
 
-class GraphQlController @Inject() (assets: AssetsFinder) extends InjectedController {
+class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchema, actions: GraphqlActions) extends InjectedController {
+
+  val schema:Schema[GraphqlActions,Unit] = gqlSchema.create
 
   def graphiql:Action[AnyContent] = Action {
     Ok(views.html.graphiql(assets))
@@ -49,8 +50,8 @@ class GraphQlController @Inject() (assets: AssetsFinder) extends InjectedControl
     process(query,operation,variables)
   }
 
-  lazy val schema:Schema[GraphqlSchema.Actions,Unit] = GraphqlSchema.create
-  lazy val actions:GraphqlSchema.Actions = GraphqlSchema.actions
+  //lazy val schema:Schema[GraphqlSchema.Actions,Unit] = GraphqlSchema.create
+  //lazy val actions:GraphqlSchema.Actions = GraphqlSchema.actions
 
   def process(query:String,name:Option[String],variables:JsObject):Future[Result] = QueryParser.parse(query) match {
     case Success(queryAst) => executeGraphQLQuery(queryAst, name, variables)
