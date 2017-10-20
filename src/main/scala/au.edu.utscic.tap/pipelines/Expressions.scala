@@ -21,7 +21,6 @@ import akka.stream.scaladsl.Flow
 import au.edu.utscic.tap.analysis.Lexicons
 import au.edu.utscic.tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
 import au.edu.utscic.tap.data._
-import au.edu.utscic.tap.pipelines.Sentences.makeDocument
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

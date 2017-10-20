@@ -17,6 +17,7 @@
 package handlers
 
 import java.io.File
+import javax.inject.Inject
 
 import au.edu.utscic.tap.pipelines.materialize.PipelineContext.{executor, materializer}
 import com.typesafe.config.ConfigFactory
@@ -30,17 +31,17 @@ import scala.concurrent.duration.DurationInt
 /**
   * Created by andrew@andrewresearch.net on 19/9/17.
   */
-object ExternalAnalysisHandler {
+class ExternalAnalysisHandler @Inject() (wsClient: WSClient) {
 
-  val configuration: Configuration = Configuration.reference ++ Configuration(ConfigFactory.parseString(
-    """
-      |ws.followRedirects = true
-    """.stripMargin))
-
-  // If running in Play, environment should be injected
-  val environment = Environment(new File("."), this.getClass.getClassLoader, Mode.Prod)
-  val wsConfig: AhcWSClientConfig = AhcWSClientConfigFactory.forConfig(configuration.underlying, environment.classLoader)
-  val wsClient: WSClient = AhcWSClient(wsConfig)
+//  val configuration: Configuration = Configuration.reference ++ Configuration(ConfigFactory.parseString(
+//    """
+//      |ws.followRedirects = true
+//    """.stripMargin))
+//
+//  // If running in Play, environment should be injected
+//  val environment = Environment(new File("."), this.getClass.getClassLoader, Mode.Prod)
+//  val wsConfig: AhcWSClientConfig = AhcWSClientConfigFactory.forConfig(configuration.underlying, environment.classLoader)
+//  val wsClient: WSClient = AhcWSClient(wsConfig)
 
   def analyseWithAthanor(text:String):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")

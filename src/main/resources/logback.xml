@@ -1,53 +1,10 @@
 <!--
-  ~ Copyright 2016-2017 original author or authors
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ Copyright (C) 2009-2017 Lightbend Inc. <https://www.lightbend.com>
   -->
-
-<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
+<!-- The default logback configuration that Play uses in dev mode if no other configuration is provided -->
 <configuration>
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
-
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/application.log</file>
-    <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-    </encoder>
-  </appender>
-
-  <appender name="JSON" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/application.json</file>
-    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-      <providers>
-        <timestamp/>
-        <logLevel/>
-        <loggerName/>
-        <threadName/>
-        <message/>
-        <logstashMarkers/>
-        <arguments/>
-        <stackTrace/>
-      </providers>
-    </encoder>
-  </appender>
-
-  <appender name="METRICS" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/metrics.log</file>
-    <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-    </encoder>
-  </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -55,27 +12,16 @@
     </encoder>
   </appender>
 
-  <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="FILE" />
-  </appender>
-
-  <appender name="ASYNCJSON" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="JSON" />
-  </appender>
-
-  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="STDOUT" />
-  </appender>
-
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
-  <logger name="v1.post" level="TRACE" />
-  <logger name="play.filters.csrf" value="TRACE"/>
+
+  <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
+  <!-- https://hibernate.atlassian.net/browse/HV-1323 -->
+  <logger name="org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator" level="ERROR" />
 
   <root level="WARN">
-    <appender-ref ref="ASYNCFILE" />
-    <appender-ref ref="ASYNCJSON" />
-    <appender-ref ref="ASYNCSTDOUT" />
+    <appender-ref ref="STDOUT" />
   </root>
 
 </configuration>
+

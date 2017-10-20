@@ -25,7 +25,7 @@ import akka.stream.scaladsl.Flow
   *      Nested object holds pipelines that take a
   *      stream of Char and produce a string stream
   */
-object Cleaning  {
+class Cleaning  {
 
   /****************************************
     *  Pipeline

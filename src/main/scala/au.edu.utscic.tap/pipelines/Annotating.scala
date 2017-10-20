@@ -29,7 +29,7 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-object Sentences {
+class Annotating {
 
   object Pipeline {
     val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
