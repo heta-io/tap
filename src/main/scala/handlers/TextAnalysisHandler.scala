@@ -16,8 +16,10 @@
 
 package handlers
 
+import javax.inject.Inject
+
 import au.edu.utscic.tap.pipelines.materialize.TextPipeline
-import au.edu.utscic.tap.pipelines.{Cleaning, Sentences}
+import au.edu.utscic.tap.pipelines.{Cleaning, Annotating}
 import models.Results._
 
 import scala.concurrent.Future
@@ -26,21 +28,22 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
-class TextAnalysisHandler {
+class TextAnalysisHandler @Inject() (cleaning: Cleaning, annotating: Annotating) {
 
-  def visible(text:String):Future[StringResult]       = TextPipeline(text,Cleaning.Pipeline.revealInvisible).run.map(StringResult(_))
-  def clean(text:String):Future[StringResult]         = TextPipeline(text,Cleaning.Pipeline.utfSimplify).run.map(StringResult(_))
-  def cleanPreserve(text:String):Future[StringResult] = TextPipeline(text,Cleaning.Pipeline.lengthPreserve).run.map(StringResult(_))
-  def cleanMinimal(text:String):Future[StringResult]  = TextPipeline(text,Cleaning.Pipeline.utfMinimal).run.map(StringResult(_))
-  def cleanAscii(text:String):Future[StringResult]    = TextPipeline(text,Cleaning.Pipeline.asciiOnly).run.map(StringResult(_))
+  /* Cleaning Pipeline */
+  def visible(text:String):Future[StringResult]       = TextPipeline(text,cleaning.Pipeline.revealInvisible).run.map(StringResult(_))
+  def clean(text:String):Future[StringResult]         = TextPipeline(text,cleaning.Pipeline.utfSimplify).run.map(StringResult(_))
+  def cleanPreserve(text:String):Future[StringResult] = TextPipeline(text,cleaning.Pipeline.lengthPreserve).run.map(StringResult(_))
+  def cleanMinimal(text:String):Future[StringResult]  = TextPipeline(text,cleaning.Pipeline.utfMinimal).run.map(StringResult(_))
+  def cleanAscii(text:String):Future[StringResult]    = TextPipeline(text,cleaning.Pipeline.asciiOnly).run.map(StringResult(_))
 
-  def sentences(text:String):Future[SentencesResult]      = TextPipeline(text,Sentences.Pipeline.sentences).run.map(SentencesResult(_))
-  def expressions(text:String):Future[ExpressionsResult]  = TextPipeline(text,Sentences.Pipeline.expressions).run.map(ExpressionsResult(_))
-  def syllables(text:String):Future[SyllablesResult]      = TextPipeline(text,Sentences.Pipeline.syllables).run.map(SyllablesResult(_))
-  def spelling(text:String):Future[SpellingResult]        = TextPipeline(text,Sentences.Pipeline.spelling).run.map(SpellingResult(_))
-
-  def vocabulary(text:String):Future[VocabResult]      = TextPipeline(text,Sentences.Pipeline.vocab).run.map(VocabResult(_))
-  def metrics(text:String):Future[MetricsResult]       = TextPipeline(text,Sentences.Pipeline.metrics).run.map(MetricsResult(_))
+  /* Annotating Pipeline */
+  def sentences(text:String):Future[SentencesResult]      = TextPipeline(text,annotating.Pipeline.sentences).run.map(SentencesResult(_))
+  def expressions(text:String):Future[ExpressionsResult]  = TextPipeline(text,annotating.Pipeline.expressions).run.map(ExpressionsResult(_))
+  def syllables(text:String):Future[SyllablesResult]      = TextPipeline(text,annotating.Pipeline.syllables).run.map(SyllablesResult(_))
+  def spelling(text:String):Future[SpellingResult]        = TextPipeline(text,annotating.Pipeline.spelling).run.map(SpellingResult(_))
+  def vocabulary(text:String):Future[VocabResult]         = TextPipeline(text,annotating.Pipeline.vocab).run.map(VocabResult(_))
+  def metrics(text:String):Future[MetricsResult]          = TextPipeline(text,annotating.Pipeline.metrics).run.map(MetricsResult(_))
 
 
   //TODO To be implemented
