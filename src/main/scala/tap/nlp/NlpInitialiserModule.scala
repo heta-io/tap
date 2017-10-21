@@ -16,7 +16,23 @@
 
 package tap.nlp
 
+import com.google.inject.AbstractModule
+import play.api.Logger
+import play.api.libs.concurrent.AkkaGuiceSupport
+import tap.nlp.factorie.{FactorieAnnotatorActor, LanguageToolActor}
+
+
 /**
-  * Created by andrew@andrewresearch.net on 19/5/17.
+  * Created by andrew@andrewresearch.net on 21/10/17.
   */
-case class OldNlpSentence(text:String, words:List[String], lemmas:List[String], posTags:List[String])
+
+class NlpInitialiserModule extends AbstractModule with AkkaGuiceSupport {
+
+  def configure():Unit = {
+    Logger.info("Binding FactorieAnnotatorActor")
+    bindActor[FactorieAnnotatorActor]("factorie-annotator")
+    Logger.info("Binding LanguageToolActor")
+    bindActor[LanguageToolActor]("languagetool")
+  }
+
+}

@@ -20,8 +20,8 @@ import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Framing, Source}
 import akka.util.ByteString
 import tap.data.CustomTypes.{DocumentStr, SectionStr}
-import tap.nlp.{NlpBuilders, NlpDocument, OldNlpSentence}
 import tap.data.{OldTapDocument, OldTapSection, OldTapSentence, OldTapTags}
+import tap.nlp.old.{NlpBuilders, NlpDocument, OldNlpSentence}
 
 /**
   * Created by andrew@andrewresearch.net on 24/2/17.
@@ -38,7 +38,7 @@ object Parsing_OpenNLP {
 
   }
 
-  import tap.nlp.openNlp.OpenNlpImplicits._
+  import tap.nlp.old.openNlp.OpenNlpImplicits._
 
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tap.nlp.openNlp
+package tap.nlp.old.openNlp
 
 import opennlp.tools.lemmatizer.LemmatizerModel
 import opennlp.tools.parser.ParserModel

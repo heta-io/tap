@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package tap.nlp
+package tap.nlp.old.openNlp
+
+import tap.nlp.old.{DocumentConverter, NlpDocument, OldNlpSentence, SentenceConverter}
+
 
 /**
   * Created by andrew@andrewresearch.net on 19/5/17.
   */
-object NlpBuilders {
-  def document[T](text: String)(implicit toDoc: DocumentConverter[T]): NlpDocument = {
-    toDoc.fromText(text)
+object OpenNlpImplicits {
+  implicit object OpenNlpToDocument extends DocumentConverter[NlpDocument] {
+    def fromText(text:String):NlpDocument = Processors.textToDoc(text)
   }
-  def sentence[T](text: String)(implicit toSentence: SentenceConverter[T]): OldNlpSentence = {
-    toSentence.fromText(text)
+  implicit object OpenNlpToSentence extends SentenceConverter[OldNlpSentence] {
+    def fromText(text:String) = Processors.textToSentence(text)
   }
 }

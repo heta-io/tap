@@ -1,37 +1,21 @@
+/*
+ * Copyright 2016-2017 original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tap.services.analytics.aggregators
 
-import akka.actor.{Actor, ActorLogging}
-import akka.pattern.ask
-import akka.util.Timeout
-import tap.data._
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
-
-
-class ComplexityAggregator extends Actor with ActorLogging {
-
-  implicit val executor = context.system.dispatcher
-  implicit val timeout = Timeout (30 seconds)
-//  val metricsAnalyser = context.actorSelection("/user/analyticsService/metricsAnalyser")
-//  val vocabAnalyser = context.actorSelection("/user/analyticsService/vocabAnalyser")
-//  val syllableAnalyser = context.actorSelection("/user/analyticsService/syllableAnalyser")
-//  val posAnalyser = context.actorSelection("/user/analyticsService/posAnalyser")
-//  val complexityAnalyser = context.actorSelection("/user/analyticsService/complexityAnalyser")
-
-  override def preStart() = {
-    log.debug("Starting Aggregator")
-  }
-  override def preRestart(reason: Throwable, message: Option[Any]) {
-    log.error(reason, "Restarting Aggregator due to [{}] when processing [{}]",
-      reason.getMessage, message.getOrElse(""))
-  }
-
-  def receive = {
-//    case text:String => sender ! aggregate(text)
-//    case inputData:InputData => sender ! aggregate(inputData)
-    case _ => sender ! "Invalid input"
-  }
 /*
   def aggregate(text:String):Future[AllComplexity] = aggregate(InputData("","",text.split("\n").toList))
 
@@ -66,5 +50,3 @@ class ComplexityAggregator extends Actor with ActorLogging {
     GenericComplexity(vocabToDocRatio,avgSentLength,avgWordLength,avgSyllables)
   }
   */
-
-}

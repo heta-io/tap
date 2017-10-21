@@ -16,20 +16,45 @@
 
 package tap.pipelines
 
+import javax.inject.{Inject, Named}
+
 import akka.NotUsed
-import akka.stream.FlowShape
-import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Source}
+import akka.actor.ActorRef
+import akka.pattern.ask
+import akka.stream.scaladsl.Flow
+import akka.util.Timeout
+import cc.factorie.app.nlp.{Document, Section}
+import play.api.Logger
+import tap.analysis.Syllable
 import tap.data._
-import tap.nlp.factorie.Annotator
-import cc.factorie.app.nlp.Document
+import tap.nlp.factorie.FactorieAnnotatorActor.{INIT, MakeDocument}
+import tap.nlp.factorie.LanguageToolActor.CheckSpelling
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-class Annotating {
+class Annotating @Inject()(
+                            @Named("factorie-annotator") factorieAnnotator: ActorRef,
+                            @Named("languagetool") languageTool: ActorRef
+                          ) {
+
+  implicit val timeout: Timeout = 30.seconds
+  val annotatorInitialised:Future[Boolean]  = ask(factorieAnnotator,INIT).mapTo[Boolean]
+  val languageToolInitialised:Future[Boolean] = ask(languageTool,INIT).mapTo[Boolean]
+
+  annotatorInitialised.onComplete{
+    case Success(result) => Logger.info(s"FactorieAnnotator initialised successfully: $result")
+    case Failure(e) => Logger.error(s"FactorieAnnotator failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
+  }
+  languageToolInitialised.onComplete{
+    case Success(result) => Logger.info(s"LanguageTool initialised successfully: $result")
+    case Failure(e) => Logger.error(s"LanguageTool failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
+  }
 
   object Pipeline {
     val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
@@ -40,15 +65,29 @@ class Annotating {
     val spelling: Flow[String,List[TapSpelling],NotUsed] = makeDocument via tapSentences via tapSpelling
   }
 
-  val makeDocument: Flow[String, Document, NotUsed] = Flow[String].map(str => Annotator.document(str))
+  val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
+    .mapAsync[Document](2) { text =>
+      ask(factorieAnnotator,MakeDocument(text)).mapTo[Document]
+    }
 
-  val tapSentences: Flow[Document, List[TapSentence], NotUsed] =
-    Flow[Document]
-      .map(doc => Annotator.sentences(doc))
-      .map(sentList => Annotator.tapSentences(sentList))
+  val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]
+    .map(_.sections.toList)
 
-  val tapVocab: Flow[List[TapSentence], TapVocab, NotUsed] =
-    Flow[List[TapSentence]]
+  val tapSentences: Flow[Document, List[TapSentence], NotUsed] = Flow[Document]
+      .map(doc => doc.sentences.toList)
+      .map { sentList =>
+        sentList.zipWithIndex.map { case(s,idx) =>
+          val tokens = s.tokens.toList.map { t =>
+            TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
+              t.parseParentIndex,0,t.parseLabel.value.toString(),t.isPunctuation)
+          }.toVector
+          TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
+        }
+      }
+
+
+
+  val tapVocab: Flow[List[TapSentence], TapVocab, NotUsed] = Flow[List[TapSentence]]
       .map { lst =>
         lst.flatMap(_.tokens)
           .map(_.term.toLowerCase)
@@ -59,8 +98,7 @@ class Annotating {
       TapVocab(m.size, lst)
     }
 
-  val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] =
-    Flow[List[TapSentence]]
+  val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] = Flow[List[TapSentence]]
       .map { lst =>
         lst.map { s =>
           val tokens:Int = s.tokens.length
@@ -87,8 +125,8 @@ class Annotating {
           sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
       }
 
-  val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] =
-    Flow[List[TapSentence]].mapAsync[List[TapExpressions]](3) { lst =>
+  val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] = Flow[List[TapSentence]]
+    .mapAsync[List[TapExpressions]](3) { lst =>
       val results = lst.map { sent =>
         for {
             ae <- Expressions.affect(sent.tokens)
@@ -99,46 +137,27 @@ class Annotating {
       Future.sequence(results)
     }
 
-  val tapSyllables: Flow[List[TapSentence],List[TapSyllables], NotUsed] =
-    Flow[List[TapSentence]].map { lst =>
+  val tapSyllables: Flow[List[TapSentence],List[TapSyllables], NotUsed] = Flow[List[TapSentence]]
+    .map { lst =>
       lst.map { sent =>
-        val counts = sent.tokens.map( t => countSyllables(t.term.toLowerCase)).filterNot(_ == 0)
+        val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / (sent.tokens.length).toDouble
         TapSyllables(sent.idx,avg,counts)
       }
     }
 
-  val tapSpelling: Flow[List[TapSentence],List[TapSpelling],NotUsed] =
-    Flow[List[TapSentence]].map { lst =>
-      lst.map { sent =>
-        TapSpelling(sent.idx,Spelling.check(sent.original))
+  val tapSpelling: Flow[List[TapSentence],List[TapSpelling],NotUsed] = Flow[List[TapSentence]]
+    .mapAsync[List[TapSpelling]](2) { lst =>
+      val checked = lst.map { sent =>
+        ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
       }
+      Future.sequence(checked)
     }
 
-  private def countSyllables(word:String): Int = {
-    val CLE = "([^aeiouy_]le)"
-    val CVCE = "([^aeiou_]{1}[aeiouy]{1}[^aeiouy_]{1,2}e)"
-    //val VVN = "([aiouCVLEN]{1,2}[ns])"
-    val CVVC = "([^aeiou_][aeiou]{2}[^aeiouy_])"
-    val CVC = "([^aeiou_][aeiouy][^aeiou_])"
-    val CVV = "([^aeiou_][aeiou][aeiouy])"
-    val VC = "([aeiou][^aeiou_])"
-    val VR = "([aeiouyr]{1,2})"
-    val C = "([^aeiou_])"
 
-    word
-      .replaceAll("um","_")
-      .replaceAll("([aeo])r","_")
-      .replaceAll(CLE,"_")
-      .replaceAll(CVCE,"_")
-      .replaceAll(CVVC,"_")
-      .replaceAll(CVC,"_")
-      .replaceAll(CVV,"_")
-      .replaceAll(VC,"_")
-      .replaceAll(VR,"_")
-      .replaceAll(C,"").length
-  }
 }
+
+
 
 /*
 object Vocab {
@@ -153,4 +172,13 @@ object Vocab {
   val pipeline = document.via(sectionsVocab).via(documentVocab).via(vocabByCount)
 
 }
+
+private def complexity(metrics:Metrics,vocab:Vocab,syllables:Syllables):Complexity = {
+    val selectVocab = vocab.countVocab.map(_._2).flatten.filterNot(_.length < 4).toList
+    val vocabToDocRatio = selectVocab.length / metrics.wordCount.toDouble
+    val avgSentLength = metrics.wordCount / metrics.sentenceCount.toDouble
+    val avgWordLength = metrics.characterCount / metrics.wordCount.toDouble
+    val avgSyllables = syllables.averageSyllables
+    GenericComplexity(vocabToDocRatio,avgSentLength,avgWordLength,avgSyllables)
+  }
 */

@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package tap.nlp
+package tap.nlp.old.openNlp
+
+import tap.nlp.{old}
+import tap.nlp.old.{NlpDocument, OldNlpSentence}
+
 
 /**
   * Created by andrew@andrewresearch.net on 19/5/17.
   */
-trait DocumentConverter[T]{
-  def fromText(text:String): NlpDocument
+object Processors {
+  def textToDoc(text:String):NlpDocument = {
+    val sentences = Parsers.sentence(text).map(textToSentence(_)) //List(textToSentence("This has"),textToSentence("been converted"))
+    old.NlpDocument(text,sentences)
+  }
+  def textToSentence(text:String):OldNlpSentence = {
+    val words = Parsers.token(text)
+    val posTags = Parsers.posTag(words)
+    val lemmas = List()//Parsers.lemma(words,posTags)
+    OldNlpSentence(text,words,lemmas,posTags)
+  }
 }

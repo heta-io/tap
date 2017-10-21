@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package tap.nlp.openNlp
+package tap.nlp.languagetool
 
-import tap.nlp.{NlpDocument, DocumentConverter, OldNlpSentence, SentenceConverter}
+import javax.inject.Singleton
+import org.languagetool.language.BritishEnglish
 
 /**
-  * Created by andrew@andrewresearch.net on 19/5/17.
+  * Created by andrew@andrewresearch.net on 21/10/17.
   */
-object OpenNlpImplicits {
-  implicit object OpenNlpToDocument extends DocumentConverter[NlpDocument] {
-    def fromText(text:String):NlpDocument = Processors.textToDoc(text)
-  }
-  implicit object OpenNlpToSentence extends SentenceConverter[OldNlpSentence] {
-    def fromText(text:String) = Processors.textToSentence(text)
-  }
+@Singleton
+class Languages {
+  val brittishEnglish = new BritishEnglish
 }

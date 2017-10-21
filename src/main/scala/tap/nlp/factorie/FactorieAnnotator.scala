@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package tap.nlp.nlp4j
+package tap.nlp.factorie
 
-//import edu.emory.mathcs.nlp.common.util.StringUtils
-//import edu.emory.mathcs.nlp.component.morph.english.EnglishMorphAnalyzer
+import javax.inject.Singleton
+
+import cc.factorie.app.nlp.{DocumentAnnotatorPipeline, parse, pos}
+import play.api.Logger.logger
 
 /**
-  * Created by andrew@andrewresearch.net on 12/7/17.
+  * Created by andrew@andrewresearch.net on 21/10/17.
   */
-object Lemmatiser {
 
-//  lazy val lemmatizer = new EnglishMorphAnalyzer
-//
-//  def process(tokens:List[String],posTags:List[String]):List[String] = {
-//
-//    tokens zip posTags map { case (token,posTag) =>
-//      lemmatizer.lemmatize(StringUtils.toSimplifiedForm(token),posTag)
-//    }
-//
-//  }
+@Singleton
+class FactorieAnnotator {
+  logger.info("Initialising Factorie default annotator")
+  val default = DocumentAnnotatorPipeline(pos.OntonotesForwardPosTagger, parse.WSJTransitionBasedParser)
 }
