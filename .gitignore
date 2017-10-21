@@ -72,7 +72,7 @@ src/test/scala-2.12/
 /lib/nlpfactorie_2.12-0.1.jar
 /lib/cc.factorie.app.nlp.all-models-1.0.0.jar
 /lib/
-/src/main/scala/au.edu.utscic.tap/zzz/
+/tap/zzz/
 /models/opennlp/
 models/opennlp/en-lemmatizer.dict.txt
 models/opennlp/en-ner-date.bin
@@ -108,3 +108,9 @@ target/scala-2.12/tap_2.12-3.0.5.pom
 target/scala-2.12/twirl/
 target/universal/
 target/web/
+/src/main/scala/tap/nlp/old/
+src/main/scala/tap/nlp/old/DocumentConverter.scala
+src/main/scala/tap/nlp/old/NlpBuilders.scala
+src/main/scala/tap/nlp/old/NlpDocument.scala
+src/main/scala/tap/nlp/old/OldNlpSentence.scala
+src/main/scala/tap/nlp/old/SentenceConverter.scala
