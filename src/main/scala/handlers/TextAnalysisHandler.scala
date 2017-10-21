@@ -18,8 +18,8 @@ package handlers
 
 import javax.inject.Inject
 
-import au.edu.utscic.tap.pipelines.materialize.TextPipeline
-import au.edu.utscic.tap.pipelines.{Cleaning, Annotating}
+import tap.pipelines.materialize.TextPipeline
+import tap.pipelines.{Cleaning, Annotating}
 import models.Results._
 
 import scala.concurrent.Future

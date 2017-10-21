@@ -19,7 +19,7 @@ package handlers
 import java.io.File
 import javax.inject.Inject
 
-import au.edu.utscic.tap.pipelines.materialize.PipelineContext.{executor, materializer}
+import tap.pipelines.materialize.PipelineContext.{executor, materializer}
 import com.typesafe.config.ConfigFactory
 import models.Results.{StringListResult, StringResult}
 import play.api.{Configuration, Environment, Mode}

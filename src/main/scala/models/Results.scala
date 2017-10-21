@@ -18,7 +18,7 @@ package models
 
 import java.time.OffsetDateTime
 
-import au.edu.utscic.tap.data._
+import tap.data._
 import models.Results.Implicits.ResultType
 import sangria.macros.derive.{GraphQLDescription, GraphQLName, Interfaces, deriveObjectType}
 import sangria.schema.{Field, IntType, InterfaceType, ObjectType, StringType, fields}
