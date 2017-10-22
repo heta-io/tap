@@ -114,3 +114,4 @@ src/main/scala/tap/nlp/old/NlpBuilders.scala
 src/main/scala/tap/nlp/old/NlpDocument.scala
 src/main/scala/tap/nlp/old/OldNlpSentence.scala
 src/main/scala/tap/nlp/old/SentenceConverter.scala
+/src/main/scala/worksheet.sc
