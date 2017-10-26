@@ -43,7 +43,7 @@ class Annotating @Inject()(
                             @Named("languagetool") languageTool: ActorRef
                           ) {
 
-  implicit val timeout: Timeout = 30.seconds
+  implicit val timeout: Timeout = 300.seconds
   val annotatorInitialised:Future[Boolean]  = ask(factorieAnnotator,INIT).mapTo[Boolean]
   val languageToolInitialised:Future[Boolean] = ask(languageTool,INIT).mapTo[Boolean]
 
@@ -74,12 +74,14 @@ class Annotating @Inject()(
     .map(_.sections.toList)
 
   val tapSentences: Flow[Document, List[TapSentence], NotUsed] = Flow[Document]
-      .map(doc => doc.sentences.toList)
+      .map { doc =>
+        doc.sentences.toList
+      }
       .map { sentList =>
         sentList.zipWithIndex.map { case(s,idx) =>
           val tokens = s.tokens.toList.map { t =>
             TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
-              t.parseParentIndex,0,t.parseLabel.value.toString(),t.isPunctuation)
+              t.nerTag.baseCategoryValue,t.parseParentIndex,0,t.parseLabel.value.toString(),t.isPunctuation)
           }.toVector
           TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
         }
