@@ -28,6 +28,8 @@ import scala.concurrent.duration._
 
 class CleaningPipelineSpec extends UnitSpec {
 
+  import tap.pipelines.materialize.PipelineContext._
+
   val cleaning = new Cleaning
 
 
