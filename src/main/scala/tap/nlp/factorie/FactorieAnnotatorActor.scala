@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import akka.actor.Actor
 import cc.factorie.app.nlp._
+import io.nlytx.factorie.nlp.api.DocumentBuilder
 import play.api.Logger
 import play.api.Logger.logger
 import tap.data.{TapSentence, TapToken}
@@ -44,8 +45,6 @@ class FactorieAnnotatorActor @Inject() (annotator: FactorieAnnotator) extends Ac
     }
   }
 
-  //private val annotator = DocumentAnnotatorPipeline(pos.OntonotesForwardPosTagger, parse.WSJTransitionBasedParser)
-
   def init:Boolean = {
     logger.info("Initialising Factorie")
     document("Initialising factory").tokenCount==2
@@ -54,6 +53,7 @@ class FactorieAnnotatorActor @Inject() (annotator: FactorieAnnotator) extends Ac
   def document(text:String):Document = {
     val doc = new Document(text)
     annotator.default.process(doc)
+    //logger.info("Annotator info: " + annotator.default.profileReport)
     doc
   }
 

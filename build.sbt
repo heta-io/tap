@@ -31,6 +31,7 @@ val akkaStreamVersion = "2.5.6"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
+val factorieVersion = "1.2"
 //Java library versions
 val openNlpVersion = "1.8.2"
 val langToolVersion = "3.9"
@@ -50,6 +51,7 @@ val apiDependencies = Seq(
 
 val analyticsDependencies = Seq(
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "cc.factorie.app.nlp" % "all-models" % factorieVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
 )
@@ -98,8 +100,8 @@ dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
 
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
-  "-J-Xmx3g",
-  "-J-Xms2g"
+  "-J-Xmx6g",
+  "-J-Xms3g"
 
   // others will be added as app parameters
 //  "-Dproperty=true",
@@ -115,3 +117,5 @@ javaOptions in Universal ++= Seq(
 //buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
 //buildInfoPackage := "org.goingok"
 //buildInfoOptions += BuildInfoOption.BuildTime
+
+resolvers += "IESL Release" at "http://dev-iesl.cs.umass.edu/nexus/content/groups/public"
