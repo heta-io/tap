@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/*
 package tap.nlp.old.openNlp
 
 import tap.UnitSpec
@@ -51,3 +52,4 @@ class ParserSpec extends UnitSpec {
   }
 
 }
+*/
