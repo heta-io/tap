@@ -63,6 +63,7 @@ class Annotating @Inject()(
     val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
     val syllables: Flow[String,List[TapSyllables],NotUsed] = makeDocument via tapSentences via tapSyllables
     val spelling: Flow[String,List[TapSpelling],NotUsed] = makeDocument via tapSentences via tapSpelling
+    val posStats: Flow[String, TapPosStats, NotUsed] = makeDocument via tapSentences via tapPosStats
   }
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
@@ -157,6 +158,33 @@ class Annotating @Inject()(
     }
 
 
+  val tapPosStats:Flow[List[TapSentence], TapPosStats, NotUsed] = Flow[List[TapSentence]]
+    .map { lst =>
+      val stats = lst.map { s =>
+        val ts = s.tokens
+        val tokens:Int = ts.length
+        val punctuation:Int = ts.count(_.isPunctuation)
+        val words: Int = tokens - punctuation
+        val verbs = ts.count(_.postag.contains("VB"))
+        val nouns = ts.count(_.postag.contains("NN"))
+        val adjectives = ts.count(_.postag.contains("JJ"))
+        val ner = ts.filterNot(_.nertag.contentEquals("O")).length
+        (words,ner,verbs,nouns,adjectives)
+      }
+      val words = stats.map(_._1)
+      val ners = stats.map(_._2)
+      val verbs = stats.map(_._3)
+      val verbDist = verbs.map(_ / verbs.sum.toDouble).toVector
+      val nouns = stats.map(_._4)
+      val nounDist = nouns.map(_ / nouns.sum.toDouble).toVector
+      val adjs = stats.map(_._5)
+      val adjDist = adjs.map(_ / adjs.sum.toDouble).toVector
+      val verbNounRatio = verbs.sum / nouns.sum.toDouble
+      val futurePastRatio = 0.0
+      val nerWordRatio = ners.sum / words.sum.toDouble
+      val adjWordRatio = adjs.sum / words.sum.toDouble
+      TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
+    }
 }
 
 

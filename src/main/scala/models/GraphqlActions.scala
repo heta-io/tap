@@ -29,6 +29,7 @@ import scala.concurrent.Future
 
 class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler) {
 
+  //Text Analysis Handler
   def visible(text:String):Future[StringResult]       = textAnalysisHandler.visible(text)
   def clean(text:String):Future[StringResult]         = textAnalysisHandler.clean(text)
   def cleanPreserve(text:String):Future[StringResult] = textAnalysisHandler.cleanPreserve(text)
@@ -39,8 +40,11 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
   def metrics(text:String):Future[MetricsResult]      = textAnalysisHandler.metrics(text)
   def expressions(text:String):Future[ExpressionsResult] = textAnalysisHandler.expressions(text)
   def syllables(text:String):Future[SyllablesResult]  = textAnalysisHandler.syllables(text)
+  def spelling(text:String):Future[SpellingResult]    = textAnalysisHandler.spelling(text)
+  def posStats(text:String):Future[PosStatsResult]    = textAnalysisHandler.posStats(text)
+
+  //External Analysis Handler
   def moves(text:String):Future[StringListResult]     = externalAnalysisHandler.analyseWithAthanor(text)
-  def spelling(text:String):Future[SpellingResult]      = textAnalysisHandler.spelling(text)
 
   //TODO Still to Implement
 

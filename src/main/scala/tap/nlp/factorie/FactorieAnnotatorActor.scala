@@ -51,10 +51,10 @@ class FactorieAnnotatorActor @Inject() (annotator: FactorieAnnotator) extends Ac
   }
 
   def document(text:String):Document = {
-    val doc = new Document(text)
-    annotator.default.process(doc)
+    //val doc = new Document(text)
+    annotator.process(text)
     //logger.info("Annotator info: " + annotator.default.profileReport)
-    doc
+    //doc
   }
 
 

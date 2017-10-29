@@ -67,6 +67,9 @@ class GraphqlSchema {
     Field("spelling", deriveObjectType[Unit,SpellingResult](Interfaces[Unit,SpellingResult](ResultType)),
       Some("Returns spelling errors and suggestions for each sentence"),
       arguments = inputText :: Nil, resolve = c => c.ctx.spelling(c.arg(inputText))),
+    Field("posStats",deriveObjectType[Unit,PosStatsResult](Interfaces[Unit,PosStatsResult](ResultType)),
+      Some("Returns posStats for text"),
+      arguments = inputText :: Nil, resolve = c => c.ctx.posStats(c arg inputText)),
     Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
       description = Some("Returns a list of moves for the input text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.moves(c arg inputText))

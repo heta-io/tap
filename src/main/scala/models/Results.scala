@@ -46,6 +46,8 @@ object Results {
 
   case class MetricsResult(analytics: TapMetrics) extends Result
 
+  case class PosStatsResult(analytics: TapPosStats) extends Result
+
   case class ExpressionsResult(analytics: List[TapExpressions]) extends Result
 
   case class SpellingResult(analytics: List[TapSpelling]) extends Result
@@ -73,5 +75,6 @@ object Results {
     implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
     implicit val TapSpellingType:ObjectType[Unit,TapSpelling] = deriveObjectType[Unit,TapSpelling]()
     implicit val TapSpellType:ObjectType[Unit,TapSpell] = deriveObjectType[Unit,TapSpell]()
+    implicit val TapPosStatsType:ObjectType[Unit,TapPosStats] = deriveObjectType[Unit,TapPosStats]()
   }
 }

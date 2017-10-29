@@ -22,6 +22,7 @@ import cc.factorie.app.nlp.lexicon.{LexiconsProvider, StaticLexicons}
 import cc.factorie.app.nlp.ner.{ConllChainNer, StaticLexiconFeatures}
 import cc.factorie.app.nlp._
 import cc.factorie.util.{ClasspathURL, ModelProvider}
+import io.nlytx.factorie.nlp.api.DocumentBuilder
 import play.api.Logger.logger
 
 /**
@@ -30,27 +31,26 @@ import play.api.Logger.logger
 
 @Singleton
 class FactorieAnnotator {
-  logger.info("Initialising Factorie default annotator")
+  logger.info("Initialising Factorie")
+  val db = new DocumentBuilder
 
-  val mp = ModelProvider.classpath[ConllChainNer]()
-  val staticLexiconFeatures = new StaticLexiconFeatures(new StaticLexicons()(LexiconsProvider.classpath()), "en")
-  val conllChainNer = new ConllChainNer()(mp, staticLexiconFeatures)
-
-  val path = ClasspathURL[coref.NerForwardCoref](".factorie").getPath
-  System.setProperty(classOf[coref.NerForwardCoref].getName,path)
-
-
-
-  val default = DocumentAnnotatorPipeline(
-    pos.OntonotesForwardPosTagger,
-    parse.WSJTransitionBasedParser,
-    conllChainNer,
-    phrase.PosBasedNounPhraseFinder,
-    //coref.NerForwardCoref
-  )
-
-
-
-
+  def process(text:String):Document = db.createAnnotatedDoc(text)
 }
+
+//  val mp = ModelProvider.classpath[ConllChainNer]()
+//  val staticLexiconFeatures = new StaticLexiconFeatures(new StaticLexicons()(LexiconsProvider.classpath()), "en")
+//  val conllChainNer = new ConllChainNer()(mp, staticLexiconFeatures)
+//
+//  val path = ClasspathURL[coref.NerForwardCoref](".factorie").getPath
+//  System.setProperty(classOf[coref.NerForwardCoref].getName,path)
+//
+
+
+//  val default = DocumentAnnotatorPipeline(
+//    pos.OntonotesForwardPosTagger,
+//    parse.WSJTransitionBasedParser,
+//    conllChainNer,
+//    phrase.PosBasedNounPhraseFinder,
+//    //coref.NerForwardCoref
+//  )
 
