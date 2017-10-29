@@ -75,6 +75,7 @@ libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDepen
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
+resolvers += Resolver.bintrayRepo("nlytx", "factorie-nlp-api")
 
 //Documentation - run ;paradox;copyDocs
 enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
