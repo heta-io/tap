@@ -1,5 +1,25 @@
 language: scala
+
+jdk: oraclejdk8
+
 scala:
-   - 2.12.3
-jdk:
-  - oraclejdk8
+   - 2.12.4
+
+script:
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6G test
+
+# Use container-based infrastructure
+sudo: false
+
+# These directories are cached to S3 at the end of the build
+cache:
+  directories:
+     - $HOME/.ivy2/cache
+     - $HOME/.sbt
+
+before_cache:
+  # Cleanup the cached directories to avoid unnecessary cache updates
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete
+
+#Testing build script

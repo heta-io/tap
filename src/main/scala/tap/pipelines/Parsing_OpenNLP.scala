@@ -21,7 +21,7 @@ import akka.stream.scaladsl.{Flow, Framing, Source}
 import akka.util.ByteString
 import tap.data.CustomTypes.{DocumentStr, SectionStr}
 import tap.data.{OldTapDocument, OldTapSection, OldTapSentence, OldTapTags}
-import tap.nlp.old.{NlpBuilders, NlpDocument, OldNlpSentence}
+//import tap.nlp.old.{NlpBuilders, NlpDocument, OldNlpSentence}
 
 /**
   * Created by andrew@andrewresearch.net on 24/2/17.
@@ -33,17 +33,17 @@ object Parsing_OpenNLP {
       *  which are treated as NLP Documents and then used to produce
       *  TapSections that are folded into a OldTapDocument
       */
-    val default:Flow[SectionStr,OldTapDocument,NotUsed] = nlpDocs.via(nlpSentences).via(tapSentences).via(tapSection).via(tapDocument)
+    //val default:Flow[SectionStr,OldTapDocument,NotUsed] = nlpDocs.via(nlpSentences).via(tapSentences).via(tapSection).via(tapDocument)
 
 
   }
 
-  import tap.nlp.old.openNlp.OpenNlpImplicits._
+  //import tap.nlp.old.openNlp.OpenNlpImplicits._
 
 
 
 
-
+/*
   val nlpDocs:Flow[SectionStr,NlpDocument,NotUsed] = Flow[String].map(s => NlpBuilders.document(s))
 
   val nlpSentences:Flow[NlpDocument,List[OldNlpSentence],NotUsed] = Flow[NlpDocument].map(_.sentences)
@@ -64,7 +64,7 @@ object Parsing_OpenNLP {
       sentence.posTags
     )
   )
-
+*/
 
 }
 

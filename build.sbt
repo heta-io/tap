@@ -32,6 +32,7 @@ val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 val factorieVersion = "1.2"
+val nlytxFactorieVersion = "0.2"
 //Java library versions
 val openNlpVersion = "1.8.2"
 val langToolVersion = "3.9"
@@ -50,7 +51,7 @@ val apiDependencies = Seq(
 )
 
 val analyticsDependencies = Seq(
-  "io.nlytx" %% "factorie-nlp-api" % "0.2",
+  "io.nlytx" %% "factorie-nlp-api" % nlytxFactorieVersion,
   "cc.factorie.app.nlp" % "all-models" % factorieVersion,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
@@ -74,6 +75,7 @@ libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDepen
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
+resolvers += Resolver.bintrayRepo("nlytx", "factorie-nlp-api")
 
 //Documentation - run ;paradox;copyDocs
 enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
