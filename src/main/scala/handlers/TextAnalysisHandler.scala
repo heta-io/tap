@@ -44,6 +44,7 @@ class TextAnalysisHandler @Inject() (cleaning: Cleaning, annotating: Annotating)
   def spelling(text:String):Future[SpellingResult]        = TextPipeline(text,annotating.Pipeline.spelling).run.map(SpellingResult(_))
   def vocabulary(text:String):Future[VocabResult]         = TextPipeline(text,annotating.Pipeline.vocab).run.map(VocabResult(_))
   def metrics(text:String):Future[MetricsResult]          = TextPipeline(text,annotating.Pipeline.metrics).run.map(MetricsResult(_))
+  def posStats(text:String):Future[PosStatsResult]        = TextPipeline(text,annotating.Pipeline.posStats).run.map(PosStatsResult(_))
 
 
   //TODO To be implemented

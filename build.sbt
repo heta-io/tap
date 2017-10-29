@@ -50,8 +50,9 @@ val apiDependencies = Seq(
 )
 
 val analyticsDependencies = Seq(
-  "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "io.nlytx" %% "factorie-nlp-api" % "0.2",
   "cc.factorie.app.nlp" % "all-models" % factorieVersion,
+  "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
 )
