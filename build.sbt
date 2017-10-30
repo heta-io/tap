@@ -32,7 +32,7 @@ val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 val factorieVersion = "1.2"
-val nlytxFactorieVersion = "0.2"
+val nlytxFactorieVersion = "0.3"
 //Java library versions
 val openNlpVersion = "1.8.2"
 val langToolVersion = "3.9"
@@ -75,7 +75,7 @@ libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDepen
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
-resolvers += Resolver.bintrayRepo("nlytx", "factorie-nlp-api")
+resolvers += Resolver.bintrayRepo("nlytx-io", "factorie-nlp-api")
 
 //Documentation - run ;paradox;copyDocs
 enablePlugins(ParadoxPlugin) //Generate documentation with Paradox

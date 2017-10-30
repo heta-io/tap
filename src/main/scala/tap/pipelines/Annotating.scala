@@ -44,13 +44,13 @@ class Annotating @Inject()(
                           ) {
 
   implicit val timeout: Timeout = 300.seconds
-  val annotatorInitialised:Future[Boolean]  = ask(factorieAnnotator,INIT).mapTo[Boolean]
+  factorieAnnotator ! INIT //No return value
   val languageToolInitialised:Future[Boolean] = ask(languageTool,INIT).mapTo[Boolean]
 
-  annotatorInitialised.onComplete{
-    case Success(result) => Logger.info(s"FactorieAnnotator initialised successfully: $result")
-    case Failure(e) => Logger.error(s"FactorieAnnotator failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
-  }
+//  annotatorInitialised.onComplete{
+//    case Success(result) => Logger.info(s"FactorieAnnotator initialised successfully: $result")
+//    case Failure(e) => Logger.error(s"FactorieAnnotator failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
+//  }
   languageToolInitialised.onComplete{
     case Success(result) => Logger.info(s"LanguageTool initialised successfully: $result")
     case Failure(e) => Logger.error(s"LanguageTool failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
@@ -68,7 +68,7 @@ class Annotating @Inject()(
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
     .mapAsync[Document](2) { text =>
-      ask(factorieAnnotator,MakeDocument(text)).mapTo[Document]
+      ask(factorieAnnotator,MakeDocument(text)).mapTo[Future[Document]].flatMap(identity)
     }
 
   val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]

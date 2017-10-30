@@ -16,15 +16,16 @@
 
 package tap.nlp.factorie
 
-import javax.inject.Inject
-
 import akka.actor.Actor
 import cc.factorie.app.nlp._
 import io.nlytx.factorie.nlp.api.DocumentBuilder
 import play.api.Logger
 import play.api.Logger.logger
-import tap.data.{TapSentence, TapToken}
 import tap.nlp.factorie.FactorieAnnotatorActor.{INIT, MakeDocument}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 /**
   * Created by andrew@andrewresearch.net on 21/10/17.
@@ -35,24 +36,37 @@ object FactorieAnnotatorActor {
   case class MakeDocument(text:String)
 }
 
-class FactorieAnnotatorActor @Inject() (annotator: FactorieAnnotator) extends Actor {
+class FactorieAnnotatorActor extends Actor {
+
+  val db = new DocumentBuilder
 
   def receive: PartialFunction[Any,Unit] = {
-    case INIT => sender ! init
+    case INIT => init
     case md:MakeDocument => sender ! document(md.text)
     case msg:Any => {
       Logger.error(s"FactorieAnnotatorActor received unkown msg: $msg")
     }
   }
 
-  def init:Boolean = {
+  def init:Unit = {
     logger.info("Initialising Factorie")
-    document("Initialising factory").tokenCount==2
+    val futureDoc = db.process[db.Complete]("Initialising factory")
+    futureDoc.onComplete {
+      case Success(d) if(d.tokenCount==2) => {
+        logger.info("Factorie initialised successfully!")
+      }
+      case Failure(e) => {
+        logger.error("There was a problem initialising factorie.")
+      }
+      case _ => {
+        logger.error("There was a problem initialising factorie.")
+      }
+    }
   }
 
-  def document(text:String):Document = {
+  def document(text:String):Future[Document] = {
     //val doc = new Document(text)
-    annotator.process(text)
+    db.process[db.Complete](text)
     //logger.info("Annotator info: " + annotator.default.profileReport)
     //doc
   }
