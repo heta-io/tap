@@ -5,9 +5,9 @@ jdk: oraclejdk8
 scala:
    - 2.12.4
 
-before_script:
- - "echo $JAVA_OPTS"
- - "export JAVA_OPTS=-Xmx6g"
+env:
+  global:
+    JAVA_OPTS=-Xmx2g
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6G test
