@@ -16,24 +16,27 @@
 
 package tap.pipelines
 
-import akka.NotUsed
-import akka.stream.scaladsl.Flow
+import play.api.Logger
 import tap.analysis.Lexicons
 import tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
 import tap.data._
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
 object Expressions {
 
-  def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = Future {
-    Vector()
-  }
+  val logger: Logger = Logger(this.getClass)
 
+  def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = Future {
+    val terms = tokens.filterNot(_.isPunctuation).map(_.term.toLowerCase)
+    val posWords = terms.filter(l => Lexicons.mostPositiveTerms.contains(l))
+    val negWords = terms.filter(l => Lexicons.mostNegativeTerms.contains(l))
+    (posWords ++ negWords).map(w =>TapExpression(w,-1,-1))
+  }
 
   def epistemic(tokens:Vector[TapToken]):Future[Vector[EpistemicExpression]] = Future {
     //Get the indexes of any epistemic verbs
