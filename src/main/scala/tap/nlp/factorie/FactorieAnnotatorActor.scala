@@ -21,7 +21,7 @@ import cc.factorie.app.nlp._
 import io.nlytx.factorie.nlp.api.DocumentBuilder
 import play.api.Logger
 import play.api.Logger.logger
-import tap.nlp.factorie.FactorieAnnotatorActor.{INIT, MakeDocument}
+import tap.nlp.factorie.FactorieAnnotatorActor.{INIT, MakeDocument, TestDocument}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -33,7 +33,10 @@ import scala.util.{Failure, Success}
 
 object FactorieAnnotatorActor {
   object INIT
+
   case class MakeDocument(text:String)
+  case class TestDocument(text:String)
+
 }
 
 class FactorieAnnotatorActor extends Actor {
@@ -43,6 +46,7 @@ class FactorieAnnotatorActor extends Actor {
   def receive: PartialFunction[Any,Unit] = {
     case INIT => init
     case md:MakeDocument => sender ! document(md.text)
+    case td:TestDocument => sender ! tokenSegment(td.text)
     case msg:Any => {
       Logger.error(s"FactorieAnnotatorActor received unkown msg: $msg")
     }
@@ -71,6 +75,9 @@ class FactorieAnnotatorActor extends Actor {
     //doc
   }
 
+  def tokenSegment(text:String):Future[Document] = {
+    db.process[db.TokenSegment](text)
+  }
 
 
 }
