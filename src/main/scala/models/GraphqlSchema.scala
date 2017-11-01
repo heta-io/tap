@@ -17,11 +17,10 @@
 package models
 
 import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
-
 import models.Results._
 import models.Results.Implicits._
 import sangria.macros.derive._
-import sangria.schema.{Argument, Field, ObjectType, Schema, StringType, fields}
+import sangria.schema.{Argument, Field, ObjectType, OptionInputType, Schema, StringType, fields}
 
 import scala.concurrent.Future
 
@@ -32,6 +31,7 @@ import scala.concurrent.Future
 class GraphqlSchema {
 
   val inputText:Argument[String] = Argument("text", StringType)
+  val moveGrammar:Argument[Option[String]] = Argument("grammar",OptionInputType(StringType))
 
   val allFields = fields[GraphqlActions,Unit](
     Field("visible", StringResultType,
@@ -72,7 +72,7 @@ class GraphqlSchema {
       arguments = inputText :: Nil, resolve = c => c.ctx.posStats(c arg inputText)),
     Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
       description = Some("Returns a list of moves for the input text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.moves(c arg inputText))
+      arguments = inputText :: moveGrammar :: Nil, resolve = c => c.ctx.moves(c arg inputText,c arg moveGrammar))
   )
 
   def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",allFields))
