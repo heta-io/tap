@@ -19,6 +19,6 @@ package tap.data
 /**
   * Created by andrew@andrewresearch.net on 29/8/17.
   */
-case class TapToken(idx:Int, term:String, lemma:String, postag:String, nertag:String, parent:Int, child:Int, deptype:String,
+case class TapToken(idx:Int, term:String, lemma:String, postag:String, nertag:String, parent:Int, children:Vector[Int], deptype:String,
                     isPunctuation:Boolean,
                    )
