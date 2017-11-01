@@ -121,7 +121,7 @@ class AnnotatingPipelineSpec extends AsyncFlatSpec {
     val result = Await.result(future, 10 seconds)
 
     assert(result.length == 2)
-    assert(result(0).affect == Vector())
+    assert(result(0).affect == Vector(TapExpression("believe",1,1)))
     assert(result(0).epistemic == Vector(TapExpression("I believe",0,1)))
     assert(result(0).modal == Vector())
     assert(result(0).sentIdx == 0)
