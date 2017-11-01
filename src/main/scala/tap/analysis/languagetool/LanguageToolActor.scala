@@ -19,15 +19,13 @@ package tap.nlp.factorie
 import javax.inject.Inject
 
 import akka.actor.Actor
-import org.languagetool.{JLanguageTool, Language}
+import org.languagetool.JLanguageTool
 import org.languagetool.language.BritishEnglish
 import org.languagetool.rules.RuleMatch
 import play.api.Logger
-import play.api.Logger.logger
+import tap.analysis.languagetool.Languages
 import tap.data.TapSpell
-import tap.nlp.factorie.FactorieAnnotatorActor.INIT
-import tap.nlp.factorie.LanguageToolActor.CheckSpelling
-import tap.nlp.languagetool.Languages
+import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
 
 import scala.collection.JavaConverters._
 
@@ -42,11 +40,13 @@ object LanguageToolActor {
 
 class LanguageToolActor @Inject() (languages: Languages) extends Actor {
 
+  val logger: Logger = Logger(this.getClass)
+
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
     case cs:CheckSpelling => sender ! check(cs.text)
     case msg:Any => {
-      Logger.error(s"FactorieAnnotatorActor received unkown msg: $msg")
+      logger.error(s"FactorieAnnotatorActor received unkown msg: $msg")
     }
   }
 

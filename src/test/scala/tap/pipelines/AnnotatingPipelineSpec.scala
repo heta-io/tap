@@ -16,16 +16,7 @@
 
 package tap.pipelines
 
-import akka.actor.{ActorSystem, Props}
-import akka.pattern.ask
-import akka.util.Timeout
-import cc.factorie.app.nlp.Document
 import org.scalatest.AsyncFlatSpec
-import tap.nlp.factorie.FactorieAnnotatorActor
-import tap.nlp.factorie.FactorieAnnotatorActor.TestDocument
-
-import scala.concurrent.duration._
-import scala.concurrent.Future
 
 /**
   * Created by andrew@andrewresearch.net on 31/10/17.

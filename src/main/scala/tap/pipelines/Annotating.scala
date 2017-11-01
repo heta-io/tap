@@ -24,38 +24,41 @@ import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
 import cc.factorie.app.nlp.{Document, Section}
+import io.nlytx.factorie.nlp.api.DocumentBuilder
 import play.api.Logger
 import tap.analysis.Syllable
-import tap.data._
-import tap.nlp.factorie.FactorieAnnotatorActor.{INIT, MakeDocument}
-import tap.nlp.factorie.LanguageToolActor.CheckSpelling
-
+import tap.data._ // scalastyle:ignore
+import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-class Annotating @Inject()(
-                            @Named("factorie-annotator") factorieAnnotator: ActorRef,
-                            @Named("languagetool") languageTool: ActorRef
-                          ) {
+class Annotating @Inject()( docBuilder: DocumentBuilder, @Named("languagetool") languageTool: ActorRef) {
 
-  implicit val timeout: Timeout = 300.seconds
-  factorieAnnotator ! INIT //No return value
+  val logger: Logger = Logger(this.getClass)
+
+  /* Running LanguageTool in an Actor */ //TODO Perhaps look at a streamed implementation?
+  implicit val timeout: Timeout = 120 seconds
   val languageToolInitialised:Future[Boolean] = ask(languageTool,INIT).mapTo[Boolean]
-
-//  annotatorInitialised.onComplete{
-//    case Success(result) => Logger.info(s"FactorieAnnotator initialised successfully: $result")
-//    case Failure(e) => Logger.error(s"FactorieAnnotator failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
-//  }
   languageToolInitialised.onComplete{
-    case Success(result) => Logger.info(s"LanguageTool initialised successfully: $result")
-    case Failure(e) => Logger.error(s"LanguageTool failed to initialise within ${timeout.toString} due to error: ${e.printStackTrace}")
+    case Success(result) => logger.info(s"LanguageTool initialised successfully: $result")
+    case Failure(e) => logger.error("LanguageTool encountered an error on startup: " + e.toString)
   }
 
+  /* Initialise Factorie models by running a test through docBuilder */
+  logger.info("Initialising Factorie models")
+  val docStart = Future(docBuilder.process[docBuilder.Complete]("Please start Factorie!"))
+  docStart.onComplete{
+    case Success(result) => result.map(d => logger.info(s"Factorie started successfully [${d.tokenCount} tokens]"))
+    case Failure(e) => logger.error("Factorie start failure:" + e.toString)
+  }
+
+  /* The main pipelines for performing annotating text analysis */
   object Pipeline {
     val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
     val vocab: Flow[String, TapVocab, NotUsed] = makeDocument via tapSentences via tapVocab
@@ -66,9 +69,14 @@ class Annotating @Inject()(
     val posStats: Flow[String, TapPosStats, NotUsed] = makeDocument via tapSentences via tapPosStats
   }
 
+
+  /* The following are essentially pipeline segments that can be re-used in the above pipelines
+   *
+   */
+
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
     .mapAsync[Document](2) { text =>
-      ask(factorieAnnotator,MakeDocument(text)).mapTo[Future[Document]].flatMap(identity)
+    docBuilder.process[docBuilder.Complete](text)
     }
 
   val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]
@@ -107,9 +115,9 @@ class Annotating @Inject()(
           val tokens:Int = s.tokens.length
           val characters:Int = s.original.length
           val punctuation:Int = s.tokens.count(_.isPunctuation)
-          val words:Int = (tokens - punctuation)
+          val words:Int = tokens - punctuation
           val wordLengths:Vector[Int] = s.tokens.filterNot(_.isPunctuation).map(_.term.length)
-          val totalWordChars = wordLengths.sum
+          //val totalWordChars = wordLengths.sum
           val whitespace:Int = s.original.count(_.toString.matches("\\s"))
           val averageWordLength:Double = wordLengths.sum / words.toDouble
           (tokens,words,characters,punctuation,whitespace,wordLengths,averageWordLength)
@@ -135,7 +143,7 @@ class Annotating @Inject()(
             ae <- Expressions.affect(sent.tokens)
             ee <- Expressions.epistemic(sent.tokens)
             me <- Expressions.modal(sent.tokens)
-        } yield (TapExpressions(ae, ee, me, sent.idx))
+        } yield TapExpressions(ae, ee, me, sent.idx)
       }
       Future.sequence(results)
     }
@@ -144,7 +152,7 @@ class Annotating @Inject()(
     .map { lst =>
       lst.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
-        val avg = counts.sum / (sent.tokens.length).toDouble
+        val avg = counts.sum / sent.tokens.length.toDouble
         TapSyllables(sent.idx,avg,counts)
       }
     }
