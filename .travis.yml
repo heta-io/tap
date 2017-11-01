@@ -7,10 +7,10 @@ scala:
 
 env:
   global:
-    JAVA_OPTS=-Xmx2g
+    JAVA_OPTS=-Xmx3g
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6G test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3G test
 
 # Use container-based infrastructure
 sudo: false
