@@ -89,8 +89,9 @@ class Annotating @Inject()( docBuilder: DocumentBuilder, @Named("languagetool") 
       .map { sentList =>
         sentList.zipWithIndex.map { case(s,idx) =>
           val tokens = s.tokens.toList.map { t =>
+            val children = t.parseChildren.map(_.positionInSentence).toVector
             TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
-              t.nerTag.baseCategoryValue,t.parseParentIndex,0,t.parseLabel.value.toString(),t.isPunctuation)
+              t.nerTag.baseCategoryValue,t.parseParentIndex,children,t.parseLabel.value.toString(),t.isPunctuation)
           }.toVector
           TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
         }
