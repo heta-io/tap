@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tap.nlp.languagetool
+package tap.analysis.languagetool
 
 import javax.inject.Singleton
 import org.languagetool.language.BritishEnglish

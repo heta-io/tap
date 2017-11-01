@@ -19,8 +19,7 @@ package tap.nlp
 import com.google.inject.AbstractModule
 import play.api.Logger
 import play.api.libs.concurrent.AkkaGuiceSupport
-import tap.nlp.factorie.{FactorieAnnotatorActor, LanguageToolActor}
-
+import tap.nlp.factorie.LanguageToolActor
 
 /**
   * Created by andrew@andrewresearch.net on 21/10/17.
@@ -29,8 +28,6 @@ import tap.nlp.factorie.{FactorieAnnotatorActor, LanguageToolActor}
 class NlpInitialiserModule extends AbstractModule with AkkaGuiceSupport {
 
   def configure():Unit = {
-    Logger.info("Binding FactorieAnnotatorActor")
-    bindActor[FactorieAnnotatorActor]("factorie-annotator")
     Logger.info("Binding LanguageToolActor")
     bindActor[LanguageToolActor]("languagetool")
   }
