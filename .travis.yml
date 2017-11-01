@@ -8,6 +8,7 @@ scala:
 env:
   global:
     JAVA_OPTS=-Xmx3g
+    _JAVA_OPTIONS=
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3G test
