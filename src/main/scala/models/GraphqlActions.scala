@@ -44,7 +44,7 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
   def posStats(text:String):Future[PosStatsResult]    = textAnalysisHandler.posStats(text)
 
   //External Analysis Handler
-  def moves(text:String):Future[StringListResult]     = externalAnalysisHandler.analyseWithAthanor(text)
+  def moves(text:String,grammar:Option[String]):Future[StringListResult]  = externalAnalysisHandler.analyseWithAthanor(text,grammar)
 
   //TODO Still to Implement
 

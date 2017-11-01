@@ -22,7 +22,7 @@ import javax.inject.Inject
 import tap.pipelines.materialize.PipelineContext.{executor, materializer}
 import com.typesafe.config.ConfigFactory
 import models.Results.{StringListResult, StringResult}
-import play.api.{Configuration, Environment, Mode}
+import play.api.{Configuration, Environment, Logger, Mode}
 import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfig, AhcWSClientConfigFactory}
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 
@@ -33,23 +33,17 @@ import scala.concurrent.duration.DurationInt
   */
 class ExternalAnalysisHandler @Inject() (wsClient: WSClient) {
 
-//  val configuration: Configuration = Configuration.reference ++ Configuration(ConfigFactory.parseString(
-//    """
-//      |ws.followRedirects = true
-//    """.stripMargin))
-//
-//  // If running in Play, environment should be injected
-//  val environment = Environment(new File("."), this.getClass.getClassLoader, Mode.Prod)
-//  val wsConfig: AhcWSClientConfig = AhcWSClientConfigFactory.forConfig(configuration.underlying, environment.classLoader)
-//  val wsClient: WSClient = AhcWSClient(wsConfig)
+  val logger: Logger = Logger(this.getClass)
 
-  def analyseWithAthanor(text:String):Future[StringListResult] = {
+  def analyseWithAthanor(text:String,grammar:Option[String]):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
-    val url = "http://athanor.utscic.edu.au/v2/analyse/text/rhetorical"
+    val parameter = "?grammar="+grammar.getOrElse("analytic")
+    val url = "http://athanor.utscic.edu.au/v2/analyse/text/rhetorical"+parameter
+    logger.info(s"Creating request to: $url")
     val request: WSRequest = wsClient.url(url)
 
-    val athanorRequest: WSRequest =
-      request.withHttpHeaders("Accept" -> "application/json")
+    val athanorRequest: WSRequest = request
+        .withHttpHeaders("Accept" -> "application/json")
         .withRequestTimeout(10000.millis)
 
     val futureResponse: Future[WSResponse] = athanorRequest.post(text)
