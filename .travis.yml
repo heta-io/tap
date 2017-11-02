@@ -7,10 +7,10 @@ scala:
 
 env:
   global:
-    _JAVA_OPTIONS=-Xmx3500
+    _JAVA_OPTIONS=-Xmx3000
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3500m test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3000m test
 
 # Use container-based infrastructure
 sudo: false
