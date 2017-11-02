@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*
 package tap.pipelines
 
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
@@ -182,3 +182,4 @@ class AnnotatingPipelineSpec extends AsyncFlatSpec {
   }
 
 }
+*/

@@ -3,15 +3,14 @@ language: scala
 jdk: oraclejdk8
 
 scala:
-   - 2.12.4
+   - 2.12.3
 
 env:
   global:
-    JAVA_OPTS=-Xmx3g
-    _JAVA_OPTIONS=-Xmx3g
+    _JAVA_OPTIONS=-Xmx3500
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3G test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3500m test
 
 # Use container-based infrastructure
 sudo: false

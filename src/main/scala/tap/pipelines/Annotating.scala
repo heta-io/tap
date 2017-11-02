@@ -24,7 +24,7 @@ import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
 import cc.factorie.app.nlp.{Document, Section}
-import io.nlytx.factorie.nlp.api.DocumentBuilder
+import io.nlytx.factorie_nlp_api.AnnotatorPipelines
 import play.api.Logger
 import tap.analysis.Syllable
 import tap.data._ // scalastyle:ignore
@@ -38,7 +38,7 @@ import scala.util.{Failure, Success}
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-class Annotating @Inject()( docBuilder: DocumentBuilder, @Named("languagetool") languageTool: ActorRef) {
+class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
 
   val logger: Logger = Logger(this.getClass)
 
@@ -52,9 +52,10 @@ class Annotating @Inject()( docBuilder: DocumentBuilder, @Named("languagetool") 
 
   /* Initialise Factorie models by running a test through docBuilder */
   logger.info("Initialising Factorie models")
-  val docStart = Future(docBuilder.process[docBuilder.Complete]("Please start Factorie!"))
+  val ap = AnnotatorPipelines
+  val docStart = Future(ap.profile("Please start Factorie!",ap.postagPipeline,180))
   docStart.onComplete{
-    case Success(result) => result.map(d => logger.info(s"Factorie started successfully [${d.tokenCount} tokens]"))
+    case Success(doc) => logger.info(s"Factorie started successfully [${doc.tokenCount} tokens]")
     case Failure(e) => logger.error("Factorie start failure:" + e.toString)
   }
 
@@ -76,7 +77,7 @@ class Annotating @Inject()( docBuilder: DocumentBuilder, @Named("languagetool") 
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
     .mapAsync[Document](2) { text =>
-    docBuilder.process[docBuilder.Complete](text)
+    ap.process(text,ap.completePipeline)
     }
 
   val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]
