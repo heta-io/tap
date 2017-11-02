@@ -13,21 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
+
 package tap.pipelines
 
+import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import cc.factorie.app.nlp.Document
+import io.nlytx.factorie_nlp_api.AnnotatorPipelines
 import org.scalatest.AsyncFlatSpec
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.{GuiceOneAppPerTest, GuiceOneServerPerTest}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Injecting
 import tap.data._
 
 import scala.concurrent.duration._
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 
-/**
-  * Created by andrew@andrewresearch.net on 31/10/17.
-  */
 
+class AnnotatingPipelineSpec extends PlaySpec {
+
+  val ap = AnnotatorPipelines
+
+  //dependency injection
+  private val app = new GuiceApplicationBuilder().build
+  private val annotator = app.injector.instanceOf[Annotating]
+
+  "profile" should {
+     "create an annotated document" in {
+       val doc = ap.profile("This is a test!")
+       assert(doc.tokenCount==5)
+     }
+  }
+
+  "annotator" should {
+    val docFlow = annotator.makeDocument
+
+    "make a valid document flow" in {
+
+      assert(docFlow.isInstanceOf[Flow[String,Document,NotUsed]])
+    }
+
+    "materialize the flow" in {
+      import tap.pipelines.materialize.PipelineContext.materializer
+      //val docFlow = annotator.makeDocument
+      val graph = Source.single("This is a test.").via(docFlow).toMat(Sink.head[Document])(Keep.right)
+      val result:Future[Document] = graph.run()
+      val doc = Await.result(result, 240 seconds)
+      assert(doc.tokenCount==5)
+    }
+  }
+
+
+//
+//  def testSource(input:String) = Source.single(input)
+//
+//  "sentences" should {
+//    "extract separated sentences" in {
+//
+//      val testSentenceSink = Flow[List[TapSentence]].toMat(Sink.head[List[TapSentence]])(Keep.right)
+//
+//      val input = s"How can I convert a Scala array to a String? Or, more, accurately, how do I convert any Scala sequence to a String."
+//      val future = testSource(input) via annotator.Pipeline.sentences runWith testSentenceSink
+//      val result = Await.result(future, 180 seconds)
+//
+//      assert(result.length == 2)
+//      assert(result(0).original == "How can I convert a Scala array to a String?")
+//      assert(result(1).original == "Or, more, accurately, how do I convert any Scala sequence to a String.")
+//    }
+//  }
+}
+
+/*
 class AnnotatingPipelineSpec extends AsyncFlatSpec {
 //
 //  private val system = ActorSystem("mySystem")
@@ -50,20 +107,7 @@ class AnnotatingPipelineSpec extends AsyncFlatSpec {
   private val app = new GuiceApplicationBuilder().build
   private val annotator = app.injector.instanceOf[Annotating]
 
-  def testSource(input:String) = Source.single(input)
 
-  "sentences" should "extract separated sentences" in {
-
-    val testSentenceSink = Flow[List[TapSentence]].toMat(Sink.head[List[TapSentence]])(Keep.right)
-
-    val input = s"How can I convert a Scala array to a String? Or, more, accurately, how do I convert any Scala sequence to a String."
-    val future = testSource(input) via annotator.Pipeline.sentences runWith testSentenceSink
-    val result = Await.result(future, 180 seconds)
-
-    assert(result.length == 2)
-    assert(result(0).original == "How can I convert a Scala array to a String?")
-    assert(result(1).original == "Or, more, accurately, how do I convert any Scala sequence to a String.")
-  }
 
 
   "vocab" should "extract vocabularies and their frequency" in {

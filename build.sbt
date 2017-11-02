@@ -32,7 +32,7 @@ val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 val factorieVersion = "1.2"
-val nlytxFactorieVersion = "0.5.0"
+val nlytxFactorieVersion = "0.5.1"
 //Java library versions
 val openNlpVersion = "1.8.3"
 val langToolVersion = "3.9"
