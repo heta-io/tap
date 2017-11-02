@@ -77,7 +77,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
 
   val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
     .mapAsync[Document](2) { text =>
-    ap.process(text,ap.completePipeline)
+    ap.process(text,ap.defaultPipeline)
     }
 
   val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]
@@ -195,6 +195,11 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       val adjWordRatio = adjs.sum / words.sum.toDouble
       TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
+
+  val addNer:Flow[Document,Document,NotUsed] = Flow[Document].map(d => d)
+
+  val addParse:Flow[Document,Document,NotUsed] = Flow[Document].map(d => d)
+
 }
 
 
