@@ -7,7 +7,7 @@ scala:
 
 env:
   global:
-    _JAVA_OPTIONS=-Xmx2500
+ #   _JAVA_OPTIONS=-Xmx2500
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx2500m test
