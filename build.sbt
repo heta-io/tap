@@ -16,25 +16,25 @@
 
 name := "tap"
 
-version := "3.0.6"
+version := "3.0.7"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.3"
 
 organization := "au.edu.utscic"
 
 //Scala library versions
-val sangriaVersion = "1.3.0"
-val playJsonVersion = "2.6.6"
-val twirlApiVersion = "1.3.12"
+val sangriaVersion = "1.3.2"
+val playJsonVersion = "2.6.7"
+val twirlApiVersion = "1.3.13"
 val sangriaJsonVersion = "1.0.4"
 val akkaStreamVersion = "2.5.6"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 val nlytxCommonsVersion = "0.1.1"
 val factorieVersion = "1.2"
-val nlytxFactorieVersion = "0.3"
+val nlytxFactorieVersion = "0.5.0"
 //Java library versions
-val openNlpVersion = "1.8.2"
+val openNlpVersion = "1.8.3"
 val langToolVersion = "3.9"
 
 enablePlugins(PlayScala)
