@@ -23,12 +23,13 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
-import cc.factorie.app.nlp.{Document, Section}
-import io.nlytx.factorie_nlp_api.AnnotatorPipelines
+import io.nlytx.nlp.api.AnnotatorPipelines
+import io.nlytx.nlp.api.DocumentModel.{Document, Section}
 import play.api.Logger
 import tap.analysis.Syllable
-import tap.data._ // scalastyle:ignore
+import tap.data._
 import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
@@ -90,9 +91,12 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       .map { sentList =>
         sentList.zipWithIndex.map { case(s,idx) =>
           val tokens = s.tokens.toList.map { t =>
-            val children = t.parseChildren.map(_.positionInSentence).toVector
+            val children = Vector() // t.parseChildren.map(_.positionInSentence).toVector
+            val nerTag = "" //t.nerTag.baseCategoryValue
+            val parent = -1 //t.parseParentIndex
+            val parseLabel = "" //t.parseLabel.value.toString()
             TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
-              t.nerTag.baseCategoryValue,t.parseParentIndex,children,t.parseLabel.value.toString(),t.isPunctuation)
+              nerTag,parent,children,parseLabel,t.isPunctuation)
           }.toVector
           TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
         }
