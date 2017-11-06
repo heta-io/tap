@@ -56,6 +56,7 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   def process(query:String,name:Option[String],variables:JsObject):Future[Result] = QueryParser.parse(query) match {
     case Success(queryAst) => executeGraphQLQuery(queryAst, name, variables)
     case Failure(error: SyntaxError) => Future.successful(BadRequest(error.getMessage))
+    case _ => Future.successful(BadRequest("There was a problem with the request to TAP graphql."))
   }
 
   def executeGraphQLQuery(query: Document, name: Option[String], vars: JsObject):Future[Result] = {

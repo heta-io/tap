@@ -16,7 +16,7 @@
 
 name := "tap"
 
-version := "3.0.8"
+version := "3.0.9"
 
 scalaVersion := "2.12.3"
 
@@ -105,8 +105,8 @@ dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
 
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
-  "-J-Xmx6g",
-  "-J-Xms3g"
+  "-J-Xmx4g",
+  "-J-Xms2g"
 
   // others will be added as app parameters
 //  "-Dproperty=true",
