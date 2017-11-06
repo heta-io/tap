@@ -16,7 +16,7 @@
 
 name := "tap"
 
-version := "3.0.8"
+version := "3.0.9"
 
 scalaVersion := "2.12.3"
 
