@@ -23,97 +23,131 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
-import cc.factorie.app.nlp.{Document, Section}
-import io.nlytx.factorie_nlp_api.AnnotatorPipelines
+import io.nlytx.nlp.api.AnnotatorPipelines
+import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import play.api.Logger
 import tap.analysis.Syllable
 import tap.data._ // scalastyle:ignore
 import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
+import tap.pipelines.AnnotatingTypes._ // scalastyle:ignore
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
+
 class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
 
   val logger: Logger = Logger(this.getClass)
 
+  /* The main pipelines for performing annotating text analysis */
+  object Pipeline {
+    val sentences: SentencesFlow  = tapSentences
+    val vocab: VocabFlow = tapSentences via tapVocab
+    val metrics: MetricsFlow = tapSentences via tapMetrics
+    val expressions: ExpressionsFlow = tapSentences via tapExpressions
+    val syllables: SyllablesFlow = tapSentences via tapSyllables
+    val spelling: SpellingFlow = tapSentences via tapSpelling
+    val posStats: PosStatsFlow = tapSentences via tapPosStats
+  }
+
+  def build[T](pipetype:String,pipeline: Flow[Document,T,NotUsed]):Flow[String,T,NotUsed] = {
+    val makeDoc = pipetype match {
+      case STANDARD => makeDocument
+      case FAST => makeFastDocument
+      case NER => makeNerDocument
+      case _ => makeFastDocument
+    }
+    makeDoc via pipeline
+  }
+
+  /* Initialise required analytics processes */
+
   /* Running LanguageTool in an Actor */ //TODO Perhaps look at a streamed implementation?
   implicit val timeout: Timeout = 120 seconds
   val languageToolInitialised:Future[Boolean] = ask(languageTool,INIT).mapTo[Boolean]
-  languageToolInitialised.onComplete{
+  languageToolInitialised.onComplete {
     case Success(result) => logger.info(s"LanguageTool initialised successfully: $result")
     case Failure(e) => logger.error("LanguageTool encountered an error on startup: " + e.toString)
   }
 
   /* Initialise Factorie models by running a test through docBuilder */
   logger.info("Initialising Factorie models")
-  val ap = AnnotatorPipelines
-  val docStart = Future(ap.profile("Please start Factorie!",ap.postagPipeline,180))
+  private val ap = AnnotatorPipelines
+  val docStart = Future(ap.profile("Please start Factorie!",ap.fastPipeline))
   docStart.onComplete{
     case Success(doc) => logger.info(s"Factorie started successfully [${doc.tokenCount} tokens]")
     case Failure(e) => logger.error("Factorie start failure:" + e.toString)
   }
 
-  /* The main pipelines for performing annotating text analysis */
-  object Pipeline {
-    val sentences: Flow[String, List[TapSentence], NotUsed] = makeDocument via tapSentences
-    val vocab: Flow[String, TapVocab, NotUsed] = makeDocument via tapSentences via tapVocab
-    val metrics: Flow[String, TapMetrics, NotUsed] = makeDocument via tapSentences via tapMetrics
-    val expressions: Flow[String, List[TapExpressions], NotUsed] = makeDocument via tapSentences via tapExpressions
-    val syllables: Flow[String,List[TapSyllables],NotUsed] = makeDocument via tapSentences via tapSyllables
-    val spelling: Flow[String,List[TapSpelling],NotUsed] = makeDocument via tapSentences via tapSpelling
-    val posStats: Flow[String, TapPosStats, NotUsed] = makeDocument via tapSentences via tapPosStats
-  }
 
 
-  /* The following are essentially pipeline segments that can be re-used in the above pipelines
+
+
+
+  /* The following are pipeline segments that can be re-used in the above pipelines
    *
    */
 
-  val makeDocument: Flow[String, Document, NotUsed] = Flow[String]
+  val makeDocument: DocumentFlow = Flow[String]
     .mapAsync[Document](2) { text =>
-    ap.process(text,ap.defaultPipeline)
+    ap.process(text,ap.parserPipeline)
     }
 
-  val sections: Flow[Document,List[Section],NotUsed] = Flow[Document]
-    .map(_.sections.toList)
+  //If parser info is NOT required
+  val makeFastDocument: DocumentFlow = Flow[String]
+    .mapAsync[Document](2) { text =>
+    ap.process(text,ap.defaultPipeline)
+  }
 
-  val tapSentences: Flow[Document, List[TapSentence], NotUsed] = Flow[Document]
+  //If nertags ARE required
+  val makeNerDocument: DocumentFlow = Flow[String]
+    .mapAsync[Document](2) { text =>
+    ap.process(text,ap.completePipeline)
+  }
+
+  val sections: Flow[Document,Sections,NotUsed] = Flow[Document]
+    .map(_.sections.toVector)
+
+  val tapSentences: SentencesFlow = Flow[Document]
       .map { doc =>
-        doc.sentences.toList
+        doc.sentences
       }
       .map { sentList =>
         sentList.zipWithIndex.map { case(s,idx) =>
-          val tokens = s.tokens.toList.map { t =>
-            val children = t.parseChildren.map(_.positionInSentence).toVector
+          val tokens = s.tokens.toVector.map { t =>
+            val (children,parent,parseLabel) = getParseData(t).toOption.getOrElse((Vector(),-1,""))
+            val nerTag = Try(t.nerTag.baseCategoryValue).toOption.getOrElse("")
             TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
-              t.nerTag.baseCategoryValue,t.parseParentIndex,children,t.parseLabel.value.toString(),t.isPunctuation)
-          }.toVector
+              nerTag,parent,children,parseLabel,t.isPunctuation)
+          }
           TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
-        }
+        }.toVector
       }
 
+  private def getParseData(t:Token):Try[(Vector[Int],Int,String)] = Try {
+    (t.parseChildren.toVector.map(_.positionInSentence),t.parseParentIndex,t.parseLabel.value.toString)
+  }
 
-
-  val tapVocab: Flow[List[TapSentence], TapVocab, NotUsed] = Flow[List[TapSentence]]
-      .map { lst =>
-        lst.flatMap(_.tokens)
+  val tapVocab: Flow[TapSentences, TapVocab, NotUsed] = Flow[TapSentences]
+      .map { v =>
+        v.flatMap(_.tokens)
           .map(_.term.toLowerCase)
           .groupBy((term: String) => term)
           .mapValues(_.length)
       }.map { m =>
-      val lst: List[TermCount] = m.toList.map { case (k, v) => TermCount(k, v) }
+      val lst: Vector[TermCount] = m.toVector.map { case (k, v) => TermCount(k, v) }
       TapVocab(m.size, lst)
     }
 
-  val tapMetrics: Flow[List[TapSentence], TapMetrics, NotUsed] = Flow[List[TapSentence]]
-      .map { lst =>
-        lst.map { s =>
+  val tapMetrics: Flow[TapSentences, TapMetrics, NotUsed] = Flow[TapSentences]
+      .map { v =>
+        v.map { s =>
           val tokens:Int = s.tokens.length
           val characters:Int = s.original.length
           val punctuation:Int = s.tokens.count(_.isPunctuation)
@@ -127,20 +161,20 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       }
       .map { res =>
         val sentCount:Int = res.length
-        val sentWordCounts = res.map(_._2).toVector
+        val sentWordCounts = res.map(_._2)
         val wordCount = sentWordCounts.sum
         val averageSentWordCount = wordCount / sentCount.toDouble
-        val wordLengths = res.map(_._6).toVector
+        val wordLengths = res.map(_._6)
         val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
-        val averageSentWordLength = res.map(_._7).toVector
+        val averageSentWordLength = res.map(_._7)
 
         TapMetrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
           sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
       }
 
-  val tapExpressions: Flow[List[TapSentence], List[TapExpressions], NotUsed] = Flow[List[TapSentence]]
-    .mapAsync[List[TapExpressions]](3) { lst =>
-      val results = lst.map { sent =>
+  val tapExpressions: Flow[TapSentences, Vector[TapExpressions], NotUsed] = Flow[TapSentences]
+    .mapAsync[Vector[TapExpressions]](3) { v =>
+      val results = v.map { sent =>
         for {
             ae <- Expressions.affect(sent.tokens)
             ee <- Expressions.epistemic(sent.tokens)
@@ -150,27 +184,27 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       Future.sequence(results)
     }
 
-  val tapSyllables: Flow[List[TapSentence],List[TapSyllables], NotUsed] = Flow[List[TapSentence]]
-    .map { lst =>
-      lst.map { sent =>
+  val tapSyllables: Flow[TapSentences,Vector[TapSyllables], NotUsed] = Flow[TapSentences]
+    .map { v =>
+      v.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / sent.tokens.length.toDouble
         TapSyllables(sent.idx,avg,counts)
       }
     }
 
-  val tapSpelling: Flow[List[TapSentence],List[TapSpelling],NotUsed] = Flow[List[TapSentence]]
-    .mapAsync[List[TapSpelling]](2) { lst =>
-      val checked = lst.map { sent =>
+  val tapSpelling: Flow[TapSentences,Vector[TapSpelling],NotUsed] = Flow[TapSentences]
+    .mapAsync[Vector[TapSpelling]](2) { v =>
+      val checked = v.map { sent =>
         ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
       }
       Future.sequence(checked)
     }
 
 
-  val tapPosStats:Flow[List[TapSentence], TapPosStats, NotUsed] = Flow[List[TapSentence]]
-    .map { lst =>
-      val stats = lst.map { s =>
+  val tapPosStats:Flow[TapSentences, TapPosStats, NotUsed] = Flow[TapSentences]
+    .map { v =>
+      val stats = v.map { s =>
         val ts = s.tokens
         val tokens:Int = ts.length
         val punctuation:Int = ts.count(_.isPunctuation)
@@ -184,11 +218,11 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       val words = stats.map(_._1)
       val ners = stats.map(_._2)
       val verbs = stats.map(_._3)
-      val verbDist = verbs.map(_ / verbs.sum.toDouble).toVector
+      val verbDist = verbs.map(_ / verbs.sum.toDouble)
       val nouns = stats.map(_._4)
-      val nounDist = nouns.map(_ / nouns.sum.toDouble).toVector
+      val nounDist = nouns.map(_ / nouns.sum.toDouble)
       val adjs = stats.map(_._5)
-      val adjDist = adjs.map(_ / adjs.sum.toDouble).toVector
+      val adjDist = adjs.map(_ / adjs.sum.toDouble)
       val verbNounRatio = verbs.sum / nouns.sum.toDouble
       val futurePastRatio = 0.0
       val nerWordRatio = ners.sum / words.sum.toDouble
@@ -196,9 +230,6 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
       TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
 
-  val addNer:Flow[Document,Document,NotUsed] = Flow[Document].map(d => d)
-
-  val addParse:Flow[Document,Document,NotUsed] = Flow[Document].map(d => d)
 
 }
 

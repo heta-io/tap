@@ -32,6 +32,7 @@ class GraphqlSchema {
 
   val inputText:Argument[String] = Argument("text", StringType)
   val moveGrammar:Argument[Option[String]] = Argument("grammar",OptionInputType(StringType))
+  val pipetype:Argument[Option[String]] = Argument("pipetype",OptionInputType(StringType))
 
   val allFields = fields[GraphqlActions,Unit](
     Field("visible", StringResultType,
@@ -49,9 +50,10 @@ class GraphqlSchema {
     Field("cleanAscii",StringResultType,
       Some("Returns ascii safe cleaned text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.cleanAscii(c arg inputText)),
+
     Field("annotations", deriveObjectType[Unit,SentencesResult](Interfaces[Unit,SentencesResult](ResultType)),
       Some("Returns sentences for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.sentences(c arg inputText)),
+      arguments = inputText :: pipetype :: Nil, resolve = c => c.ctx.annotations(c arg inputText,c arg pipetype)),
     Field("vocabulary",deriveObjectType[Unit,VocabResult](Interfaces[Unit,VocabResult](ResultType)),
       description = Some("Returns vocabulary for text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.vocabulary(c arg inputText)),
@@ -70,6 +72,7 @@ class GraphqlSchema {
     Field("posStats",deriveObjectType[Unit,PosStatsResult](Interfaces[Unit,PosStatsResult](ResultType)),
       Some("Returns posStats for text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.posStats(c arg inputText)),
+
     Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
       description = Some("Returns a list of moves for the input text"),
       arguments = inputText :: moveGrammar :: Nil, resolve = c => c.ctx.moves(c arg inputText,c arg moveGrammar))

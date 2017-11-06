@@ -31,30 +31,31 @@ object Results {
   trait Result {
     val analytics: Any
     val timestamp: String = OffsetDateTime.now().toString
-    val querytime: Int = -1
-    val message: String = ""
+    val querytime: Int
+    val message: String
   }
 
-  case class StringResult(analytics: String) extends Result
-  val StringResultType =  deriveObjectType[Unit,StringResult](Interfaces[Unit,StringResult](ResultType))
+  case class StringResult(analytics: String, message:String = "", querytime:Int = -1) extends Result
 
-  case class StringListResult(analytics: List[List[String]]) extends Result
+  case class StringListResult(analytics: Vector[Vector[String]], message:String = "", querytime:Int = -1) extends Result
 
-  case class SentencesResult(analytics: List[TapSentence]) extends Result
+  case class SentencesResult(analytics: Vector[TapSentence], message:String = "", querytime:Int = -1) extends Result
 
-  case class VocabResult(analytics: TapVocab) extends Result
+  case class VocabResult(analytics: TapVocab, message:String = "", querytime:Int = -1) extends Result
 
-  case class MetricsResult(analytics: TapMetrics) extends Result
+  case class MetricsResult(analytics: TapMetrics, message:String = "", querytime:Int = -1) extends Result
 
-  case class PosStatsResult(analytics: TapPosStats) extends Result
+  case class PosStatsResult(analytics: TapPosStats, message:String = "", querytime:Int = -1) extends Result
 
-  case class ExpressionsResult(analytics: List[TapExpressions]) extends Result
+  case class ExpressionsResult(analytics: Vector[TapExpressions], message:String = "", querytime:Int = -1) extends Result
 
-  case class SpellingResult(analytics: List[TapSpelling]) extends Result
+  case class SpellingResult(analytics: Vector[TapSpelling], message:String = "", querytime:Int = -1) extends Result
 
   @GraphQLName("syllables")
   @GraphQLDescription("Get syllable counts and averages.")
-  case class SyllablesResult(analytics: List[TapSyllables]) extends Result
+  case class SyllablesResult(analytics: Vector[TapSyllables], message:String = "", querytime:Int = -1) extends Result
+
+  val StringResultType =  deriveObjectType[Unit,StringResult](Interfaces[Unit,StringResult](ResultType))
 
   object Implicits {
     implicit val ResultType:InterfaceType[Unit,Result] = InterfaceType(
@@ -64,7 +65,6 @@ object Results {
         Field("message", StringType, resolve = _.value.message)
       )
     )
-
     implicit val TokenType:ObjectType[Unit,TapToken] = deriveObjectType[Unit,TapToken]()
     implicit val SentenceType:ObjectType[Unit,TapSentence] = deriveObjectType[Unit,TapSentence]()
     implicit val TermCountType:ObjectType[Unit,TermCount] = deriveObjectType[Unit,TermCount]()

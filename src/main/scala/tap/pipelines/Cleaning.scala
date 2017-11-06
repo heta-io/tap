@@ -21,7 +21,7 @@ import akka.stream.scaladsl.Flow
 
 /*****************************************
   *  Cleaning
-  *      The pipelines for cleaning text
+  *      The pipelines for clean text
   *      Nested object holds pipelines that take a
   *      stream of Char and produce a string stream
   */
@@ -30,7 +30,7 @@ class Cleaning  {
   /****************************************
     *  Pipeline
     *      A convenience object that holds the pipelines
-    *      for cleaning
+    *      for clean
     */
   object Pipeline { //Flow[ByteString,String,NotUsed]
     val revealInvisible:Flow[String,String,NotUsed] = utf8Str via visibleWhitespace via replaceControl
