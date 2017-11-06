@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package tap.services.feedback
+//package tap.services.feedback
 
 /**
   * Created by andrew@andrewresearch.net on 15/07/2016.
   */
 
-import akka.actor.{Actor, ActorLogging}
-import akka.util.Timeout
 
-import scala.concurrent.duration._
 
 /*
 object WritingFeedback {
