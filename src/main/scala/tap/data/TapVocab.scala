@@ -21,5 +21,5 @@ package tap.data
   */
 
 case class TermCount(term:String,count:Int)
-case class CountTerms(count:Int,terms:List[String])
-case class TapVocab(unique: Int, terms: List[TermCount])
+case class CountTerms(count:Int,terms:Vector[String])
+case class TapVocab(unique: Int, terms: Vector[TermCount])
