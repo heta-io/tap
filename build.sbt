@@ -14,9 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import LocalSbtSettings._
+
 name := "tap"
 
-version := "3.1.0-RC1"
+version := "3.1.0-RC3"
 
 scalaVersion := "2.12.3"
 
@@ -83,8 +85,8 @@ scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value
 enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
 paradoxTheme := Some(builtinParadoxTheme("generic"))
 paradoxProperties in Compile ++= Map(
-  "github.base_url" -> s"https://github.com/uts-cic/tap",
-  "scaladoc.api.base_url" -> s"https://uts-cic.github.io/tap"
+  "github.base_url" -> s"$githubBaseUrl",
+  "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
 )
 //Task for copying to root level docs folder (for GitHub pages)
 val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
@@ -97,30 +99,14 @@ copyDocsTask := {
   IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
   IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
 }
-//scalacOptions in Paradox ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
-//Enable this only for local builds - disabled for Travis
 enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-dockerExposedPorts := Seq(9000) // sbt docker:publishLocal
-
+dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
+dockerRepository := Some(s"$dockerRepoURI")
+defaultLinuxInstallLocation in Docker := "/opt/docker"
+dockerExposedVolumes := Seq("/opt/docker/logs")
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",
   "-J-Xms2g"
-
-  // others will be added as app parameters
-//  "-Dproperty=true",
-//  "-port=8080",
-
-  // you can access any build setting/task here
-  //s"-version=${version.value}"
 )
-
-//Generate build info file
-//Disable for travis CI
-//enablePlugins(BuildInfoPlugin)
-//buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
-//buildInfoPackage := "org.goingok"
-//buildInfoOptions += BuildInfoOption.BuildTime
-
-resolvers += "IESL Release" at "http://dev-iesl.cs.umass.edu/nexus/content/groups/public"
