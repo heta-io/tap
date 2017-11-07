@@ -6,6 +6,7 @@ scala:
    - 2.12.3
 
 env:
+  TAP_HOSTS=localhost
   global:
  #   _JAVA_OPTIONS=-Xmx2500
 

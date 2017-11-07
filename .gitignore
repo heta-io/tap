@@ -118,3 +118,4 @@ src/main/scala/tap/nlp/old/SentenceConverter.scala
 /src/main/scala/experiments.sc
 /project/project/
 /project/target/
+/project/LocalSbtSettings.scala
