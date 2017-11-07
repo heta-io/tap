@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Quick Start · </title>
+<title>Quick Start · Text Analytics Pipeline (TAP)</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='tap'/>
@@ -27,10 +27,10 @@
 <nav class="off-canvas-nav">
 <div class="nav-home">
 <a href="../index.html" >
-<span class="home-icon">⌂</span>
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.0.5
+3.1.0-RC3
 </div>
 </div>
 <div class="nav-toc">
@@ -69,7 +69,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="../index.html">index.html</a></div>
+<div class="title"><a href="../index.html">Text Analytics Pipeline (TAP)</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -83,10 +83,10 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <nav class="site-nav">
 <div class="nav-home">
 <a href="../index.html" >
-<span class="home-icon">⌂</span>
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.0.5
+3.1.0-RC3
 </div>
 </div>
 <div class="nav-toc">
@@ -124,7 +124,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-12 show-for-medium column">
 <div class="nav-breadcrumbs">
 <ul>
-  <li><a href="../index.html">index.html</a></li>
+  <li><a href="../index.html">Text Analytics Pipeline (TAP)</a></li>
   <li><a href="../overview/index.html">Overview</a></li>
   <li>Quick Start</li>
 </ul>
@@ -135,19 +135,27 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
 <h2><a href="#quick-start" name="quick-start" class="anchor"><span class="anchor-link"></span></a>Quick Start</h2>
+<p>Clone the project source code with git:</p>
+<pre class="prettyprint"><code class="language-bash">git clone https://github.com/uts-cic/tap
+</code></pre>
+<p>Ensure you have the <a href="http://www.scala-sbt.org">latest sbt</a> installed</p>
+<p>Add a <code>LocalSbtSettings.scala</code> file in the <code>project</code> directory. This will hold your specific settings for your build:</p>
+<pre class="prettyprint"><code class="language-scala">import sbt._
+
+object LocalSbtSettings {
+ val githubBaseUrl = &quot;https://github.com/uts-cic/tap&quot; //Change this to your fork
+ val scaladocApiBaseUrl = &quot;https://uts-cic.github.io/tap&quot; //Change this to your fork
+ val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot;
+}
+</code></pre>
 <ol>
-  <li>
-    <p>The steps to getting the tap-api running locally&hellip;</p>
-    <ul>
-      <li>Get a copy of the project source code</li>
-      <li>Download sbt and/or the play framework if they are not already installed on your system</li>
-      <li>Run the project using sbt run or Play</li>
-    </ul>
-  </li>
-  <li>
-    <p>Connecting &hellip;</p>
-    <p>Connect to localhost:9000 via the browser</p>
-  </li>
+  <li>Run TAP with enough memory to process larger models:</li>
+</ol>
+<p><code>bash
+  sbt -J-Xmx4096M run
+</code></p>
+<ol>
+  <li>Connect to <code>http://localhost:9000</code> with your web browser</li>
 </ol>
 <div class="source-github">
 The source code for this page can be found <a href="https://github.com/uts-cic/tap/tree/master/src/main/paradox/overview/quick_start.md">here</a>.

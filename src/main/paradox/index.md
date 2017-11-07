@@ -1,3 +1,7 @@
+# Text Analytics Pipeline (TAP)
+
+Get started immediately with the [Quick Start](overview/quick_start.html)
+
 @@toc { depth=2 }
 
 @@@ index
