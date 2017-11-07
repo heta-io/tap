@@ -16,15 +16,13 @@
 
 package handlers
 
-import java.io.File
 import javax.inject.Inject
 
-import tap.pipelines.materialize.PipelineContext.{executor, materializer}
-import com.typesafe.config.ConfigFactory
-import models.Results.{StringListResult, StringResult}
-import play.api.{Configuration, Environment, Logger, Mode}
-import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfig, AhcWSClientConfigFactory}
+import models.Results.StringListResult
+import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
+import tap.pipelines.materialize.PipelineContext.executor
+
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
@@ -37,42 +35,47 @@ class ExternalAnalysisHandler @Inject() (wsClient: WSClient) {
 
   def analyseWithAthanor(text:String,grammar:Option[String]):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
-    val parameter = "?grammar="+grammar.getOrElse("analytic")
-    val url = "http://athanor.utscic.edu.au/v2/analyse/text/rhetorical"+parameter
+    val parameter = "?grammar=" + grammar.getOrElse("analytic")
+    val url = "http://athanor.utscic.edu.au/v2/analyse/text/rhetorical" + parameter
     logger.info(s"Creating request to: $url")
     val request: WSRequest = wsClient.url(url)
 
     val athanorRequest: WSRequest = request
-        .withHttpHeaders("Accept" -> "application/json")
-        .withRequestTimeout(10000.millis)
+      .withHttpHeaders("Accept" -> "application/json")
+      .withRequestTimeout(30000.millis)
 
     val futureResponse: Future[WSResponse] = athanorRequest.post(text)
+    //try {
+    case class AthanorMsg(message: String, results: Vector[Vector[String]])
 
-    case class AthanorMsg(message:String, results:List[List[String]])
-
-    import play.api.libs.functional.syntax._  //scalastyle:ignore
-    import play.api.libs.json._               //scalastyle:ignore
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._ //scalastyle:ignore
 
     implicit val AMWrites: Writes[AthanorMsg] = (
       (JsPath \ "message").write[String] and
-        (JsPath \ "results").write[List[List[String]]]
-    )(unlift(AthanorMsg.unapply))
+        (JsPath \ "results").write[Vector[Vector[String]]]
+      ) (unlift(AthanorMsg.unapply))
 
-    implicit val AMReads:Reads[AthanorMsg] = (
+    implicit val AMReads: Reads[AthanorMsg] = (
       (JsPath \ "message").read[String] and
-        (JsPath \ "results").read[List[List[String]]]
-      )(AthanorMsg.apply _)
-
-    val result:Future[List[List[String]]] = futureResponse.map { response =>
-      response.json.as[AthanorMsg].results
+        (JsPath \ "results").read[Vector[Vector[String]]]
+      ) (AthanorMsg.apply _)
+    logger.warn("About to try and get result...")
+    val result: Future[StringListResult] = {
+      futureResponse.map { response =>
+        val res = response.json.as[AthanorMsg].results
+        StringListResult(res,"ok")
+      }
+      val errMsg = "There was a problem connecting to the Athanor server."
+      futureResponse.recover {
+        case e: Any => {
+          val msg = s"$errMsg: $e"
+          logger.error(msg)
+          StringListResult(Vector(),msg)
+        }
+      }.asInstanceOf[Future[StringListResult]]
     }
-    
-    result.map(s => StringListResult(s))
+    result
   }
-
-//  def analyseWithXip(text:String):Future[StringResult] = Future {
-//
-//    StringResult("")
-//  }
 
 }

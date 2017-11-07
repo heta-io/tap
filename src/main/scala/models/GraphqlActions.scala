@@ -35,7 +35,8 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
   def cleanPreserve(text:String):Future[StringResult] = textAnalysisHandler.cleanPreserve(text)
   def cleanMinimal(text:String):Future[StringResult]  = textAnalysisHandler.cleanMinimal(text)
   def cleanAscii(text:String):Future[StringResult]    = textAnalysisHandler.cleanAscii(text)
-  def sentences(text:String):Future[SentencesResult]  = textAnalysisHandler.sentences(text)
+
+  def annotations(text:String,pipetype:Option[String]):Future[SentencesResult]  = textAnalysisHandler.annotations(text,pipetype)
   def vocabulary(text:String):Future[VocabResult]     = textAnalysisHandler.vocabulary(text)
   def metrics(text:String):Future[MetricsResult]      = textAnalysisHandler.metrics(text)
   def expressions(text:String):Future[ExpressionsResult] = textAnalysisHandler.expressions(text)

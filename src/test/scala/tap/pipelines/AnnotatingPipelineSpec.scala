@@ -18,14 +18,10 @@ package tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
-import cc.factorie.app.nlp.Document
-import io.nlytx.factorie_nlp_api.AnnotatorPipelines
-import org.scalatest.AsyncFlatSpec
+import io.nlytx.nlp.api.AnnotatorPipelines
+import io.nlytx.nlp.api.DocumentModel.Document
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.{GuiceOneAppPerTest, GuiceOneServerPerTest}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Injecting
-import tap.data._
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
