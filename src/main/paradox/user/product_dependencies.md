@@ -76,10 +76,11 @@ this section in response to errors to see what you might be missing**.
 
     Installing the JDK should take care of installing the JRE also.
 
-    You should provide enough memory for the JDK and JRE to build and run this project.
+    You should provide enough memory for the JDK and JRE to build and run this project. While TAP will run with standard memory settings, certain NLP processes which require the loading of large models will require additional memory.
+    
     The following values are suggested :
 
-       -Xmx2048M -Xss1M
+       -Xmx4096M -Xss1M
 
 5. The Play Framework
 
