@@ -60,7 +60,7 @@ fabric.properties
 /src/main/resources/logback.xml
 /.idea/
 !/src/main/resources/logback.xml
-project/
+
 src/test/java/
 src/test/resources/
 src/test/scala-2.12/
@@ -116,3 +116,5 @@ src/main/scala/tap/nlp/old/OldNlpSentence.scala
 src/main/scala/tap/nlp/old/SentenceConverter.scala
 /src/main/scala/worksheet.sc
 /src/main/scala/experiments.sc
+/project/project/
+/project/target/
