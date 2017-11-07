@@ -62,11 +62,6 @@ val analyticsDependencies = Seq(
 )
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
-val generalDependencies = Seq(
-  "io.nlytx" %% "commons" % nlytxCommonsVersion
-)
-resolvers += Resolver.bintrayRepo("nlytx", "nlytx_commons")
-
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
@@ -75,7 +70,7 @@ val testDependencies = Seq(
 )
 
 
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ generalDependencies ++ testDependencies
+libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
