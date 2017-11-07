@@ -5,9 +5,8 @@ jdk: oraclejdk8
 scala:
    - 2.12.3
 
-env:
-  TAP_HOSTS=localhost
-  global:
+env: TAP_HOSTS=localhost
+ # global:
  #   _JAVA_OPTIONS=-Xmx2500
 
 script:
