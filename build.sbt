@@ -18,7 +18,7 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.0-RC3"
+version := "3.1.0-RC4"
 
 scalaVersion := "2.12.3"
 
@@ -32,7 +32,7 @@ val sangriaJsonVersion = "1.0.4"
 val akkaStreamVersion = "2.5.6"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
-val nlytxCommonsVersion = "0.1.1"
+val nlytxCommonsVersion = "0.3.0"
 val factorieVersion = "1.2"
 val nlytxFactorieVersion = "0.5.1"
 //Java library versions
@@ -55,6 +55,7 @@ val apiDependencies = Seq(
 val analyticsDependencies = Seq(
   "io.nlytx" %% "nlytx-nlp-api" % "1.0.2",
   "io.nlytx" %% "factorie-nlp-models" % "1.0.3",
+  "io.nlytx" %% "nlytx-nlp-commons" % nlytxCommonsVersion,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
