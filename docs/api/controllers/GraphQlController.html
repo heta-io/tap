@@ -121,6 +121,12 @@
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
+                        <a class="class" href="HealthController.html" title="Created by quanie on 06/10/2017."></a>
+                        <a href="HealthController.html" title="Created by quanie on 06/10/2017.">
+                          HealthController
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
                         <a class="class" href="ReverseAssets.html" title=""></a>
                         <a href="ReverseAssets.html" title="">
                           ReverseAssets
@@ -136,6 +142,12 @@
                         <a class="class" href="ReverseGraphQlController.html" title=""></a>
                         <a href="ReverseGraphQlController.html" title="">
                           ReverseGraphQlController
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
+                        <a class="class" href="ReverseHealthController.html" title=""></a>
+                        <a href="ReverseHealthController.html" title="">
+                          ReverseHealthController
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
@@ -223,9 +235,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="controllers.GraphQlController#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(assets:controllers.AssetsFinder):controllers.GraphQlController"></a><a id="&lt;init&gt;:GraphQlController"></a>
+      <a id="&lt;init&gt;(assets:controllers.AssetsFinder,gqlSchema:models.GraphqlSchema,actions:models.GraphqlActions):controllers.GraphQlController"></a><a id="&lt;init&gt;:GraphQlController"></a>
       <span class="permalink">
-      <a href="../controllers/GraphQlController.html#&lt;init&gt;(assets:controllers.AssetsFinder):controllers.GraphQlController" title="Permalink">
+      <a href="../controllers/GraphQlController.html#&lt;init&gt;(assets:controllers.AssetsFinder,gqlSchema:models.GraphqlSchema,actions:models.GraphqlActions):controllers.GraphQlController" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -234,7 +246,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">GraphQlController</span><span class="params">(<span name="assets">assets: <span class="extype" name="controllers.AssetsFinder">AssetsFinder</span></span>)</span>
+        <span class="name">GraphQlController</span><span class="params">(<span name="assets">assets: <span class="extype" name="controllers.AssetsFinder">AssetsFinder</span></span>, <span name="gqlSchema">gqlSchema: <a href="../models/GraphqlSchema.html" class="extype" name="models.GraphqlSchema">GraphqlSchema</a></span>, <span name="actions">actions: <a href="../models/GraphqlActions.html" class="extype" name="models.GraphqlActions">GraphqlActions</a></span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -3332,6 +3344,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="controllers.GraphQlController#executeGraphQLQuery" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="executeGraphQLQuery(query:sangria.ast.Document,name:Option[String],vars:play.api.libs.json.JsObject):scala.concurrent.Future[play.api.mvc.Result]"></a><a id="executeGraphQLQuery(Document,Option[String],JsObject):Future[Result]"></a>
+      <span class="permalink">
+      <a href="../controllers/GraphQlController.html#executeGraphQLQuery(query:sangria.ast.Document,name:Option[String],vars:play.api.libs.json.JsObject):scala.concurrent.Future[play.api.mvc.Result]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executeGraphQLQuery</span><span class="params">(<span name="query">query: <span class="extype" name="sangria.ast.Document">Document</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="vars">vars: <span class="extype" name="play.api.libs.json.JsObject">JsObject</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.mvc.Result">Result</span>]</span>
+      </span>
+      
+      
     </li><li name="play.api.mvc.InjectedController#fallbackControllerComponents" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fallbackControllerComponents:play.api.mvc.ControllerComponents"></a><a id="fallbackControllerComponents:ControllerComponents"></a>
       <span class="permalink">
@@ -3546,6 +3574,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseControllerHelpers</dd></dl></div>
+    </li><li name="controllers.GraphQlController#process" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="process(query:String,name:Option[String],variables:play.api.libs.json.JsObject):scala.concurrent.Future[play.api.mvc.Result]"></a><a id="process(String,Option[String],JsObject):Future[Result]"></a>
+      <span class="permalink">
+      <a href="../controllers/GraphQlController.html#process(query:String,name:Option[String],variables:play.api.libs.json.JsObject):scala.concurrent.Future[play.api.mvc.Result]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">process</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="variables">variables: <span class="extype" name="play.api.libs.json.JsObject">JsObject</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.mvc.Result">Result</span>]</span>
+      </span>
+      
+      
     </li><li name="play.api.mvc.RequestImplicits#request2flash" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="request2flash(implicitrequest:play.api.mvc.RequestHeader):play.api.mvc.Flash"></a><a id="request2flash(RequestHeader):Flash"></a>
       <span class="permalink">
@@ -3578,6 +3622,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>RequestImplicits</dd></dl></div>
+    </li><li name="controllers.GraphQlController#schema" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="schema:sangria.schema.Schema[models.GraphqlActions,Unit]"></a><a id="schema:Schema[GraphqlActions,Unit]"></a>
+      <span class="permalink">
+      <a href="../controllers/GraphQlController.html#schema:sangria.schema.Schema[models.GraphqlActions,Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">schema</span><span class="result">: <span class="extype" name="sangria.schema.Schema">Schema</span>[<a href="../models/GraphqlActions.html" class="extype" name="models.GraphqlActions">GraphqlActions</a>, <span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      
     </li><li name="play.api.mvc.InjectedController#setControllerComponents" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setControllerComponents(components:play.api.mvc.ControllerComponents):Unit"></a><a id="setControllerComponents(ControllerComponents):Unit"></a>
       <span class="permalink">

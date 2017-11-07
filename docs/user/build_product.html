@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Building TAP · </title>
+<title>Building TAP · Text Analytics Pipeline (TAP)</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='tap'/>
@@ -27,10 +27,10 @@
 <nav class="off-canvas-nav">
 <div class="nav-home">
 <a href="../index.html" >
-<span class="home-icon">⌂</span>
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.0.5
+3.1.0-RC3
 </div>
 </div>
 <div class="nav-toc">
@@ -69,7 +69,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="../index.html">index.html</a></div>
+<div class="title"><a href="../index.html">Text Analytics Pipeline (TAP)</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -83,10 +83,10 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <nav class="site-nav">
 <div class="nav-home">
 <a href="../index.html" >
-<span class="home-icon">⌂</span>
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.0.5
+3.1.0-RC3
 </div>
 </div>
 <div class="nav-toc">
@@ -124,7 +124,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-12 show-for-medium column">
 <div class="nav-breadcrumbs">
 <ul>
-  <li><a href="../index.html">index.html</a></li>
+  <li><a href="../index.html">Text Analytics Pipeline (TAP)</a></li>
   <li><a href="../user/index.html">User</a></li>
   <li>Building TAP</li>
 </ul>
@@ -135,33 +135,34 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
 <h4><a href="#building-tap" name="building-tap" class="anchor"><span class="anchor-link"></span></a>Building TAP</h4>
-<ol>
-  <li>
-    <p>Move to the directory where you placed the tap product. Assuming it is in the home directory, you should see a build.sbt file containing instruction on how the build is done, as well as this README.md file:</p>
-    <pre><code>cd ~/tap
+<p>(1) Move to the directory where you placed the tap product. Assuming it is in the home directory, you should see a build.sbt file containing instruction on how the build is done, as well as this README.md file:</p>
+<pre class="prettyprint"><code class="language-bash">cd ~/tap
 </code></pre>
-  </li>
-  <li>
-    <p>Compile the product.</p>
-    <p>The first compile will be very slow as dependencies have to be fetched and placed  in the ~/.ivy2 directory.</p>
-    <pre><code> sbt compile
+<p>(2) Create a <code>LocalSbtSettings.scala</code> file in the <code>project</code> directory. This will hold your specific settings for your build:</p>
+<pre class="prettyprint"><code class="language-scala">import sbt._
+
+object LocalSbtSettings {
+
+  val githubBaseUrl = &quot;https://github.com/uts-cic/tap&quot; //Change this to your fork
+  val scaladocApiBaseUrl = &quot;https://uts-cic.github.io/tap&quot; //Change this to your fork
+  
+  val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot;
+}
 </code></pre>
-    <p>The following compile warnings seem to be safe to ignore, but ensure the  last compile ends with [SUCCESS] :</p>
-    <pre><code>com.typesafe.akka:akka-stream_2.12:2.5.6 is selected over {2.5.4, 2.5.3, 2.4.19}
-com.typesafe.akka:akka-actor_2.12:2.5.6 is selected over {2.5.4, 2.4.19}
-com.google.guava:guava:22.0 is selected over 19.0
-...srcc/main/scala/handlers/GraphQlHandler.scala:42: match may not be exhaustive.
-...
-there were 8 feature warnings; re-run with -feature for details
-two warnings found^[[0m
-Total time: 11 s, completed Oct 7, 2017 12:39:37 PM^[[0m
+<p>(3) Compile the product.</p>
+<p>The first compile will be very slow as dependencies have to be fetched and placed in the <code>~/.ivy2 directory</code>.</p>
+<pre class="prettyprint"><code class="language-bash">sbt compile
 </code></pre>
-    <p>If you get the following compile errors, it means the jars that TAP relies are not  being accessed from the lib directory.  Ensure the missing jars are installed, as explained in the  &ldquo;Getting a local copy of TAP&rdquo; section.</p>
-    <pre><code>import cc.factorie.app.nlp._
-~/tap/src/main/scala/au.edu.utscic.tap/nlp/factorie/Annotator.scala:28: not found: value DocumentAnnotatorPipeline
+<p>The following compile warnings seem to be safe to ignore, but ensure the last compile ends with [SUCCESS] :</p>
+<pre class="prettyprint"><code class="language-sbtshell">  com.typesafe.akka:akka-stream_2.12:2.5.6 is selected over {2.5.4, 2.5.3, 2.4.19}
+  com.typesafe.akka:akka-actor_2.12:2.5.6 is selected over {2.5.4, 2.4.19}
+  com.google.guava:guava:22.0 is selected over 19.0
+  ...srcc/main/scala/handlers/GraphQlHandler.scala:42: match may not be exhaustive.
+  ...
+  there were 8 feature warnings; re-run with -feature for details
+  two warnings found^[[0m
+  Total time: 11 s, completed Oct 7, 2017 12:39:37 PM^[[0m
 </code></pre>
-  </li>
-</ol>
 <div class="source-github">
 The source code for this page can be found <a href="https://github.com/uts-cic/tap/tree/master/src/main/paradox/user/build_product.md">here</a>.
 </div>

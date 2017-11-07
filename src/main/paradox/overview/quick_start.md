@@ -1,12 +1,30 @@
 ## Quick Start
 
-1. The steps to getting the tap-api running locally...
+Clone the project source code with git:
 
-    - Get a copy of the project source code
-    - Download sbt and/or the play framework if they are not already installed on your system
-    - Run the project using sbt run or Play
+```bash
+git clone https://github.com/uts-cic/tap
+```
 
-2. Connecting ...
+Ensure you have the [latest sbt](http://www.scala-sbt.org) installed
 
-    Connect to localhost:9000 via the browser
+Add a ```LocalSbtSettings.scala``` file in the ```project``` directory. This will hold your specific settings for your build:
+   
+```scala
+import sbt._
+
+object LocalSbtSettings {
+ val githubBaseUrl = "https://github.com/uts-cic/tap" //Change this to your fork
+ val scaladocApiBaseUrl = "https://uts-cic.github.io/tap" //Change this to your fork
+ val dockerRepoURI = "the.url.to.publish.docker.images.to"
+}
+```
+
+4. Run TAP with enough memory to process larger models:
+
+  ```bash
+  sbt -J-Xmx4096M run
+  ```
+
+5. Connect to ```http://localhost:9000``` with your web browser
 
