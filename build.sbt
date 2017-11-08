@@ -18,23 +18,27 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.0-RC4"
+version := "3.1.1"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
 organization := "au.edu.utscic"
 
 //Scala library versions
+val nlytxNlpApiV = "1.1.0"
+val nlytxNlpCommonsV = "1.0.0"
+val factorieNlpV = "1.0.4"
+val factorieNlpModelsV = "1.0.3"
+
 val sangriaVersion = "1.3.2"
+val sangriaJsonVersion = "1.0.4"
 val playJsonVersion = "2.6.7"
 val twirlApiVersion = "1.3.13"
-val sangriaJsonVersion = "1.0.4"
+
 val akkaStreamVersion = "2.5.6"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
-val nlytxCommonsVersion = "0.3.0"
-val factorieVersion = "1.2"
-val nlytxFactorieVersion = "0.5.1"
+
 //Java library versions
 val openNlpVersion = "1.8.3"
 val langToolVersion = "3.9"
@@ -53,9 +57,10 @@ val apiDependencies = Seq(
 )
 
 val analyticsDependencies = Seq(
-  "io.nlytx" %% "nlytx-nlp-api" % "1.0.2",
-  "io.nlytx" %% "factorie-nlp-models" % "1.0.3",
-  "io.nlytx" %% "nlytx-nlp-commons" % nlytxCommonsVersion,
+  "io.nlytx" %% "nlytx-nlp-api" % nlytxNlpApiV,
+  "io.nlytx" %% "nlytx-nlp-commons" % nlytxNlpCommonsV,
+  "io.nlytx" %% "factorie-nlp" % factorieNlpV,
+  "io.nlytx" %% "factorie-nlp-models" % factorieNlpModelsV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
@@ -74,7 +79,9 @@ libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependen
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
-
+//Set the environment variable for hosts allowed in testing
+fork in Test := true
+envVars in Test := Map("TAP_HOSTS" -> "localhost")
 
 
 //Documentation - run ;paradox;copyDocs
