@@ -32,9 +32,9 @@ class ExternalAnalysisHandler @Inject() (athanorClient: AthanorClient) {
 
   def analyseWithAthanor(text:String,grammar:Option[String]):Future[StringListResult] = {
     val parameter = "?grammar=" + grammar.getOrElse("analytic")
-    val url = "http://athanor.utscic.edu.au/v2/analyse/text/rhetorical" + parameter
-    logger.info(s"Creating request to: $url")
-    athanorClient.process(text,url)
+    logger.info(s"Creating request with parameter: $parameter")
+
+    athanorClient.process(text,parameter)
   }
 
 }
