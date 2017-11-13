@@ -26,6 +26,6 @@ class AppConfig{
   }
 
   def getAthanorURL() = {
-    parseConfig("play","external.servers.athanor") getOrElse "localhost"
+    parseConfig("play","external.servers.athanor") getOrElse "http://localhost/v2/analyse/text/rhetorical"
   }
 }
