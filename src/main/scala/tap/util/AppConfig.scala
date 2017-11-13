@@ -15,12 +15,17 @@
  */
 package tap.util
 
+import scala.util.Try
 import com.typesafe.config.ConfigFactory
 
 class AppConfig{
 
-  def getAthanorURL() = {
+  def parseConfig(configName: String, environmentVariable: String)= {
     val conf = ConfigFactory.load("application.conf")
-    conf.getConfig("play").getString("external.servers.athanor")
+    Try(conf.getConfig(configName).getString(environmentVariable))
+  }
+
+  def getAthanorURL() = {
+    parseConfig("play","external.servers.athanor") getOrElse "localhost"
   }
 }
