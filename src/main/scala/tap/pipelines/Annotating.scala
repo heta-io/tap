@@ -41,7 +41,7 @@ import scala.util.{Failure, Success, Try}
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
 
-class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
+class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expressions:Expressions) {
 
   val logger: Logger = Logger(this.getClass)
 
@@ -97,7 +97,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
   val makeDocument: DocumentFlow = Flow[String]
     .mapAsync[Document](2) { text =>
     ap.process(text,ap.parserPipeline)
-    }
+  }
 
   //If parser info is NOT required
   val makeFastDocument: DocumentFlow = Flow[String]
@@ -115,74 +115,74 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
     .map(_.sections.toVector)
 
   val tapSentences: SentencesFlow = Flow[Document]
-      .map { doc =>
-        doc.sentences
-      }
-      .map { sentList =>
-        sentList.zipWithIndex.map { case(s,idx) =>
-          val tokens = s.tokens.toVector.map { t =>
-            val (children,parent,parseLabel) = getParseData(t).toOption.getOrElse((Vector(),-1,""))
-            val nerTag = Try(t.nerTag.baseCategoryValue).toOption.getOrElse("")
-            TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
-              nerTag,parent,children,parseLabel,t.isPunctuation)
-          }
-          TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
-        }.toVector
-      }
+    .map { doc =>
+      doc.sentences
+    }
+    .map { sentList =>
+      sentList.zipWithIndex.map { case(s,idx) =>
+        val tokens = s.tokens.toVector.map { t =>
+          val (children,parent,parseLabel) = getParseData(t).toOption.getOrElse((Vector(),-1,""))
+          val nerTag = Try(t.nerTag.baseCategoryValue).toOption.getOrElse("")
+          TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
+            nerTag,parent,children,parseLabel,t.isPunctuation)
+        }
+        TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
+      }.toVector
+    }
 
   private def getParseData(t:Token):Try[(Vector[Int],Int,String)] = Try {
     (t.parseChildren.toVector.map(_.positionInSentence),t.parseParentIndex,t.parseLabel.value.toString)
   }
 
   val tapVocab: Flow[TapSentences, TapVocab, NotUsed] = Flow[TapSentences]
-      .map { v =>
-        v.flatMap(_.tokens)
-          .map(_.term.toLowerCase)
-          .groupBy((term: String) => term)
-          .mapValues(_.length)
-      }.map { m =>
-      val lst: Vector[TermCount] = m.toVector.map { case (k, v) => TermCount(k, v) }
-      TapVocab(m.size, lst)
-    }
+    .map { v =>
+      v.flatMap(_.tokens)
+        .map(_.term.toLowerCase)
+        .groupBy((term: String) => term)
+        .mapValues(_.length)
+    }.map { m =>
+    val lst: Vector[TermCount] = m.toVector.map { case (k, v) => TermCount(k, v) }
+    TapVocab(m.size, lst)
+  }
 
   val tapMetrics: Flow[TapSentences, TapMetrics, NotUsed] = Flow[TapSentences]
-      .map { v =>
-        v.map { s =>
-          val tokens:Int = s.tokens.length
-          val characters:Int = s.original.length
-          val punctuation:Int = s.tokens.count(_.isPunctuation)
-          val words:Int = tokens - punctuation
-          val wordLengths:Vector[Int] = s.tokens.filterNot(_.isPunctuation).map(_.term.length)
-          //val totalWordChars = wordLengths.sum
-          val whitespace:Int = s.original.count(_.toString.matches("\\s"))
-          val averageWordLength:Double = wordLengths.sum / words.toDouble
-          (tokens,words,characters,punctuation,whitespace,wordLengths,averageWordLength)
-        }
+    .map { v =>
+      v.map { s =>
+        val tokens:Int = s.tokens.length
+        val characters:Int = s.original.length
+        val punctuation:Int = s.tokens.count(_.isPunctuation)
+        val words:Int = tokens - punctuation
+        val wordLengths:Vector[Int] = s.tokens.filterNot(_.isPunctuation).map(_.term.length)
+        //val totalWordChars = wordLengths.sum
+        val whitespace:Int = s.original.count(_.toString.matches("\\s"))
+        val averageWordLength:Double = wordLengths.sum / words.toDouble
+        (tokens,words,characters,punctuation,whitespace,wordLengths,averageWordLength)
       }
-      .map { res =>
-        val sentCount:Int = res.length
-        val sentWordCounts = res.map(_._2)
-        val wordCount = sentWordCounts.sum
-        val averageSentWordCount = wordCount / sentCount.toDouble
-        val wordLengths = res.map(_._6)
-        val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
-        val averageSentWordLength = res.map(_._7)
+    }
+    .map { res =>
+      val sentCount:Int = res.length
+      val sentWordCounts = res.map(_._2)
+      val wordCount = sentWordCounts.sum
+      val averageSentWordCount = wordCount / sentCount.toDouble
+      val wordLengths = res.map(_._6)
+      val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
+      val averageSentWordLength = res.map(_._7)
 
-        TapMetrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
-          sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
-      }
+      TapMetrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
+        sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
+    }
 
   val tapExpressions: Flow[TapSentences, Vector[TapExpressions], NotUsed] = Flow[TapSentences]
     .mapAsync[Vector[TapExpressions]](3) { v =>
-      val results = v.map { sent =>
-        for {
-            ae <- Expressions.affect(sent.tokens)
-            ee <- Expressions.epistemic(sent.tokens)
-            me <- Expressions.modal(sent.tokens)
-        } yield TapExpressions(ae, ee, me, sent.idx)
-      }
-      Future.sequence(results)
+    val results = v.map { sent =>
+      for {
+        ae <- expressions.affect(sent.tokens)
+        ee <- expressions.epistemic(sent.tokens)
+        me <- expressions.modal(sent.tokens)
+      } yield TapExpressions(ae, ee, me, sent.idx)
     }
+    Future.sequence(results)
+  }
 
   val tapSyllables: Flow[TapSentences,Vector[TapSyllables], NotUsed] = Flow[TapSentences]
     .map { v =>
@@ -195,11 +195,11 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef) {
 
   val tapSpelling: Flow[TapSentences,Vector[TapSpelling],NotUsed] = Flow[TapSentences]
     .mapAsync[Vector[TapSpelling]](2) { v =>
-      val checked = v.map { sent =>
-        ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
-      }
-      Future.sequence(checked)
+    val checked = v.map { sent =>
+      ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
     }
+    Future.sequence(checked)
+  }
 
 
   val tapPosStats:Flow[TapSentences, TapPosStats, NotUsed] = Flow[TapSentences]
