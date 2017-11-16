@@ -20,8 +20,9 @@ import java.io.InputStream
 
 import akka.actor.Actor
 import play.api.Logger
+import tap.analysis.Lexicons.Lexicon
 import tap.analysis.affectlexicon.AffectLexiconActor._
-import tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
+import tap.data.CustomTypes.AffectExpression
 import tap.data.{TapExpression, TapToken}
 
 /**
@@ -39,14 +40,7 @@ object AffectLexiconActor {
 class AffectLexiconActor extends Actor {
   val logger: Logger = Logger(this.getClass)
 
-  type Lexicon = Vector[String]
   type AffectLexicon = Vector[Affect]
-
-  val epistemicVerbTerms:Lexicon = Vector("think","thought","believe","believed","guess","guessed","suppose","supposed",
-    "sure","certain","confident","learnt","learned","imagine","imagined","wonder","wondered","consider","considered",
-    "realise","realised","realize","realized","understand","understood","assume","assumed","admit")
-  val epistemicVerbLemmas:Lexicon = Vector("think","believe","guess","suppose","sure","certain","confident",
-    "learnt","learn","imagine","wonder","consider","realise","realize","understand","assume","admit")
 
   val allAffectTerms:AffectLexicon = load("/affect-lexicon.json")
   logger.info(s"Affect lexicon loaded with ${allAffectTerms.size} words.")
@@ -59,10 +53,7 @@ class AffectLexiconActor extends Actor {
 
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
-    case mEV:matchEpistemicVerbs => sender ! matchEV(mEV.terms,mEV.useLemmas)
     case gAffect: getAffectTerms => sender ! getAffectTerms(gAffect.tokens)
-    case gEV: getEpistemicVerbs => sender ! getEpistemicVerbs(gEV.tokens)
-    case gMV: getModalVerbs => sender ! getModalVerbs(gMV.tokens)
     case msg:Any => {
       logger.error(s"AffectLexiconActor received unknown msg: $msg")
     }
@@ -71,9 +62,6 @@ class AffectLexiconActor extends Actor {
   def init:Boolean = {
     allAffectTerms.size > 0
   }
-
-  def matchEV(terms:Vector[String],useLemmas:Boolean = false):Vector[String] = terms
-    .intersect(if (useLemmas) epistemicVerbLemmas else epistemicVerbTerms)
 
   private def getPositive(terms: Vector[String]): Vector[TapExpression] = {
     val pos = terms.filter(l => mostPositiveTerms.contains(l))
@@ -92,54 +80,6 @@ class AffectLexiconActor extends Actor {
     val negWords = getNegative(terms)
 
     posWords ++ negWords
-  }
-
-  def getEpistemicVerbs(tokens:Vector[TapToken]):Vector[EpistemicExpression] = {
-    //Get the indexes of any epistemic verbs
-    val epIdx = tokens.filter( t => epistemicVerbLemmas.contains(t.lemma)).map(_.idx)
-    //Get the indexes of any personal pronouns
-    val prpIdx = tokens.filter( t => t.postag.contains("PRP")).map(_.idx)
-    //For each verb, check if there is pronoun index prior within 4 steps
-    val pairs = epIdx.map(ei => (prpIdx.find(pi => (ei - pi) > 0 && (ei - pi) < 5),ei))
-    pairs.map(p => TapExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
-  }
-
-  def getModalVerbs(tokens:Vector[TapToken]):Vector[ModalExpression] = {
-    //Get the indexes of any modals
-    val modIdx = tokens.filter( t => t.postag.contains("MD")).map(_.idx)
-    //Get the indexes of any personal pronouns
-    val prpIdx = tokens.filter( t => t.postag.contains("PRP")).map(_.idx)
-    //For each verb, check if there is pronoun index prior within 4 steps
-    val pairs = modIdx.map(mi => (prpIdx.find(pi => (mi - pi) > 0 && (mi - pi) < 4),mi))
-    pairs.map(p => TapExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
-    /*
-  def modal(annotations:List[(TapAnnotation,Int)],paraIndex:Int):List[Expression] = {
-    val modals = annotations.filter(_._1.POS.contentEquals("MD")).filter(_._1.word.contains("ould"))
-    val modalExpressions = modals.map { m =>
-      val modalIdx = m._2
-      val start = findPosIndex(annotations,"PRP",modalIdx,5,false)
-      val end = findPosIndex(annotations,"VB",modalIdx,3,true)
-      if (start!= -1 && end != -1) {
-        val expression = annotations.filter((start to end) contains _._2)
-        Some(Expression("CRITIQUE",expression.map(_._1.word).mkString(" "),start,end))
-      } else None
-    }
-    modalExpressions.flatten
-  }
-
-  def findPosIndex(annotations:List[(TapAnnotation,Int)],posStr:String,start:Int,max:Int,forward:Boolean=true):Int = {
-    val range = if(forward) {
-      val end = if((start+max) < annotations.length) start + max else annotations.length -1
-      (start to end)
-    } else {
-      val end = if((start-max) >= 0) start - max else 0
-      (end to start)
-    }
-    val filtered = annotations.filter(range contains _._2).filter { case(a,i) => a.POS.startsWith(posStr) || a.word.contains(".")}
-    if (filtered.isEmpty) -1 else if(forward) filtered.head._2 else filtered.reverse.head._2
-  }
-*/
-    //Vector()
   }
 
   def load(filename:String):Vector[Affect] = {
