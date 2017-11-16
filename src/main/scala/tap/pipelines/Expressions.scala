@@ -17,25 +17,38 @@
 package tap.pipelines
 
 import play.api.Logger
-import tap.analysis.Lexicons
 import tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
 import tap.data._
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import javax.inject.{Inject, Named}
 
+import akka.actor.ActorRef
+import akka.pattern.ask
+import akka.util.Timeout
+import tap.analysis.Lexicons
+import tap.analysis.affectlexicon.AffectLexiconActor._
+
+import scala.util.{Failure, Success}
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
-object Expressions {
+class Expressions @Inject()(@Named("affectlexicon") affectlexicon: ActorRef){
 
   val logger: Logger = Logger(this.getClass)
 
-  def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = Future {
-    val terms = tokens.filterNot(_.isPunctuation).map(_.term.toLowerCase)
-    val posWords = terms.filter(l => Lexicons.mostPositiveTerms.contains(l))
-    val negWords = terms.filter(l => Lexicons.mostNegativeTerms.contains(l))
-    (posWords ++ negWords).map(w =>TapExpression(w,-1,-1))
+  /* Initialise AffectLexicon in an Actor */
+  implicit val timeout: Timeout = 120 seconds
+  val affectLexiconInitialised:Future[Boolean] = ask(affectlexicon,INIT).mapTo[Boolean]
+  affectLexiconInitialised.onComplete {
+    case Success(result) => logger.info(s"AffectLexicon initialised successfully: $result")
+    case Failure(e) => logger.error("AffectLexicon encountered an error on startup: " + e.toString)
+  }
+
+  def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = {
+    ask(affectlexicon,getAffectTerms(tokens)).mapTo[Vector[AffectExpression]]
   }
 
   def epistemic(tokens:Vector[TapToken]):Future[Vector[EpistemicExpression]] = Future {
@@ -71,7 +84,6 @@ object Expressions {
     }
     modalExpressions.flatten
   }
-
   def findPosIndex(annotations:List[(TapAnnotation,Int)],posStr:String,start:Int,max:Int,forward:Boolean=true):Int = {
     val range = if(forward) {
       val end = if((start+max) < annotations.length) start + max else annotations.length -1

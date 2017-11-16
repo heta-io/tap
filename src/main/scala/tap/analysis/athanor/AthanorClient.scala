@@ -18,6 +18,7 @@ package tap.analysis.athanor
 
 import javax.inject.Inject
 
+import tap.util.AppConfig
 import models.Results.StringListResult
 import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
@@ -30,13 +31,17 @@ import scala.concurrent.duration._ // scalastyle:ignore
   * Created by andrew@andrewresearch.net on 6/11/17.
   */
 
-class AthanorClient @Inject() (wsClient: WSClient)(implicit ec: ExecutionContext) {
+class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec: ExecutionContext) {
 
   val logger: Logger = Logger(this.getClass)
 
+  val athanorURL= config.getAthanorURL()
 
-  def process(text:String,url:String):Future[StringListResult] = {
+  def process(text:String,parameter:String):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
+
+    val url = athanorURL + parameter
+    logger.info(s"Analysing with athanor at this url: $url")
 
     val request: WSRequest = wsClient.url(url)
 

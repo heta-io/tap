@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package tap.util
 
-package tap.nlp
+import scala.util.Try
+import com.typesafe.config.ConfigFactory
 
-import com.google.inject.AbstractModule
-import play.api.Logger
-import play.api.libs.concurrent.AkkaGuiceSupport
-import tap.analysis.affectlexicon.AffectLexiconActor
-import tap.nlp.factorie.LanguageToolActor
+class AppConfig{
 
-/**
-  * Created by andrew@andrewresearch.net on 21/10/17.
-  */
-
-class NlpInitialiserModule extends AbstractModule with AkkaGuiceSupport {
-
-  def configure():Unit = {
-    Logger.info("Binding LanguageToolActor")
-    bindActor[LanguageToolActor]("languagetool")
-    bindActor[AffectLexiconActor]("affectlexicon")
+  def parseConfig(configName: String, environmentVariable: String)= {
+    val conf = ConfigFactory.load("application.conf")
+    Try(conf.getConfig(configName).getString(environmentVariable))
   }
 
+  def getAthanorURL() = {
+    parseConfig("play","external.servers.athanor") getOrElse "http://localhost/v2/analyse/text/rhetorical"
+  }
 }
