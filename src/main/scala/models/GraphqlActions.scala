@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -28,26 +28,107 @@ import scala.concurrent.Future
   */
 
 class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler) {
+  //wrap function
 
-  //Text Analysis Handler
-  def visible(text:String):Future[StringResult]       = textAnalysisHandler.visible(text)
-  def clean(text:String):Future[StringResult]         = textAnalysisHandler.clean(text)
-  def cleanPreserve(text:String):Future[StringResult] = textAnalysisHandler.cleanPreserve(text)
-  def cleanMinimal(text:String):Future[StringResult]  = textAnalysisHandler.cleanMinimal(text)
-  def cleanAscii(text:String):Future[StringResult]    = textAnalysisHandler.cleanAscii(text)
+  def timedQueryStringResult(text:String, analysisFunction:(String) => Future[StringResult]):Future[StringResult] = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = analysisFunction(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
 
-  def annotations(text:String,pipetype:Option[String]):Future[SentencesResult]  = textAnalysisHandler.annotations(text,pipetype)
-  def vocabulary(text:String):Future[VocabResult]     = textAnalysisHandler.vocabulary(text)
-  def metrics(text:String):Future[MetricsResult]      = textAnalysisHandler.metrics(text)
-  def expressions(text:String):Future[ExpressionsResult] = textAnalysisHandler.expressions(text)
-  def syllables(text:String):Future[SyllablesResult]  = textAnalysisHandler.syllables(text)
-  def spelling(text:String):Future[SpellingResult]    = textAnalysisHandler.spelling(text)
-  def posStats(text:String):Future[PosStatsResult]    = textAnalysisHandler.posStats(text)
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+
+  val visibleFunction = (text: String)=>textAnalysisHandler.visible(text)
+  def visible(text:String):Future[StringResult] = timedQueryStringResult(text, visibleFunction)
+
+  val cleanFunction = (text: String)=>textAnalysisHandler.clean(text)
+  def clean(text:String):Future[StringResult]         = timedQueryStringResult(text, cleanFunction)
+
+  val cleanPreserveFunction = (text: String)=>textAnalysisHandler.cleanPreserve(text)
+  def cleanPreserve(text:String):Future[StringResult] = timedQueryStringResult(text, cleanPreserveFunction)
+
+  val cleanMinimalFunction = (text: String)=>textAnalysisHandler.cleanMinimal(text)
+  def cleanMinimal(text:String):Future[StringResult]  = timedQueryStringResult(text, cleanMinimalFunction)
+
+  val cleanAsciiFunction = (text: String)=>textAnalysisHandler.cleanAscii(text)
+  def cleanAscii(text:String):Future[StringResult]    = timedQueryStringResult(text, cleanAsciiFunction)
+
+  def annotations(text:String,pipetype:Option[String]):Future[SentencesResult]  = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.annotations(text,pipetype)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def vocabulary(text:String):Future[VocabResult]     = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.vocabulary(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def metrics(text:String):Future[MetricsResult]      = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.metrics(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def expressions(text:String):Future[ExpressionsResult] = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.expressions(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def syllables(text:String):Future[SyllablesResult]  = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.syllables(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def spelling(text:String):Future[SpellingResult]    = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.spelling(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
+  def posStats(text:String):Future[PosStatsResult]    = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.posStats(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
 
   //External Analysis Handler
-  def moves(text:String,grammar:Option[String]):Future[StringListResult]  = externalAnalysisHandler.analyseWithAthanor(text,grammar)
+  def moves(text:String,grammar:Option[String]):Future[StringListResult]  = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = externalAnalysisHandler.analyseWithAthanor(text,grammar)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
 
   //TODO Still to Implement
 
-  def shape(text:String):Future[StringResult] = textAnalysisHandler.shape(text)
+  def shape(text:String):Future[StringResult] = {
+    val startTime = System.currentTimeMillis.toInt
+    val result = textAnalysisHandler.shape(text)
+    val queryTime = (System.currentTimeMillis - startTime).toInt
+
+    // Copy the result object and add in the queryTimeValue then return the new result
+    result.map(a=> a.copy(querytime = queryTime))
+  }
 }
