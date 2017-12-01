@@ -31,12 +31,12 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
   //wrap function
 
   def timedQueryStringResult(text:String, analysisFunction:(String) => Future[StringResult]):Future[StringResult] = {
-    val startTime = System.currentTimeMillis.toInt
+    val startTime = System.currentTimeMillis
     val result = analysisFunction(text)
-    val queryTime = (System.currentTimeMillis - startTime).toInt
+    val queryTime = (System.currentTimeMillis - startTime)
 
     // Copy the result object and add in the queryTimeValue then return the new result
-    result.map(a=> a.copy(querytime = queryTime))
+    result.map(a=> a.copy(querytime = queryTime.toInt))
   }
 
   val visibleFunction = (text: String)=>textAnalysisHandler.visible(text)
