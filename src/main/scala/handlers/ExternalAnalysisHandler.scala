@@ -30,11 +30,11 @@ class ExternalAnalysisHandler @Inject() (athanorClient: AthanorClient) {
 
   val logger: Logger = Logger(this.getClass)
 
-  def analyseWithAthanor(text:String,grammar:Option[String]):Future[StringListResult] = {
+  def analyseWithAthanor(text:String,grammar:Option[String],start:Long):Future[StringListResult] = {
     val parameter = "?grammar=" + grammar.getOrElse("analytic")
     logger.info(s"Creating request with parameter: $parameter")
 
-    athanorClient.process(text,parameter)
+    athanorClient.process(text,parameter,start)
   }
 
 }

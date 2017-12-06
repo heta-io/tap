@@ -216,10 +216,10 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   }
 
   def graphql:Action[JsValue] = Action.async(parse.json) { request =>
-    Logger.info("Got Json request from:" + request.remoteAddress)
     val query = (request.body \ "query").as[String]
     val operation = (request.body \ "operationName").asOpt[String]
     val variables = (request.body \ "variables").asOpt[JsObject].getOrElse(Json.obj())
+    Logger.info(s"Query received from ${request.remoteAddress} >>> ${operation.getOrElse("No query")}")
     process(query,operation,variables)
   }
 

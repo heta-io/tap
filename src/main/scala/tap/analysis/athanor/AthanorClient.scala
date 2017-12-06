@@ -37,7 +37,7 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
 
   val athanorURL= config.getAthanorURL()
 
-  def process(text:String,parameter:String):Future[StringListResult] = {
+  def process(text:String,parameter:String,start:Long):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
 
     val url = athanorURL + parameter
@@ -55,7 +55,8 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
     val result: Future[StringListResult] = {
       val decoded = futureResponse.map { response =>
         val res = decodeRepsonse(response)
-        StringListResult(res,"ok")
+        val queryTime = (System.currentTimeMillis() - start).toInt
+        StringListResult(res,"ok",querytime = queryTime)
       }
       val errMsg = "There was a problem connecting to the Athanor server."
       futureResponse.recover {
