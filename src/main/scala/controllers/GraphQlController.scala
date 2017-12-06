@@ -30,7 +30,8 @@ import sangria.schema.Schema
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
-
+import play.api.Logger
+import play.api.mvc._
 /**
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
@@ -40,10 +41,12 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   val schema:Schema[GraphqlActions,Unit] = gqlSchema.create
 
   def graphiql:Action[AnyContent] = Action {
+    request => Logger.info("Got Any content request from:" + request.remoteAddress)
     Ok(views.html.graphiql(assets))
   }
 
   def graphql:Action[JsValue] = Action.async(parse.json) { request =>
+    Logger.info("Got Json request from:" + request.remoteAddress)
     val query = (request.body \ "query").as[String]
     val operation = (request.body \ "operationName").asOpt[String]
     val variables = (request.body \ "variables").asOpt[JsObject].getOrElse(Json.obj())
@@ -60,8 +63,7 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   }
 
   def executeGraphQLQuery(query: Document, name: Option[String], vars: JsObject):Future[Result] = {
-
-    Executor.execute(schema, query, actions, operationName = name, variables = vars)
+     Executor.execute(schema, query, actions, operationName = name, variables = vars)
       .map(Ok(_))
       .recover {
         case error: QueryAnalysisError => BadRequest(error.resolveError)
