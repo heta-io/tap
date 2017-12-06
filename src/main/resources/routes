@@ -2,7 +2,7 @@ GET   /         controllers.DefaultController.index
 
 GET   /graphiql  controllers.GraphQlController.graphiql
 
-GET   /health  controllers.HealthController.health
+
 
 + nocsrf # This should be removed once graphiql is passing tokens
 POST  /graphql  controllers.GraphQlController.graphql
@@ -10,3 +10,4 @@ POST  /graphql  controllers.GraphQlController.graphql
 # prefix must match `play.assets.urlPrefix`
 GET /assets/*file           controllers.Assets.at(file)
 GET /versionedAssets/*file  controllers.Assets.versioned(file)
+POST  /upload controllers.GraphQlController.upload
