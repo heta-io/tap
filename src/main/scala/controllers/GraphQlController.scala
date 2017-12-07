@@ -53,9 +53,6 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
     process(query,operation,variables)
   }
 
-  //lazy val schema:Schema[GraphqlSchema.Actions,Unit] = GraphqlSchema.create
-  //lazy val actions:GraphqlSchema.Actions = GraphqlSchema.actions
-
   def process(query:String,name:Option[String],variables:JsObject):Future[Result] = QueryParser.parse(query) match {
     case Success(queryAst) => executeGraphQLQuery(queryAst, name, variables)
     case Failure(error: SyntaxError) => Future.successful(BadRequest(error.getMessage))
