@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -29,25 +29,47 @@ import scala.concurrent.Future
 
 class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler) {
 
-  //Text Analysis Handler
-  def visible(text:String):Future[StringResult]       = textAnalysisHandler.visible(text)
-  def clean(text:String):Future[StringResult]         = textAnalysisHandler.clean(text)
-  def cleanPreserve(text:String):Future[StringResult] = textAnalysisHandler.cleanPreserve(text)
-  def cleanMinimal(text:String):Future[StringResult]  = textAnalysisHandler.cleanMinimal(text)
-  def cleanAscii(text:String):Future[StringResult]    = textAnalysisHandler.cleanAscii(text)
+  def startTime = System.currentTimeMillis
 
-  def annotations(text:String,pipetype:Option[String]):Future[SentencesResult]  = textAnalysisHandler.annotations(text,pipetype)
-  def vocabulary(text:String):Future[VocabResult]     = textAnalysisHandler.vocabulary(text)
-  def metrics(text:String):Future[MetricsResult]      = textAnalysisHandler.metrics(text)
-  def expressions(text:String):Future[ExpressionsResult] = textAnalysisHandler.expressions(text)
-  def syllables(text:String):Future[SyllablesResult]  = textAnalysisHandler.syllables(text)
-  def spelling(text:String):Future[SpellingResult]    = textAnalysisHandler.spelling(text)
-  def posStats(text:String):Future[PosStatsResult]    = textAnalysisHandler.posStats(text)
+  //  def timedQueryStringResult(text:String, analysisFunction:(String) => Future[StringResult]):Future[StringResult] = {
+  //    val startTime = System.currentTimeMillis
+  //    val result = analysisFunction(text)
+  //    val queryTime = (System.currentTimeMillis - startTime)
+  //
+  //    // Copy the result object and add in the queryTimeValue then return the new result
+  //    result.map(a=> a.copy(querytime = queryTime.toInt))
+  //  }
+
+
+  def visible(text: String): Future[StringResult] = textAnalysisHandler.visible(text, startTime)
+
+  def clean(text: String): Future[StringResult] = textAnalysisHandler.clean(text, startTime)
+
+  def cleanPreserve(text: String): Future[StringResult] = textAnalysisHandler.cleanPreserve(text, startTime)
+
+  def cleanMinimal(text: String): Future[StringResult] = textAnalysisHandler.cleanMinimal(text, startTime)
+
+  def cleanAscii(text: String): Future[StringResult] = textAnalysisHandler.cleanAscii(text, startTime)
+
+  def annotations(text: String, pipetype: Option[String]): Future[SentencesResult] = textAnalysisHandler.annotations(text, pipetype, startTime)
+
+  def vocabulary(text: String): Future[VocabResult] = textAnalysisHandler.vocabulary(text, startTime)
+
+  def metrics(text: String): Future[MetricsResult] = textAnalysisHandler.metrics(text, startTime)
+
+  def expressions(text: String): Future[ExpressionsResult] = textAnalysisHandler.expressions(text, startTime)
+
+  def syllables(text: String): Future[SyllablesResult] = textAnalysisHandler.syllables(text, startTime)
+
+  def spelling(text: String): Future[SpellingResult] = textAnalysisHandler.spelling(text, startTime)
+
+  def posStats(text: String): Future[PosStatsResult] = textAnalysisHandler.posStats(text, startTime)
 
   //External Analysis Handler
-  def moves(text:String,grammar:Option[String]):Future[StringListResult]  = externalAnalysisHandler.analyseWithAthanor(text,grammar)
+  def moves(text: String, grammar: Option[String]): Future[StringListResult] = externalAnalysisHandler.analyseWithAthanor(text, grammar, startTime)
 
   //TODO Still to Implement
 
-  def shape(text:String):Future[StringResult] = textAnalysisHandler.shape(text)
+  def shape(text: String): Future[StringResult] = textAnalysisHandler.shape(text)
+
 }
