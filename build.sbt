@@ -67,6 +67,12 @@ val analyticsDependencies = Seq(
 )
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
+val dl4jDependencies = Seq(
+  "org.deeplearning4j" % "deeplearning4j-core" % "0.7.2",
+  "org.deeplearning4j" % "deeplearning4j-nlp" % "0.7.2",
+  "org.nd4j" % "nd4j-native-platform" % "0.7.2" % Test
+)
+
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
@@ -74,8 +80,7 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies
+libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies ++ dl4jDependencies
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
