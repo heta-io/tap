@@ -2,12 +2,12 @@
 
 # Text Analytics Pipeline (TAP)
 
-TAP provides Text Analytics services via a [GraphQL API](). It is written in [Scala](), and uses the [Play Framework](https://www.playframework.com), [Sangria GraphQL](http://sangria-graphql.org) and [GraphiQL](https://github.com/graphql/graphiql).
+TAP provides Text Analytics services via a [GraphQL API](). It is written in [Scala](https://www.scala-lang.org), and uses the [Play Framework](https://www.playframework.com), [Sangria GraphQL](http://sangria-graphql.org) and [GraphiQL](https://github.com/graphql/graphiql).
 TAP also provides back-end analytics services for [AWA](http://awa.uts.edu.au), a web application for Academic Writing Analytics. 
 
 ## Documentation
 
-See the current [docs](https://heta-io.github.io/tap/).
+Refer to our current documentation [here](https://heta-io.github.io/tap/).
 
 ## Development
 
@@ -17,7 +17,6 @@ We welcome contributions to TAP. If you are interesting in contributing, take a 
 
  - [Andrew Gibson, QUT](http://GitHub.com/andrewresearch)
  - [Radhika Mogarkar, UTS]()
-
 
 
 
