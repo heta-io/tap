@@ -15,7 +15,7 @@ TAP was originally created by [Andrew Gibson](http://GitHub.com/andrewresearch) 
 
 We welcome contributions to TAP. If you are interesting in contributing, take a look at the `developer` section of the [docs](https://heta-io.github.io/tap/), take a look at the current [Issues](), and or contact one of the current maintainers:
 
- - [Andrew Gibson, QUT](http://GitHub.com/andrewresearch)
+ - [Andrew Gibson, UTS](http://GitHub.com/andrewresearch)
  - [Radhika Mogarkar, UTS]()
 
 
