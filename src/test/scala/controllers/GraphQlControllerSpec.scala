@@ -63,12 +63,12 @@ class GraphQlControllerSpec extends PlaySpec with Results with Injecting with Gu
       val response = await(responseFuture)
       response.status mustBe OK
 
-      // The id returned has the format randomNumber-extCode-fileSize
-      // where randomNumber is part of the uploaded file name and can
-      // be later used to relocate it. The fileSize is not part of the
-      // uploaded file name but can be used to verify its contents.
-      // extCode is "01" for text files, "02" for zip, "03" for jar and "00" for other files
-      val id_pattern = new Regex("[0-9]+" + "-01-" + "[0-9]+")
+      // The id returned has the format of a 48 character long base64 string.
+      // See base64 table in the following wiki page for a list of characters
+      // that are allowed as part of a base64 string :
+      // https://en.wikipedia.org/wiki/Base64
+
+      val id_pattern = new Regex("[0-9,a-z,A-Z,+/]{48}")
       val id = id_pattern.findFirstIn(response.body)
 
       val matching = id match {
