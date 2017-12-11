@@ -34,7 +34,7 @@ object WordVectorActor {
 class WordVectorActor extends Actor {
   val logger: Logger = Logger(this.getClass)
 
-  val gModel = new File("models/test/googleNews/GoogleNews-vectors-negative300.bin.gz")
+  val gModel = new File("models/googleNews/GoogleNews-vectors-negative300.bin.gz")
   val vec= Try(Some(WordVectorSerializer.readWord2VecModel(gModel))).getOrElse(None)
 
   def receive: PartialFunction[Any,Unit] = {
