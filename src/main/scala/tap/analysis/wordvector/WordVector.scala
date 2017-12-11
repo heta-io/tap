@@ -43,13 +43,3 @@ class WordVector @Inject()(@Named("wordvector") wordvector: ActorRef){
     ask(wordvector,getNearestWords(word, numberOfNearestWords)).mapTo[Option[Array[String]]]
   }
 }
-/*
-class WordVector {
-  val gModel = new File("models/googleNews/GoogleNews-vectors-negative300.bin.gz")
-  val vec = WordVectorSerializer.readWord2VecModel(gModel)
-
-  def getNearestWords(word:String, numberOfNearestWords: Int): util.Collection[String] = {
-    vec.wordsNearest(word, numberOfNearestWords)
-  }
-}*/
-
