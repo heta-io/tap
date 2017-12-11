@@ -32,17 +32,17 @@ class WordVectorSpec extends PlaySpec{
     val lst = wordvector.nearestWords("day", 10)
     val result = Await.result(lst, 360 seconds)
 
-    if(result.length>0){
-      assert(result(0) == "week")
-      assert(result(1) == "days")
-      assert(result(2) == "morning")
-      assert(result(3) == "month")
-      assert(result(4) == "hours")
-      assert(result(5) == "afternoon")
-      assert(result(6) == "hour")
-      assert(result(7) == "weekend")
-      assert(result(8) == "evening")
-      assert(result(9) == "time")
+    if(result!= None){
+      assert(result.get(0) == "week")
+      assert(result.get(1) == "days")
+      assert(result.get(2) == "morning")
+      assert(result.get(3) == "month")
+      assert(result.get(4) == "hours")
+      assert(result.get(5) == "afternoon")
+      assert(result.get(6) == "hour")
+      assert(result.get(7) == "weekend")
+      assert(result.get(8) == "evening")
+      assert(result.get(9) == "time")
     }
   }
 

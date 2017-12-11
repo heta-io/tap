@@ -39,8 +39,8 @@ class WordVector @Inject()(@Named("wordvector") wordvector: ActorRef){
     case Failure(e) => logger.error("WordVector encountered an error on startup: " + e.toString)
   }
 
-  def nearestWords(word:String, numberOfNearestWords: Int): Future[Array[String]] = {
-    ask(wordvector,getNearestWords(word, numberOfNearestWords)).mapTo[Array[String]]
+  def nearestWords(word:String, numberOfNearestWords: Int): Future[Option[Array[String]]] = {
+    ask(wordvector,getNearestWords(word, numberOfNearestWords)).mapTo[Option[Array[String]]]
   }
 }
 /*

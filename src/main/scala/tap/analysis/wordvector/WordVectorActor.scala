@@ -17,9 +17,6 @@
 package tap.analysis.wordvector
 
 import java.io.File
-import java.util
-import java.util.Collections
-
 import akka.actor.{Actor, Stash}
 import play.api.Logger
 import tap.analysis.wordvector.WordVectorActor._
@@ -57,7 +54,7 @@ object WordVectorActor {
   }
 }*/
 
-class WordVectorActor extends Actor with Stash{
+/*class WordVectorActor extends Actor with Stash{
   val logger: Logger = Logger(this.getClass)
 
   var vec:Word2Vec = null
@@ -119,5 +116,31 @@ class WordVectorActor extends Actor with Stash{
   def getNearestWords(word:String, numberOfNearestWords: Int): Array[String] = {
     val wordCollection = vec.wordsNearest(word, numberOfNearestWords)
     wordCollection.asScala.toArray
+  }
+}*/
+
+class WordVectorActor extends Actor {
+  val logger: Logger = Logger(this.getClass)
+
+  val gModel = new File("models/test/googleNews/GoogleNews-vectors-negative300.bin.gz")
+  val vec= Try(Some(WordVectorSerializer.readWord2VecModel(gModel))).getOrElse(None)
+
+  def receive: PartialFunction[Any,Unit] = {
+    case INIT => sender ! init
+    case gNearestWords: getNearestWords => sender ! getNearestWords(gNearestWords.word, gNearestWords.numberOfNearestWords)
+    case msg:Any => logger.error(s"WordVectorActor received unknown msg: $msg")
+  }
+
+  def init:Boolean = {
+    vec != None
+  }
+
+  def getNearestWords(word:String, numberOfNearestWords: Int): Option[Array[String]] = {
+    if (vec!= None) {
+      val wordCollection = vec.get.wordsNearest(word, numberOfNearestWords)
+      return Some(wordCollection.asScala.toArray)
+    }
+    else
+      return None
   }
 }
