@@ -47,7 +47,7 @@ import akka.stream.scaladsl.Source
 import scala.util.matching.Regex
 
 // class GraphQlControllerSpec @Inject() (ws: WSClient) extends PlaySpec with Results with GuiceOneServerPerSuite  {
-class GraphQlControllerSpec extends PlaySpec with Results with Injecting with GuiceOneServerPerSuite {
+class FileControllerSpec extends PlaySpec with Results with Injecting with GuiceOneServerPerSuite {
   "UploadService" should {
 
 

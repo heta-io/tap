@@ -10,4 +10,4 @@ POST  /graphql  controllers.GraphQlController.graphql
 # prefix must match `play.assets.urlPrefix`
 GET /assets/*file           controllers.Assets.at(file)
 GET /versionedAssets/*file  controllers.Assets.versioned(file)
-POST  /upload controllers.GraphQlController.upload
+POST  /upload controllers.FileController.upload
