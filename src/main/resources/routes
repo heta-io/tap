@@ -12,3 +12,4 @@ POST  /AWAgraphql  controllers.AWAGraphQlController.graphql
 # prefix must match `play.assets.urlPrefix`
 GET /assets/*file           controllers.Assets.at(file)
 GET /versionedAssets/*file  controllers.Assets.versioned(file)
+POST  /upload controllers.FileController.upload
