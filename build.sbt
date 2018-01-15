@@ -32,10 +32,10 @@ val factorieNlpModelsV = "1.0.3"
 
 val sangriaVersion = "1.3.2"
 val sangriaJsonVersion = "1.0.4"
-val playJsonVersion = "2.6.7"
+val playJsonVersion = "2.6.8"
 val twirlApiVersion = "1.3.13"
 
-val akkaStreamVersion = "2.5.6"
+val akkaStreamVersion = "2.5.8"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 
