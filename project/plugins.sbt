@@ -1,7 +1,7 @@
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 //Play framework
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.10")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.11")
 
 //Dependency management
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.3")
@@ -16,6 +16,6 @@ addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.3")
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.7.0")
 
 //Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.1")
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.2")
 
 //Other

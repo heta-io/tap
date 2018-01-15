@@ -30,18 +30,19 @@ val nlytxNlpCommonsV = "1.0.0"
 val factorieNlpV = "1.0.4"
 val factorieNlpModelsV = "1.0.3"
 
-val sangriaVersion = "1.3.2"
+val sangriaVersion = "1.3.3"
 val sangriaJsonVersion = "1.0.4"
 val playJsonVersion = "2.6.8"
 val twirlApiVersion = "1.3.13"
 
-val akkaStreamVersion = "2.5.8"
+val akkaStreamVersion = "2.5.9"
 val scalatestVersion = "3.0.4"
 val scalatestPlayVersion = "3.1.2"
 
 //Java library versions
-val openNlpVersion = "1.8.3"
-val langToolVersion = "3.9"
+val openNlpVersion = "1.8.4"
+val langToolVersion = "4.0"
+val deepLearning4jVersion = "0.9.1"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
@@ -68,9 +69,9 @@ val analyticsDependencies = Seq(
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
 val dl4jDependencies = Seq(
-  "org.deeplearning4j" % "deeplearning4j-core" % "0.7.2",
-  "org.deeplearning4j" % "deeplearning4j-nlp" % "0.7.2",
-  "org.nd4j" % "nd4j-native-platform" % "0.7.2" % Test
+  "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
+  "org.deeplearning4j" % "deeplearning4j-nlp" % deepLearning4jVersion,
+  "org.nd4j" % "nd4j-native-platform" % deepLearning4jVersion % Test
 )
 
 val testDependencies = Seq(
