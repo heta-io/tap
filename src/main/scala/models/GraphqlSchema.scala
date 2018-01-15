@@ -16,7 +16,7 @@
 
 package models
 
-import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
+import tap.handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
 import models.Results.Implicits._
 import sangria.macros.derive._

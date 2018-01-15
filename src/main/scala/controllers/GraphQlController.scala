@@ -31,6 +31,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 import play.api.Logger
+import tap.views.GraphiqlPage
 /**
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
@@ -41,7 +42,8 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
 
   def graphiql:Action[AnyContent] = Action {
     request => Logger.info("Got Any content request from:" + request.remoteAddress)
-    Ok(views.html.graphiql(assets))
+    //Ok(views.html.graphiql(assets))
+    Ok(GraphiqlPage.render("Explore TAP with GraphiQL"))
   }
 
   def graphql:Action[JsValue] = Action.async(parse.json) { request =>
