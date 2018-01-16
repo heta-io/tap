@@ -18,31 +18,32 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.2"
+version := "3.1.4"
 
 scalaVersion := "2.12.4"
 
-organization := "au.edu.utscic"
+organization := "io.heta"
 
 //Scala library versions
-val nlytxNlpApiV = "1.1.0"
-val nlytxNlpCommonsV = "1.0.0"
-val factorieNlpV = "1.0.4"
-val factorieNlpModelsV = "1.0.3"
+lazy val nlytxNlpApiV = "1.1.0"
+lazy val nlytxNlpCommonsV = "1.0.0"
+lazy val factorieNlpV = "1.0.4"
+lazy val factorieNlpModelsV = "1.0.3"
 
-val sangriaVersion = "1.3.3"
-val sangriaJsonVersion = "1.0.4"
-val playJsonVersion = "2.6.8"
-val twirlApiVersion = "1.3.13"
+lazy val sangriaVersion = "1.3.3"
+lazy val sangriaJsonVersion = "1.0.4"
+lazy val playJsonVersion = "2.6.8"
+lazy val scalaTagsVersion = "0.6.7"
+//val twirlApiVersion = "1.3.13"
 
-val akkaStreamVersion = "2.5.9"
-val scalatestVersion = "3.0.4"
-val scalatestPlayVersion = "3.1.2"
+lazy val akkaStreamVersion = "2.5.9"
+lazy val scalatestVersion = "3.0.4"
+lazy val scalatestPlayVersion = "3.1.2"
 
 //Java library versions
-val openNlpVersion = "1.8.4"
-val langToolVersion = "4.0"
-val deepLearning4jVersion = "0.9.1"
+lazy val openNlpVersion = "1.8.4"
+lazy val langToolVersion = "4.0"
+lazy val deepLearning4jVersion = "0.9.1"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
@@ -53,7 +54,8 @@ libraryDependencies += guice  //Dependency injection
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
-  "com.typesafe.play" %% "twirl-api" % twirlApiVersion,
+  //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
+  "com.lihaoyi" %% "scalatags" % scalaTagsVersion,
   "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
 )
 
@@ -114,6 +116,7 @@ dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
 dockerRepository := Some(s"$dockerRepoURI")
 defaultLinuxInstallLocation in Docker := "/opt/docker"
 dockerExposedVolumes := Seq("/opt/docker/logs")
+dockerBaseImage := "openjdk:9-jdk"
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",

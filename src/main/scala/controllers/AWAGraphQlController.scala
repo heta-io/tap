@@ -27,6 +27,8 @@ import sangria.marshalling.playJson.{PlayJsonInputUnmarshallerJObject, PlayJsonR
 import sangria.parser.{QueryParser, SyntaxError}
 import sangria.schema.Schema
 
+import tap.views.AWAGraphiqlPage
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -42,7 +44,8 @@ class AWAGraphQlController @Inject() (assets: AssetsFinder, gqlSchema: AWAGraphq
 
   def graphiql:Action[AnyContent] = Action {
     request => Logger.info("Got Any content request from:" + request.remoteAddress)
-      Ok(views.html.AWAgraphiql(assets))
+      //Ok(views.html.AWAgraphiql(assets))
+      Ok(AWAGraphiqlPage.render("Explore TAP with GraphiQL"))
   }
 
   def graphql:Action[JsValue] = Action.async(parse.json) { request =>

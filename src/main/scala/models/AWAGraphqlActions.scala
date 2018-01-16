@@ -18,7 +18,7 @@ package models
 
 import javax.inject.Inject
 
-import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
+import tap.handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

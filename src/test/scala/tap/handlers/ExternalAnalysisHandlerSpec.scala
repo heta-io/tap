@@ -17,7 +17,7 @@
 package tap.handlers
 
 
-import handlers.ExternalAnalysisHandler
+import tap.handlers.ExternalAnalysisHandler
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 
