@@ -33,16 +33,16 @@ class Cleaning  {
     *      for clean
     */
   object Pipeline { //Flow[ByteString,String,NotUsed]
-    val revealInvisible:Flow[String,String,NotUsed] = utf8Str via visibleWhitespace via replaceControl
-    val simplify:Flow[String,String,NotUsed] = utf8Str via simplifyQuotes via simplifyHyphens
-    val lengthPreserve:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via replaceControl
-    val utfMinimal:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via stripControl via reduceSpace
-    val utfSimplify:Flow[String,String,NotUsed] = utf8Str via simplifyWhitespace via simplifyQuotes via simplifyHyphens via stripControlExtended via reduceSpace
-    val asciiOnly:Flow[String,String,NotUsed] = utfSimplify via stripNonAscii
+    val revealInvisible:Flow[String,String,NotUsed] = visibleWhitespace via replaceControl
+    val simplify:Flow[String,String,NotUsed] = simplifyQuotes via simplifyHyphens
+    val lengthPreserve:Flow[String,String,NotUsed] = simplifyWhitespace via replaceControl
+    val utfMinimal:Flow[String,String,NotUsed] = simplifyWhitespace via stripControl via reduceSpace
+    val utfSimplify:Flow[String,String,NotUsed] = simplifyWhitespace via simplifyQuotes via simplifyHyphens via stripControlExtended via reduceSpace
+    val asciiOnly:Flow[String,String,NotUsed] = stripNonAscii
 
   }
 
-  val utf8Str:Flow[String,String,NotUsed] = Flow[String].map(str => str) //.map(_.utf8String)
+  val utf8Str:Flow[String,String,NotUsed] = Flow[String].map(str => str) //Only necessary if changing input string format
 
   val visibleWhitespace:Flow[String,String,NotUsed] = Flow[String].map { str =>
     str.replaceAll(White.rgx_space,Replace.dot) // Spaces

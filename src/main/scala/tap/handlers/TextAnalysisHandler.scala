@@ -92,6 +92,9 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
     TextPipeline(text,annotate.build(DEFAULT,pipe.posStats)).run
       .map(PosStatsResult(_,querytime = queryTime(start)))
 
+  def reflectExpressions(text:String,start:Long):Future[ReflectExpressionsResult] =
+    TextPipeline(text,annotate.build(DEFAULT,pipe.reflectExpress)).run
+    .map(ReflectExpressionsResult(_, querytime = queryTime(start)))
 
   //TODO To be implemented
   def shape(text:String):Future[StringResult]   = dummyResult(text)

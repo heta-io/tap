@@ -28,6 +28,8 @@ import javax.inject.{Inject, Named}
 import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
+import io.nlytx.expressions.ReflectiveExpressionPipeline
+import io.nlytx.expressions.data.ReflectiveExpressions
 import tap.analysis.Lexicons
 import tap.analysis.affectlexicon.AffectLexiconActor._
 
@@ -46,6 +48,8 @@ class Expressions @Inject()(@Named("affectlexicon") affectlexicon: ActorRef){
     case Success(result) => logger.info(s"AffectLexicon initialised successfully: $result")
     case Failure(e) => logger.error("AffectLexicon encountered an error on startup: " + e.toString)
   }
+
+  def reflective(text:String):Future[ReflectiveExpressions] = ReflectiveExpressionPipeline.process(text)
 
   def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = {
     ask(affectlexicon,getAffectTerms(tokens)).mapTo[Vector[AffectExpression]]

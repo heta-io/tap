@@ -18,7 +18,7 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.4"
+version := "3.1.5"
 
 scalaVersion := "2.12.4"
 
@@ -26,18 +26,19 @@ organization := "io.heta"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.0"
+lazy val nlytxNlpExpressionsV = "1.0.0"
 lazy val nlytxNlpCommonsV = "1.0.0"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
 
-lazy val sangriaVersion = "1.3.3"
+lazy val sangriaVersion = "1.4.0"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.8"
 lazy val scalaTagsVersion = "0.6.7"
 //val twirlApiVersion = "1.3.13"
 
 lazy val akkaStreamVersion = "2.5.9"
-lazy val scalatestVersion = "3.0.4"
+lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
 //Java library versions
@@ -61,6 +62,7 @@ val apiDependencies = Seq(
 
 val analyticsDependencies = Seq(
   "io.nlytx" %% "nlytx-nlp-api" % nlytxNlpApiV,
+  "io.nlytx" %% "nlytx-nlp-expressions" % nlytxNlpExpressionsV,
   "io.nlytx" %% "nlytx-nlp-commons" % nlytxNlpCommonsV,
   "io.nlytx" %% "factorie-nlp" % factorieNlpV,
   "io.nlytx" %% "factorie-nlp-models" % factorieNlpModelsV,

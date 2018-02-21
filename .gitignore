@@ -119,3 +119,4 @@ src/main/scala/tap/nlp/old/SentenceConverter.scala
 /project/project/
 /project/target/
 /project/LocalSbtSettings.scala
+/src/main/scala/scratch.sc
