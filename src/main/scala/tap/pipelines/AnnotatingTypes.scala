@@ -18,6 +18,7 @@ package tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
+import io.nlytx.expressions.data.ReflectiveExpressions
 import io.nlytx.nlp.api.DocumentModel.{Document, Section}
 import tap.data._ // scalastyle:ignore
 
@@ -48,4 +49,5 @@ object AnnotatingTypes {
   type SyllablesFlow = Flow[Document, Vector[TapSyllables],NotUsed]
   type SpellingFlow = Flow[Document, Vector[TapSpelling],NotUsed]
   type PosStatsFlow = Flow[Document, TapPosStats, NotUsed]
+  type ReflectExpressionFlow = Flow[Document, TapReflectExpressions, NotUsed]
 }

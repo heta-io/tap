@@ -17,30 +17,26 @@
 /* Current Graphiql version: 0.11.5 */
 
 
-var instructions = "# Welcome to AWAGraphiQL\n" +
+var instructions = "# AWAGraphiQL Interface\n" +
     "#\n" +
     "# AWAGraphiQL is an in-browser IDE for writing, validating, and\n" +
     "# testing GraphQL queries.\n" +
-    "#\n" +
     "# Type queries into this side of the screen, and you will\n" +
     "# see intelligent typeaheads aware of the current GraphQL type schema and\n" +
     "# live syntax and validation errors highlighted within the text.\n" +
-    "#\n" +
     "# To bring up the auto-complete at any point, just press Ctrl-Space.\n" +
-    "#\n" +
     "# Press the run button above, or Cmd-Enter to execute the query, and the result\n" +
     "# will appear in the pane to the right.\n\n" +
-    "\n" +
-    "# Text Analytics Pipeline\n" +
-    "\n"
+    "# This interface is specifically for testing TAP queries that are used by AWA.\n" +
+    "\n";
 
-var exampleQueries = "# TAP Example Queries\n" +
+var awaQueries = "# AWA Specific Queries\n" +
     "# -------------------\n" +
     "# These queries are just examples of what TAP can do, the\n" +
     "# actual capability of the server at any point in time can\n" +
     "# be found in the Schema - see the Documentation Explorer\n" +
     "# on the right hand side. \n" +
-    "# See the TAP Documentation https://uts-cic.github.io/tap/\n" +
+    "# See the TAP Documentation https://heta-io.github.io/tap/\n" +
     "\n" +
     "# All queries require submission of text and return\n" +
     "# analytics,timestamp, message, querytime\n" +
@@ -85,29 +81,6 @@ var exampleQueries = "# TAP Example Queries\n" +
     "  }\n" +
     "}\n" +
     "\n" +
-    "query TokeniseWithNer($input: String!) {\n" +
-    "  annotations(text:$input,pipetype:\"ner\") {\n" +
-    "    analytics {\n" +
-    "      idx\n" +
-    "      start\n" +
-    "      end\n" +
-    "      length\n" +
-    "      tokens {\n" +
-    "        idx\n" +
-    "        term\n" +
-    "        lemma\n" +
-    "        postag\n" +
-    "        parent\n" +
-    "        children\n" +
-    "        deptype\n" +
-    "        nertag\n" +
-    "      }\n" +
-    "    }\n" +
-    "    timestamp\n" +
-    "  }\n" +
-    "}\n" +
-    "\n" +
-    "# Other examples\n" +
     "query Expressions($input2:String!) {\n" +
     "  expressions(text:$input2) {\n" +
     "    analytics {\n" +
@@ -157,7 +130,7 @@ var exampleQueries = "# TAP Example Queries\n" +
     "  }\n" +
     "}\n"
 
-var exampleVariables = "{\"input\": \"It didn't take any time for Dr. Smith to review the subject outline by logging onto UTS Online. However, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
+var awaVariables = "{\"input\": \"It didn't take any time for Dr. Smith to review the subject outline by logging onto UTS Online. However, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
     "\"input2\": \"Althogh I wasn't certain, I did believe that I was doing the right thing. Next time I will be sure.\"}"
 
 
@@ -173,8 +146,8 @@ var exampleVariables = "{\"input\": \"It didn't take any time for Dr. Smith to r
     // Parse the search string to get url parameters.
 var search = window.location.search;
 var parameters = {};
-parameters.variables = exampleVariables;
-parameters.query = exampleQueries;
+parameters.variables = awaVariables;
+parameters.query = awaQueries;
 
 search.substr(1).split('&').forEach(function (entry) {
     var eq = entry.indexOf('=');

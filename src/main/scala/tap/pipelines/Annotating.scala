@@ -23,13 +23,14 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
+import io.nlytx.expressions.ReflectiveExpressionPipeline
 import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import play.api.Logger
 import tap.analysis.Syllable
-import tap.data._ // scalastyle:ignore
+import tap.data._
 import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
-import tap.pipelines.AnnotatingTypes._ // scalastyle:ignore
+import tap.pipelines.AnnotatingTypes._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -54,6 +55,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
     val syllables: SyllablesFlow = tapSentences via tapSyllables
     val spelling: SpellingFlow = tapSentences via tapSpelling
     val posStats: PosStatsFlow = tapSentences via tapPosStats
+    val reflectExpress: ReflectExpressionFlow = reflectExpressions
   }
 
   def build[T](pipetype:String,pipeline: Flow[Document,T,NotUsed]):Flow[String,T,NotUsed] = {
@@ -230,6 +232,38 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
       TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
 
+  val reflectExpressions:Flow[Document,TapReflectExpressions,NotUsed] = Flow[Document]
+    .map { doc =>
+      val REP = ReflectiveExpressionPipeline
+      val codedSents = REP.getCodedSents(doc)
+      val tags = REP.getCoded(codedSents)
+      val reflect = REP.getReflect(doc)
+      val summary =  REP.getSummary(codedSents)
+      val metaMap = summary.metaTagSummary
+      val phraseMap = summary.phraseTagSummary
+      val metaTagSummary = TapMetaTagSummary(
+        metaMap.getOrElse("knowledge",0),
+        metaMap.getOrElse("experience",0),
+        metaMap.getOrElse("regulation",0),
+        metaMap.getOrElse("none",0)
+      )
+      val phraseTagSummary = TapPhraseTagSummary(
+        phraseMap.getOrElse("outcome", 0),
+        phraseMap.getOrElse("temporal", 0),
+        phraseMap.getOrElse("pertains", 0),
+        phraseMap.getOrElse("consider", 0),
+        phraseMap.getOrElse("anticipate", 0),
+        phraseMap.getOrElse("definite", 0),
+        phraseMap.getOrElse("possible", 0),
+        phraseMap.getOrElse("selfReflexive", 0),
+        phraseMap.getOrElse("emotive", 0),
+        phraseMap.getOrElse("selfPossessive", 0),
+        phraseMap.getOrElse("compare", 0),
+        phraseMap.getOrElse("manner", 0),
+        phraseMap.getOrElse("none", 0)
+      )
+     TapReflectExpressions(reflect,TapSummary(metaTagSummary,phraseTagSummary),tags)
+    }
 
 }
 

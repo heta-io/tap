@@ -52,6 +52,8 @@
     "\n" +
     "query Tokenise($input: String!) {\n" +
     "  annotations(text:$input) {\n" +
+    "    timestamp\n" +
+    "    querytime\n" +
     "    analytics {\n" +
     "      idx\n" +
     "      start\n" +
@@ -221,10 +223,10 @@
     "    analytics\n" +
     "  }\n" +
     "}" +
-    "\n"
+    "\n";
 
   var exampleVariables = "{\"input\": \"It didn't take any time for Dr. Smith to review the subject outline by logging onto the LMS. However, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
-    "\"input2\": \"Althogh I wasn't certin, I did beleive that I was doing the right thing. Next time I will be sure.\"}"
+    "\"input2\": \"Althogh I wasn't certin, I did beleive that I was doing the right thing. Next time I will be sure.\"}";
 
 
 

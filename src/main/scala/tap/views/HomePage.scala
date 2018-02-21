@@ -16,8 +16,8 @@ object HomePage extends GenericPage {
     body(
       div(
         h1(id:="title", titleStr),
-        p(a(href:=routes.GraphQlController.graphiql().url)("Use the generic graphiql interface.")),
-        p(a(href:=routes.AWAGraphQlController.graphiql().url)("Use the AWA graphiql interface.")),
+        p(a(href:=routes.GraphQlController.graphiql().url)("Use the generic graphiql interface.")) //,
+//        p(a(href:=routes.AWAGraphQlController.graphiql().url)("Use the AWA graphiql interface.")),
       )
     )
   )
