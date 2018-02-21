@@ -20,6 +20,7 @@ import com.google.inject.AbstractModule
 import play.api.Logger
 import play.api.libs.concurrent.AkkaGuiceSupport
 import tap.analysis.affectlexicon.AffectLexiconActor
+import tap.analysis.wordvector.WordVectorActor
 import tap.nlp.factorie.LanguageToolActor
 
 /**
@@ -32,6 +33,7 @@ class NlpInitialiserModule extends AbstractModule with AkkaGuiceSupport {
     Logger.info("Binding LanguageToolActor")
     bindActor[LanguageToolActor]("languagetool")
     bindActor[AffectLexiconActor]("affectlexicon")
+    bindActor[WordVectorActor]("wordvector")
   }
 
 }

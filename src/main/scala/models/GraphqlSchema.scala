@@ -16,7 +16,7 @@
 
 package models
 
-import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
+import tap.handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
 import models.Results.Implicits._
 import sangria.macros.derive._
@@ -72,7 +72,9 @@ class GraphqlSchema {
     Field("posStats",deriveObjectType[Unit,PosStatsResult](Interfaces[Unit,PosStatsResult](ResultType)),
       Some("Returns posStats for text"),
       arguments = inputText :: Nil, resolve = c => c.ctx.posStats(c arg inputText)),
-
+    Field("reflectExpressions",deriveObjectType[Unit,ReflectExpressionsResult](Interfaces[Unit,ReflectExpressionsResult](ResultType)),
+      description = Some("Returns reflection expressions for text"),
+      arguments = inputText :: Nil, resolve = c => c.ctx.reflectExpressions(c arg inputText)),
     Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
       description = Some("Returns a list of moves for the input text"),
       arguments = inputText :: moveGrammar :: Nil, resolve = c => c.ctx.moves(c arg inputText,c arg moveGrammar))

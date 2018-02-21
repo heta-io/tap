@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package handlers
+package tap.handlers
 
 
 //import au.edu.utscic.tap.data.CorpusTfIdfResults

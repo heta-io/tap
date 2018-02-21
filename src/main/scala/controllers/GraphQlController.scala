@@ -30,7 +30,8 @@ import sangria.schema.Schema
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
-
+import play.api.Logger
+import tap.views.GraphiqlPage
 /**
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
@@ -40,18 +41,18 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   val schema:Schema[GraphqlActions,Unit] = gqlSchema.create
 
   def graphiql:Action[AnyContent] = Action {
-    Ok(views.html.graphiql(assets))
+    request => Logger.info("Got Any content request from:" + request.remoteAddress)
+    //Ok(views.html.graphiql(assets))
+    Ok(GraphiqlPage.render("Explore TAP with GraphiQL"))
   }
 
   def graphql:Action[JsValue] = Action.async(parse.json) { request =>
     val query = (request.body \ "query").as[String]
     val operation = (request.body \ "operationName").asOpt[String]
     val variables = (request.body \ "variables").asOpt[JsObject].getOrElse(Json.obj())
+    Logger.info(s"Query received from ${request.remoteAddress} >>> ${operation.getOrElse("No query")}")
     process(query,operation,variables)
   }
-
-  //lazy val schema:Schema[GraphqlSchema.Actions,Unit] = GraphqlSchema.create
-  //lazy val actions:GraphqlSchema.Actions = GraphqlSchema.actions
 
   def process(query:String,name:Option[String],variables:JsObject):Future[Result] = QueryParser.parse(query) match {
     case Success(queryAst) => executeGraphQLQuery(queryAst, name, variables)
@@ -60,8 +61,7 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
   }
 
   def executeGraphQLQuery(query: Document, name: Option[String], vars: JsObject):Future[Result] = {
-
-    Executor.execute(schema, query, actions, operationName = name, variables = vars)
+     Executor.execute(schema, query, actions, operationName = name, variables = vars)
       .map(Ok(_))
       .recover {
         case error: QueryAnalysisError => BadRequest(error.resolveError)
