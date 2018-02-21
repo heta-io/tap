@@ -18,7 +18,7 @@ package models
 
 import javax.inject.Inject
 
-import handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
+import tap.handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
 import models.Results._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -64,6 +64,8 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
   def spelling(text: String): Future[SpellingResult] = textAnalysisHandler.spelling(text, startTime)
 
   def posStats(text: String): Future[PosStatsResult] = textAnalysisHandler.posStats(text, startTime)
+
+  def reflectExpressions(text: String) :Future[ReflectExpressionsResult] = textAnalysisHandler.reflectExpressions(text, startTime)
 
   //External Analysis Handler
   def moves(text: String, grammar: Option[String]): Future[StringListResult] = externalAnalysisHandler.analyseWithAthanor(text, grammar, startTime)

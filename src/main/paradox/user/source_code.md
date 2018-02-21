@@ -26,4 +26,13 @@ This will create a copy of the repository in the tap directory.
         wget https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/cc.factorie.app.nlp.all-models-1.0.0.jar
         wget https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/nlpfactorie_2.12-0.1.jar
 
+3. For Word Vector, a pre-trained model from Google News should be downloaded here: 
 
+        [GoogleNews-vectors-negative300.bin.gz](https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing)
+
+    Create models/googleNews directory:
+
+        cd ~/tap/models
+        mkdir -p googleNews
+
+    Copy the downloaded file to the models/googleNews directory.
