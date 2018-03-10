@@ -23,7 +23,7 @@ import Keys._
 
 object LocalSbtSettings {
 
-  val githubBaseUrl = "https://github.com/uts-cic/tap"
+  val githubBaseUrl = "https://github.com/infosci-qut/tap"
   val scaladocApiBaseUrl = "https://heta.github.io/tap"
-  val dockerRepoURI = ""
+  val dockerRepoURI = "975443900627.dkr.ecr.ap-southeast-2.amazonaws.com"
 }
