@@ -18,9 +18,9 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.7"
+version := "3.1.8"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.5"
 
 organization := "io.heta"
 
@@ -30,6 +30,7 @@ lazy val nlytxNlpExpressionsV = "1.0.0"
 lazy val nlytxNlpCommonsV = "1.0.0"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
+lazy val cluLabProcessorV = "7.2.0"
 
 lazy val sangriaVersion = "1.4.0"
 lazy val sangriaJsonVersion = "1.0.4"
@@ -66,6 +67,9 @@ val analyticsDependencies = Seq(
   "io.nlytx" %% "nlytx-nlp-commons" % nlytxNlpCommonsV,
   "io.nlytx" %% "factorie-nlp" % factorieNlpV,
   "io.nlytx" %% "factorie-nlp-models" % factorieNlpModelsV,
+  "org.clulab" %% "processors-main" % cluLabProcessorV,
+  "org.clulab" %% "processors-odin" % cluLabProcessorV,
+  "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
