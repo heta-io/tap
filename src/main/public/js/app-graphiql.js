@@ -91,6 +91,29 @@
     "  }\n" +
     "}\n" +
     "\n" +
+      "\n" +
+      "query TokeniseWithCLU($input: String!) {\n" +
+      "  annotations(text:$input,pipetype:\"clu\") {\n" +
+      "    analytics {\n" +
+      "      idx\n" +
+      "      start\n" +
+      "      end\n" +
+      "      length\n" +
+      "      tokens {\n" +
+      "        idx\n" +
+      "        term\n" +
+      "        lemma\n" +
+      "        postag\n" +
+      "        parent\n" +
+      "        children\n" +
+      "        deptype\n" +
+      "        nertag\n" +
+      "      }\n" +
+      "    }\n" +
+      "    timestamp\n" +
+      "  }\n" +
+      "}\n" +
+      "\n" +
     "# Other examples\n" +
     "query Expressions($input2:String!) {\n" +
     "  expressions(text:$input2) {\n" +
@@ -110,6 +133,48 @@
     "    }\n" +
     "  }\n" +
     "}\n" +
+      "query ReflectExpressions($input2:String!) {\n" +
+      "  reflectExpressions(text:$input2) {\n" +
+      "    querytime\n" +
+      "    analytics {\n" +
+      "      counts {\n" +
+      "        wordCount\n" +
+      "        avgWordLength\n" +
+      "        sentenceCount\n" +
+      "        avgSentenceLength\n" +
+      "      }\n" +
+      "      summary {\n" +
+      "        metaTagSummary {\n" +
+      "          knowledge\n" +
+      "          experience\n" +
+      "          regulation\n" +
+      "          none\n" +
+      "        }\n" +
+      "        phraseTagSummary {\n" +
+      "          outcome\n" +
+      "          temporal\n" +
+      "          pertains\n" +
+      "          consider\n" +
+      "          anticipate\n" +
+      "          definite\n" +
+      "          possible\n" +
+      "          selfReflexive\n" +
+      "          emotive\n" +
+      "          selfPossessive\n" +
+      "          compare\n" +
+      "          manner\n" +
+      "          none\n" +
+      "        }\n" +
+      "      }\n" +
+      "      tags {\n" +
+      "        sentence\n" +
+      "        phrases\n" +
+      "        subTags\n" +
+      "        metaTags\n" +
+      "      }\n" +
+      "    }\n" +
+      "  }\n" +
+      "}\n" +
     "query Vocab($input: String!) {\n" +
     "  vocabulary(text:$input){\n" +
     "    analytics {\n" +
@@ -179,51 +244,51 @@
     "    }\n" +
     "  }\n" +
     "}\n" +
-    "\n" +
-      "# Some queries like \"moves\" require external resources and may\n" +
-      "# fail if those resources are not available.\n" +
-      "\n" +
-      "query RhetoricalMoves($input: String!) {\n" +
-      "  moves(text:$input,grammar:\"analytic\") {\n" +
-      "    analytics\n" +
-      "    message\n" +
-      "    timestamp\n" +
-      "    querytime\n" +
-      "  }\n" +
-      "}\n" +
-      "# However, you only need to ask for what you want e.g.\n" +
-      "query MinimalMoves($input:String!) {\n" +
-      "  moves(text:$input) {\n" +
-      "    analytics\n" +
-      "  }\n" +
-      "}\n" +
-      "\n" +
-    "\n" +
-    "##############################\n" +
-    "# UTILITY QUERIES\n" +
-    "\n" +
-    "query MakeVisible($input: String!) {\n" +
-    "  visible(text:$input) {\n" +
-    "    analytics\n" +
-    "    timestamp\n" +
-    "  }\n" +
-    "}\n" +
-    "query AllCleaning($input: String!) {\n" +
-    "  clean(text:$input) {\n" +
-    "    analytics\n" +
-    "    timestamp\n" +
-    "  }\n" +
-    "  cleanPreserve(text:$input) {\n" +
-    "    analytics\n" +
-    "  }\n" +
-    "  cleanMinimal(text:$input) {\n" +
-    "    analytics\n" +
-    "  }\n" +
-    "  cleanAscii(text:$input) {\n" +
-    "    analytics\n" +
-    "  }\n" +
-    "}" +
-    "\n";
+    "\n"; //+
+    //   "# Some queries like \"moves\" require external resources and may\n" +
+    //   "# fail if those resources are not available.\n" +
+    //   "\n" +
+    //   "query RhetoricalMoves($input: String!) {\n" +
+    //   "  moves(text:$input,grammar:\"analytic\") {\n" +
+    //   "    analytics\n" +
+    //   "    message\n" +
+    //   "    timestamp\n" +
+    //   "    querytime\n" +
+    //   "  }\n" +
+    //   "}\n" +
+    //   "# However, you only need to ask for what you want e.g.\n" +
+    //   "query MinimalMoves($input:String!) {\n" +
+    //   "  moves(text:$input) {\n" +
+    //   "    analytics\n" +
+    //   "  }\n" +
+    //   "}\n" +
+    //   "\n" +
+    // "\n" +
+    // "##############################\n" +
+    // "# UTILITY QUERIES\n" +
+    // "\n" +
+    // "query MakeVisible($input: String!) {\n" +
+    // "  visible(text:$input) {\n" +
+    // "    analytics\n" +
+    // "    timestamp\n" +
+    // "  }\n" +
+    // "}\n" +
+    // "query AllCleaning($input: String!) {\n" +
+    // "  clean(text:$input) {\n" +
+    // "    analytics\n" +
+    // "    timestamp\n" +
+    // "  }\n" +
+    // "  cleanPreserve(text:$input) {\n" +
+    // "    analytics\n" +
+    // "  }\n" +
+    // "  cleanMinimal(text:$input) {\n" +
+    // "    analytics\n" +
+    // "  }\n" +
+    // "  cleanAscii(text:$input) {\n" +
+    // "    analytics\n" +
+    // "  }\n" +
+    // "}" +
+    // "\n";
 
   var exampleVariables = "{\"input\": \"It didn't take any time for Dr. Smith to review the subject outline by logging onto the LMS. However, I walked into class like a blank canvas. I had no idea what this course was about but I was certain it had something to do with responsibility and leaders. I reflected on this and felt decision making was like second nature, yes I over-thought my decisions whether it was personal or professional but I never thought of the act of having to justify my decisions.\"," +
     "\"input2\": \"Althogh I wasn't certin, I did beleive that I was doing the right thing. Next time I will be sure.\"}";
