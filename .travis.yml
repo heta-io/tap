@@ -5,6 +5,10 @@ jdk: oraclejdk8
 scala:
    - 2.12.4
 
+# Undo _JAVA_OPTIONS environment variable
+before_script:
+ - _JAVA_OPTIONS=
+
 env:
  global:
   - TAP_HOSTS=localhost
