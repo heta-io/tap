@@ -12,7 +12,7 @@ before_script:
 env:
  global:
   - TAP_HOSTS=localhost
-  - JAVA_TOOL_OPTIONS=-Xmx6g
+  - JAVA_TOOL_OPTIONS="-Xms4g -Xmx6g"
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6g test
