@@ -10,7 +10,7 @@ env: TAP_HOSTS=localhost
  #   _JAVA_OPTIONS=-Xmx2500
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx2500m test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx4g test
 
 # Use container-based infrastructure
 sudo: false
