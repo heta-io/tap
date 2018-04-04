@@ -28,6 +28,7 @@ import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import play.api.Logger
 import tap.analysis.Syllable
+import tap.analysis.clu.CluAnnotator
 import tap.data._
 import tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
 import tap.pipelines.AnnotatingTypes._
@@ -42,12 +43,13 @@ import scala.util.{Failure, Success, Try}
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
 
-class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expressions:Expressions) {
+class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expressions:Expressions, ca:CluAnnotator) {
 
   val logger: Logger = Logger(this.getClass)
 
   /* The main pipelines for performing annotating text analysis */
   object Pipeline {
+    val cluSentences: CluSentencesFlow = cluTapSentences
     val sentences: SentencesFlow  = tapSentences
     val vocab: VocabFlow = tapSentences via tapVocab
     val metrics: MetricsFlow = tapSentences via tapMetrics
@@ -58,12 +60,13 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
     val reflectExpress: ReflectExpressionFlow = reflectExpressions
   }
 
-  def build[T](pipetype:String,pipeline: Flow[Document,T,NotUsed]):Flow[String,T,NotUsed] = {
-    val makeDoc = pipetype match {
-      case STANDARD => makeDocument
-      case FAST => makeFastDocument
-      case NER => makeNerDocument
-      case _ => makeFastDocument
+  def build[A,B](pipetype:String,pipeline: Flow[A,B,NotUsed]):Flow[String,B,NotUsed] = {
+    val makeDoc:Flow[String,A,NotUsed] = pipetype match {
+      case STANDARD => makeDocument.asInstanceOf[Flow[String,A,NotUsed]]
+      case FAST => makeFastDocument.asInstanceOf[Flow[String,A,NotUsed]]
+      case NER => makeNerDocument.asInstanceOf[Flow[String,A,NotUsed]]
+      case CLU => makeCluDocument.asInstanceOf[Flow[String,A,NotUsed]]
+      case _ => makeFastDocument.asInstanceOf[Flow[String,A,NotUsed]]
     }
     makeDoc via pipeline
   }
@@ -91,10 +94,14 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
 
 
 
-
   /* The following are pipeline segments that can be re-used in the above pipelines
    *
    */
+
+  val makeCluDocument: CluDocumentFlow = Flow[String]
+    .map[org.clulab.processors.Document] { text =>
+    ca.annotate(text)
+  }
 
   val makeDocument: DocumentFlow = Flow[String]
     .mapAsync[Document](2) { text =>
@@ -115,6 +122,36 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
 
   val sections: Flow[Document,Sections,NotUsed] = Flow[Document]
     .map(_.sections.toVector)
+
+  val cluTapSentences: CluSentencesFlow = Flow[org.clulab.processors.Document]
+      .map { doc =>
+        logger.info("Extracting sentences")
+        doc.sentences
+      }
+    .map { sentArray =>
+      sentArray.toList.zipWithIndex.map { case (s, idx) =>
+        val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
+        TapSentence(s.getSentenceText(),tokens,-1,-1,s.words.length,idx)
+      }.toVector
+    }
+
+  private def getTokens(start:Array[Int],words:Array[String],
+                       lemmas:Option[Array[String]],posTags:Option[Array[String]],nerTags:Option[Array[String]]) = {
+    val numTokens = words.length
+    val is = List.range(0, numTokens)
+    val ws = words.toVector
+    logger.info(words.mkString("|"))
+    val ls = lemmas.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
+    val pts = posTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
+    logger.info(pts.mkString("|"))
+    val nts = nerTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
+
+    val tapTokens = for {
+      ((((i,w),l),pt),nt) <- is zip ws zip ls zip pts zip nts
+    } yield TapToken(i,w,l,pt,nt,-1,Vector(),"",false)
+
+    tapTokens.toVector
+  }
 
   val tapSentences: SentencesFlow = Flow[Document]
     .map { doc =>
