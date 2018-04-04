@@ -12,13 +12,17 @@ before_script:
 env:
  global:
   - TAP_HOSTS=localhost
-  - JAVA_TOOL_OPTIONS=-Xmx3500m
+  - JAVA_TOOL_OPTIONS=-Xmx6g
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3500m test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6g test
 
 # Use container-based infrastructure
-sudo: false
+#sudo: false
+
+# Virtual machine
+sudo: required
+dist: trusty
 
 # These directories are cached to S3 at the end of the build
 cache:
