@@ -6,13 +6,13 @@ scala:
    - 2.12.4
 
 # Undo _JAVA_OPTIONS environment variable
-before_script:
- - _JAVA_OPTIONS=
+#before_script:
+# - _JAVA_OPTIONS=
 
 env:
  global:
   - TAP_HOSTS=localhost
-  - JAVA_TOOL_OPTIONS=-Xmx6g
+  #- JAVA_TOOL_OPTIONS=-Xmx6g
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6g test
