@@ -5,9 +5,10 @@ jdk: oraclejdk8
 scala:
    - 2.12.4
 
-env: TAP_HOSTS=localhost
+env:
  global:
-    _JAVA_OPTIONS=-Xmx3500m
+  - TAP_HOSTS=localhost
+  - JAVA_TOOL_OPTIONS=-Xmx3500m
 
 script:
    - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx3500m test
