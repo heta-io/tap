@@ -16,6 +16,6 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.0")
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.8.0")
 
 //Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.2")
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.3")
 
 //Other

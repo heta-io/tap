@@ -20,7 +20,7 @@ name := "tap"
 
 version := "3.1.8"
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.4"
 
 organization := "io.heta"
 
@@ -44,7 +44,7 @@ lazy val scalatestPlayVersion = "3.1.2"
 
 //Java library versions
 lazy val openNlpVersion = "1.8.4"
-lazy val langToolVersion = "4.0"
+lazy val langToolVersion = "4.1"
 lazy val deepLearning4jVersion = "0.9.1"
 
 enablePlugins(PlayScala)
