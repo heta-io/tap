@@ -38,15 +38,15 @@ class ExternalAnalysisHandlerSpec extends PlaySpec {
     }
   }
 
-  "RhetoricalMoves" should {
-    "query RhetoricalMoves" in {
-      val input = "It didn't take any time for Dr. Smith to review the subject outline by logging onto UTS Online. However, I walked into class like a blank canvas."
-      val start = System.currentTimeMillis()
-      val analysis = analysisHandler.analyseWithAthanor(input, None, start)
-      val result = Await.result(analysis, 240 seconds)
-      assert(result.analytics==Vector(Vector("ContrastAnalysis", "contrast"), Vector()))
-      assert(result.message=="ok")
-      assert(result.querytime == -1)
-    }
-  }
+//  "RhetoricalMoves" should {
+//    "query RhetoricalMoves" in {
+//      val input = "It didn't take any time for Dr. Smith to review the subject outline by logging onto UTS Online. However, I walked into class like a blank canvas."
+//      val start = System.currentTimeMillis()
+//      val analysis = analysisHandler.analyseWithAthanor(input, None, start)
+//      val result = Await.result(analysis, 240 seconds)
+//      assert(result.analytics==Vector(Vector("ContrastAnalysis", "contrast"), Vector()))
+//      assert(result.message=="ok")
+//      assert(result.querytime == -1)
+//    }
+//  }
 }

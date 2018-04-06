@@ -1,19 +1,28 @@
 language: scala
 
-jdk: oraclejdk8
+jdk: oraclejdk9
 
 scala:
-   - 2.12.3
+   - 2.12.4
 
-env: TAP_HOSTS=localhost
- # global:
- #   _JAVA_OPTIONS=-Xmx2500
+# Undo _JAVA_OPTIONS environment variable
+#before_script:
+# - _JAVA_OPTIONS=
+
+env:
+ global:
+  - TAP_HOSTS=localhost
+  - _JAVA_OPTIONS="-Xms4000m -Xmx6000m"
 
 script:
-   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx2500m test
+   - sbt ++$TRAVIS_SCALA_VERSION -J-Xmx6g test
 
 # Use container-based infrastructure
-sudo: false
+#sudo: false
+
+# Virtual machine
+sudo: required
+dist: trusty
 
 # These directories are cached to S3 at the end of the build
 cache:
