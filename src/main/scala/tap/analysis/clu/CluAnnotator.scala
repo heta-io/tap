@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-/**
-  * Created by andrew@andrewresearch.net on 7/11/17.
-  */
+package tap.analysis.clu
 
-import sbt._
-import Keys._
+import org.clulab.processors.Document
+import org.clulab.processors.clu.CluProcessor
+import play.api.Logger
 
-object LocalSbtSettings {
+class CluAnnotator {
 
-  val githubBaseUrl = "https://github.com/infosci-qut/tap"
-  val scaladocApiBaseUrl = "https://heta.github.io/tap"
-  val dockerRepoURI = "975443900627.dkr.ecr.ap-southeast-2.amazonaws.com"
+  private val logger: Logger = Logger(this.getClass)
+
+  val processor = new CluProcessor()
+
+  this.init()
+
+  private def init():Unit = {
+    logger.info("Initialising CluProcessor")
+    val text = """CluProcessor is starting up!"""
+    val aDoc = this.annotate(text)
+    logger.info("Initialised CluProcessor >> "+aDoc.sentences.length)
+  }
+
+  def annotate(text:String):Document = {
+    val doc = processor.mkDocument(text)
+    processor.annotate(doc)
+  }
 }

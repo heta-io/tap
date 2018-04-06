@@ -61,10 +61,12 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   /* Annotating Pipeline */
 
-  def annotations(text:String,pipetype:Option[String],start:Long):Future[SentencesResult] =
-    TextPipeline(text, annotate.build(validPipeType(pipetype),pipe.sentences)).run
+  def annotations(text:String,pipetype:Option[String],start:Long):Future[SentencesResult] = {
+    val pt = validPipeType(pipetype)
+    val ps = if(pt=="clu") pipe.cluSentences else pipe.sentences
+    TextPipeline(text, annotate.build(pt,ps)).run
       .map(SentencesResult(_,querytime = queryTime(start)))
-
+  }
 
   // DEFAULT pipetypes don't require parsing or NER so can use the FAST (DEFAULT) option
 
