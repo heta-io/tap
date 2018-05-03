@@ -34,10 +34,7 @@ object AnnotatingTypes {
   val NER = "ner"
   val CLU = "clu"
   val DEFAULT = FAST
-  def validPipeType(pipetype:Option[String]):String = {
-    val pt = pipetype.getOrElse(DEFAULT).toLowerCase
-    if(List(STANDARD,FAST,NER,CLU).contains(pt)) pt else DEFAULT
-  }
+
 
   /* Some convenience types */
   type TapSentences = Vector[TapSentence]
@@ -54,6 +51,7 @@ object AnnotatingTypes {
   type SpellingFlow = Flow[Document, Vector[TapSpelling],NotUsed]
   type PosStatsFlow = Flow[Document, TapPosStats, NotUsed]
   type ReflectExpressionFlow = Flow[Document, TapReflectExpressions, NotUsed]
+  type AffectExpressionFlow = Flow[Document, Vector[TapAffectExpressions], NotUsed]
 
 
 }

@@ -18,7 +18,7 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.8"
+version := "3.1.9"
 
 scalaVersion := "2.12.4"
 

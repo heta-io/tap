@@ -17,8 +17,8 @@
 package controllers
 
 import javax.inject.Inject
-
-import models.{GraphqlActions, GraphqlSchema}
+import models.GraphqlSchema
+import models.graphql.GraphqlActions
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, InjectedController, Result}
 import sangria.ast.Document

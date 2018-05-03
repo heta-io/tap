@@ -58,6 +58,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
     val spelling: SpellingFlow = tapSentences via tapSpelling
     val posStats: PosStatsFlow = tapSentences via tapPosStats
     val reflectExpress: ReflectExpressionFlow = reflectExpressions
+    val affectExpress: AffectExpressionFlow = affectExpressions
   }
 
   def build[A,B](pipetype:String,pipeline: Flow[A,B,NotUsed]):Flow[String,B,NotUsed] = {
@@ -302,6 +303,10 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
      TapReflectExpressions(reflect,TapSummary(metaTagSummary,phraseTagSummary),tags)
     }
 
+  val affectExpressions:Flow[Document,Vector[TapAffectExpressions],NotUsed] = Flow[Document]
+    .map { doc =>
+      Vector()
+    }
 }
 
 
