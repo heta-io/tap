@@ -51,7 +51,7 @@ object AnnotatingTypes {
   type SpellingFlow = Flow[Document, Vector[TapSpelling],NotUsed]
   type PosStatsFlow = Flow[Document, TapPosStats, NotUsed]
   type ReflectExpressionFlow = Flow[Document, TapReflectExpressions, NotUsed]
-  type AffectExpressionFlow = Flow[Document, Vector[TapAffectExpressions], NotUsed]
+  type AffectExpressionFlow = Flow[processors.Document, Vector[TapAffectExpressions], NotUsed]
 
 
 }

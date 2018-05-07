@@ -18,7 +18,9 @@ package tap.handlers
 
 import javax.inject.Inject
 import models.graphql.Fields._
+import play.api.Logger
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import tap.data.AffectThresholds
 import tap.pipelines.materialize.TextPipeline
 import tap.pipelines.{Annotating, Cleaning}
 import tap.pipelines.AnnotatingTypes._
@@ -26,6 +28,7 @@ import tap.pipelines.AnnotatingTypes._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
+import scala.reflect.runtime.universe._
 
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
@@ -34,22 +37,18 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   private val pipe = annotate.Pipeline
 
-  private def queryTime(start:Long):Int = (System.currentTimeMillis() - start).toInt
-
-  private def extractParameter(paramName:String,parameters:Option[String]):JsValue = {
-    val jsonResult = Try(Json.parse(parameters.getOrElse("{}")))
-    val jparam = jsonResult.getOrElse(JsObject(Seq()))
-    (jparam \ paramName).getOrElse(JsString(""))
-  }
-
   def clean(text: Option[String], parameters: Option[String], start:Long): Future[StringResult] = {
     val inputStr = text.getOrElse("")
-    val outputStr:Future[String] = extractParameter("cleanType",parameters) match {
-      case JsString("visible") => TextPipeline(inputStr,clean.Pipeline.revealInvisible).run
-      case JsString("minimal") => TextPipeline(inputStr,clean.Pipeline.utfMinimal).run
-      case JsString("simple") => TextPipeline(inputStr,clean.Pipeline.utfSimplify).run
-      case JsString("preserve") => TextPipeline(inputStr,clean.Pipeline.lengthPreserve).run
-      case JsString("ascii") =>  TextPipeline(inputStr,clean.Pipeline.asciiOnly).run
+    val json = validJson(parameters)
+    Logger.debug(s"JSON: $json")
+    val cleanType = extractParameter[String]("cleanType",json)
+    Logger.debug(s"STRING: $cleanType")
+    val outputStr:Future[String] = cleanType match {
+      case Some("visible") => TextPipeline(inputStr,clean.Pipeline.revealInvisible).run
+      case Some("minimal") => TextPipeline(inputStr,clean.Pipeline.utfMinimal).run
+      case Some("simple") => TextPipeline(inputStr,clean.Pipeline.utfSimplify).run
+      case Some("preserve") => TextPipeline(inputStr,clean.Pipeline.lengthPreserve).run
+      case Some("ascii") =>  TextPipeline(inputStr,clean.Pipeline.asciiOnly).run
       case _ => Future("")
     }
     outputStr.map(StringResult(_,querytime = queryTime(start)))
@@ -57,11 +56,15 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   def annotations(text:Option[String],parameters:Option[String],start:Long):Future[SentencesResult] = {
     val inputStr = text.getOrElse("")
-    val analysis = extractParameter("pipeType",parameters) match {
-      case JsString(CLU) => TextPipeline(inputStr, annotate.build(CLU,pipe.cluSentences)).run
-      case JsString(STANDARD) => TextPipeline(inputStr, annotate.build(STANDARD,pipe.sentences)).run
-      case JsString(FAST) => TextPipeline(inputStr, annotate.build(FAST,pipe.sentences)).run
-      case JsString(NER) => TextPipeline(inputStr, annotate.build(NER,pipe.sentences)).run
+    val json = validJson(parameters)
+    Logger.debug(s"JSON: $json")
+    val pipeType = extractParameter[String]("pipeType",json)
+    Logger.debug(s"STRING: $pipeType")
+    val analysis = pipeType match {
+      case Some(CLU) => TextPipeline(inputStr, annotate.build(CLU,pipe.cluSentences)).run
+      case Some(STANDARD) => TextPipeline(inputStr, annotate.build(STANDARD,pipe.sentences)).run
+      case Some(FAST) => TextPipeline(inputStr, annotate.build(FAST,pipe.sentences)).run
+      case Some(NER) => TextPipeline(inputStr, annotate.build(NER,pipe.sentences)).run
       case _ => TextPipeline(inputStr, annotate.build(FAST,pipe.sentences)).run
     }
     analysis.map(SentencesResult(_,querytime = queryTime(start)))
@@ -96,10 +99,40 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.reflectExpress)).run
     .map(ReflectExpressionsResult(_, querytime = queryTime(start)))
 
-  def affectExpressions(text:Option[String],parameters:Option[String] = None,start:Long): Future[AffectExpressionsResult] =
-    TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.affectExpress)).run
-    .map(AffectExpressionsResult(_,"",queryTime(start)))
+  def affectExpressions(text:Option[String],parameters:Option[String] = None,start:Long): Future[AffectExpressionsResult] = {
+    val thresholds = extractAffectThresholds(parameters)
+    Logger.debug(s"thresholds: $thresholds")
+    TextPipeline(text.getOrElse(""),annotate.build(CLU,pipe.affectExpress(thresholds))).run
+      .map(AffectExpressionsResult(_,"",queryTime(start)))
+  }
 
+
+
+  private def queryTime(start:Long):Int = (System.currentTimeMillis() - start).toInt
+
+  private def validJson(parameters:Option[String]):Option[JsValue] = parameters.flatMap(p => Try(Json.parse(p)).toOption).map(_.result.get)
+
+  private def extractParameter[A:TypeTag](paramName:String,jsParams:Option[JsValue]):Option[Any] = jsParams.flatMap { jp =>
+      val result = Try((jp \ paramName).toOption).toOption.flatten
+      typeOf[A] match {
+        case t if t =:= typeOf[String] => Try(result.map(_.as[String])).toOption.flatten
+        case t if t =:= typeOf[Double] => Try(result.map(_.as[Double])).toOption.flatten
+        case t if t =:= typeOf[Int] => Try(result.map(_.as[Int])).toOption.flatten
+        case _ => None
+      }
+    }
+
+
+
+  private def extractAffectThresholds(parameters:Option[String]):Option[AffectThresholds] = {
+    val jsonParams = validJson(parameters)
+    Logger.debug(s"PARAMS: $jsonParams")
+    for {
+      v <- extractParameter[Double]("valence",jsonParams)
+      a <- extractParameter[Double]("arousal",jsonParams)
+      d <- extractParameter[Double]("dominance",jsonParams)
+    } yield AffectThresholds(v.asInstanceOf[Double],a.asInstanceOf[Double],d.asInstanceOf[Double])
+  }
 
 
   //TODO To be implemented
