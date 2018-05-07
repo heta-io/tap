@@ -19,7 +19,7 @@ package tap.analysis.athanor
 import javax.inject.Inject
 
 import tap.util.AppConfig
-import models.Results.StringListResult
+import models.graphql.Fields.StringListResult
 import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 

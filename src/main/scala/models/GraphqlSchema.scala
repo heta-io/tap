@@ -16,71 +16,27 @@
 
 package models
 
-import tap.handlers.{ExternalAnalysisHandler, TextAnalysisHandler}
-import models.Results._
-import models.Results.Implicits._
-import sangria.macros.derive._
-import sangria.schema.{Argument, Field, ObjectType, OptionInputType, Schema, StringType, fields}
+import models.graphql.Fields._
+import models.graphql.{Fields, GraphqlActions}
+import sangria.schema.{Field, ObjectType, Schema, fields}
 
-import scala.concurrent.Future
-
-/**
-  * Created by andrew@andrewresearch.net on 31/8/17.
-  */
 
 class GraphqlSchema {
 
-  val inputText:Argument[String] = Argument("text", StringType)
-  val moveGrammar:Argument[Option[String]] = Argument("grammar",OptionInputType(StringType))
-  val pipetype:Argument[Option[String]] = Argument("pipetype",OptionInputType(StringType))
-
-  val allFields = fields[GraphqlActions,Unit](
-    Field("visible", StringResultType,
-      Some("Returns the text showing nonstandard characters"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.visible(c arg inputText)),
-    Field("clean",StringResultType,
-      Some("Cleans text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.clean(c arg inputText)),
-    Field("cleanPreserve",StringResultType,
-      Some("Cleans text preserving original length"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.cleanPreserve(c arg inputText)),
-    Field("cleanMinimal",StringResultType,
-      Some("Minimally cleans text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.cleanMinimal(c arg inputText)),
-    Field("cleanAscii",StringResultType,
-      Some("Returns ascii safe cleaned text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.cleanAscii(c arg inputText)),
-
-    Field("annotations", deriveObjectType[Unit,SentencesResult](Interfaces[Unit,SentencesResult](ResultType)),
-      Some("Returns sentences for text"),
-      arguments = inputText :: pipetype :: Nil, resolve = c => c.ctx.annotations(c arg inputText,c arg pipetype)),
-    Field("vocabulary",deriveObjectType[Unit,VocabResult](Interfaces[Unit,VocabResult](ResultType)),
-      description = Some("Returns vocabulary for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.vocabulary(c arg inputText)),
-    Field("metrics",deriveObjectType[Unit,MetricsResult](Interfaces[Unit,MetricsResult](ResultType)),
-      Some("Returns metrics for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.metrics(c arg inputText)),
-    Field("expressions",deriveObjectType[Unit,ExpressionsResult](Interfaces[Unit,ExpressionsResult](ResultType)),
-      description = Some("Returns expressions for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.expressions(c arg inputText)),
-    Field("syllables", deriveObjectType[Unit,SyllablesResult](Interfaces[Unit,SyllablesResult](ResultType)),
-      Some("Counts syllables in words and calculates averages for sentences"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.syllables(c.arg(inputText))),
-    Field("spelling", deriveObjectType[Unit,SpellingResult](Interfaces[Unit,SpellingResult](ResultType)),
-      Some("Returns spelling errors and suggestions for each sentence"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.spelling(c.arg(inputText))),
-    Field("posStats",deriveObjectType[Unit,PosStatsResult](Interfaces[Unit,PosStatsResult](ResultType)),
-      Some("Returns posStats for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.posStats(c arg inputText)),
-    Field("reflectExpressions",deriveObjectType[Unit,ReflectExpressionsResult](Interfaces[Unit,ReflectExpressionsResult](ResultType)),
-      description = Some("Returns reflection expressions for text"),
-      arguments = inputText :: Nil, resolve = c => c.ctx.reflectExpressions(c arg inputText)),
-    Field("moves",deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType)),
-      description = Some("Returns a list of moves for the input text"),
-      arguments = inputText :: moveGrammar :: Nil, resolve = c => c.ctx.moves(c arg inputText,c arg moveGrammar))
+  private val tapFields = fields[GraphqlActions,Unit](
+    Field(CleanField.name,CleanField.deriveType,CleanField.description,CleanField.arguments,CleanField.resolver),
+    Field(AnnotationsField.name,AnnotationsField.deriveType,AnnotationsField.description,AnnotationsField.arguments,AnnotationsField.resolver),
+    Field(VocabularyField.name,VocabularyField.deriveType,VocabularyField.description,VocabularyField.arguments,VocabularyField.resolver),
+    Field(MetricsField.name,MetricsField.deriveType,MetricsField.description,MetricsField.arguments,MetricsField.resolver),
+    Field(PosStatsField.name,PosStatsField.deriveType,PosStatsField.description,PosStatsField.arguments,PosStatsField.resolver),
+    Field(SyllablesField.name,SyllablesField.deriveType,SyllablesField.description,SyllablesField.arguments,SyllablesField.resolver),
+    Field(SpellingField.name,SpellingField.deriveType,SpellingField.description,SpellingField.arguments,SpellingField.resolver),
+    Field(ExpressionsField.name,ExpressionsField.deriveType,ExpressionsField.description,ExpressionsField.arguments,ExpressionsField.resolver),
+    Field(ReflectExpressionsField.name,ReflectExpressionsField.deriveType,ReflectExpressionsField.description,ReflectExpressionsField.arguments,ReflectExpressionsField.resolver),
+    Field(AffectExpressionsField.name,AffectExpressionsField.deriveType,AffectExpressionsField.description,AffectExpressionsField.arguments,AffectExpressionsField.resolver),
+    Field(RhetoricalMovesField.name,RhetoricalMovesField.deriveType,RhetoricalMovesField.description,RhetoricalMovesField.arguments,RhetoricalMovesField.resolver),
   )
 
-  def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",allFields))
-
+  def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",tapFields))
 
 }

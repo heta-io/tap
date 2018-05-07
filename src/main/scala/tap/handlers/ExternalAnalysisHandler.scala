@@ -17,8 +17,7 @@
 package tap.handlers
 
 import javax.inject.Inject
-
-import models.Results.StringListResult
+import models.graphql.Fields.StringListResult
 import play.api.Logger
 import tap.analysis.athanor.AthanorClient
 
@@ -30,11 +29,11 @@ class ExternalAnalysisHandler @Inject() (athanorClient: AthanorClient) {
 
   val logger: Logger = Logger(this.getClass)
 
-  def analyseWithAthanor(text:String,grammar:Option[String],start:Long):Future[StringListResult] = {
+  def analyseWithAthanor(text:Option[String],grammar:Option[String],start:Long):Future[StringListResult] = {
     val parameter = "?grammar=" + grammar.getOrElse("analytic")
     logger.info(s"Creating request with parameter: $parameter")
 
-    athanorClient.process(text,parameter,start)
+    athanorClient.process(text.getOrElse(""),parameter,start)
   }
 
 }

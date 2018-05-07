@@ -18,9 +18,9 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.8"
+version := "3.2.0"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.6"
 
 organization := "io.heta"
 
@@ -30,15 +30,14 @@ lazy val nlytxNlpExpressionsV = "1.0.0"
 lazy val nlytxNlpCommonsV = "1.0.0"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.2.0"
+lazy val cluLabProcessorV = "7.2.2"
 
 lazy val sangriaVersion = "1.4.0"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.9"
 lazy val scalaTagsVersion = "0.6.7"
-//val twirlApiVersion = "1.3.13"
 
-lazy val akkaStreamVersion = "2.5.11"
+lazy val akkaStreamVersion = "2.5.12"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
