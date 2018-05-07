@@ -51,9 +51,16 @@ class Expressions @Inject()(@Named("affectlexicon") affectlexicon: ActorRef){
 
   def reflective(text:String):Future[ReflectiveExpressions] = ReflectiveExpressionPipeline.process(text)
 
+  def affective(tokens:Vector[TapToken]):Future[Vector[TapAffectExpression]] = {
+    ask(affectlexicon,matchAffectTerms(tokens)).mapTo[Vector[TapAffectExpression]]
+  }
+
+
   def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = {
     ask(affectlexicon,getAffectTerms(tokens)).mapTo[Vector[AffectExpression]]
   }
+
+
 
   def epistemic(tokens:Vector[TapToken]):Future[Vector[EpistemicExpression]] = Future {
     //Get the indexes of any epistemic verbs

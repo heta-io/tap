@@ -58,7 +58,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
     val spelling: SpellingFlow = tapSentences via tapSpelling
     val posStats: PosStatsFlow = tapSentences via tapPosStats
     val reflectExpress: ReflectExpressionFlow = reflectExpressions
-    val affectExpress: AffectExpressionFlow = affectExpressions
+    def affectExpress(thresholds:Option[AffectThresholds] = None): AffectExpressionFlow = cluTapSentences via affectExpressions(thresholds)
   }
 
   def build[A,B](pipetype:String,pipeline: Flow[A,B,NotUsed]):Flow[String,B,NotUsed] = {
@@ -303,11 +303,28 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
      TapReflectExpressions(reflect,TapSummary(metaTagSummary,phraseTagSummary),tags)
     }
 
-  val affectExpressions:Flow[Document,Vector[TapAffectExpressions],NotUsed] = Flow[Document]
-    .map { doc =>
-      Vector()
+  def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[TapAffectExpressions],NotUsed] = {
+    val th = thresholds.getOrElse(AffectThresholds(0.0,0.0,0.0))
+    Flow[TapSentences].mapAsync[Vector[TapAffectExpressions]](3) { sents =>
+      val results = sents.map { s =>
+        for {
+          ae <- expressions.affective(s.tokens)
+        } yield TapAffectExpressions(filterAffectThresholds(ae,th),s.idx)
+      }
+      Future.sequence(results)
     }
+  }
+
+  private def filterAffectThresholds(affectExpressions:Vector[TapAffectExpression],thresholds:AffectThresholds) = {
+    affectExpressions.filter{ ae =>
+      ae.valence >= thresholds.valence &&
+      ae.arousal >= thresholds.arousal &&
+        ae.dominance >= thresholds.dominance
+    }
+  }
+
 }
+
 
 
 

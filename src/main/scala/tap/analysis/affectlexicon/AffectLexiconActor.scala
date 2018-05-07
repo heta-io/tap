@@ -23,7 +23,7 @@ import play.api.Logger
 import tap.analysis.Lexicons.Lexicon
 import tap.analysis.affectlexicon.AffectLexiconActor._
 import tap.data.CustomTypes.AffectExpression
-import tap.data.{TapExpression, TapToken}
+import tap.data.{TapAffectExpression, TapExpression, TapToken}
 
 /**
   * Created by quanie on 13/11/17.
@@ -33,6 +33,7 @@ object AffectLexiconActor {
   object INIT
   case class matchEpistemicVerbs(terms:Vector[String],useLemmas:Boolean = false)
   case class getAffectTerms(tokens:Vector[TapToken])
+  case class matchAffectTerms(tokens:Vector[TapToken])
   case class getEpistemicVerbs(tokens:Vector[TapToken])
   case class getModalVerbs(tokens:Vector[TapToken])
 }
@@ -54,6 +55,7 @@ class AffectLexiconActor extends Actor {
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
     case gAffect: getAffectTerms => sender ! getAffectTerms(gAffect.tokens)
+    case matchAffect: matchAffectTerms => sender !getAllMatchingTerms(matchAffect.tokens)
     case msg:Any => {
       logger.error(s"AffectLexiconActor received unknown msg: $msg")
     }
@@ -61,6 +63,15 @@ class AffectLexiconActor extends Actor {
 
   def init:Boolean = {
     allAffectTerms.size > 0
+  }
+
+  private def getAllMatchingTerms(tokens:Vector[TapToken]):Vector[TapAffectExpression] = {
+    val terms = tokens.map(_.lemma)
+    val affectTerms = allAffectTerms.filter(a => terms.contains(a.word)).map(aff => aff.word -> aff).toMap
+    tokens.map { t =>
+      val affect = affectTerms.getOrElse(t.lemma,Affect(t.lemma,0,0,0))
+      TapAffectExpression(t.term,t.idx,t.idx,affect.valence,affect.arousal,affect.dominance)
+    }
   }
 
   private def getPositive(terms: Vector[String]): Vector[TapExpression] = {

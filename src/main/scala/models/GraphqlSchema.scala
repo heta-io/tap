@@ -23,12 +23,6 @@ import sangria.schema.{Field, ObjectType, Schema, fields}
 
 class GraphqlSchema {
 
-//  private val tapFields = Fields.fieldsList
-//    .map(f => Field(f.name,f.deriveType,f.description,f.arguments,f.resolver))
-//    .flatMap(fields[GraphqlActions,Unit](_))
-
-  //private val fl = Fields.fieldsList
-
   private val tapFields = fields[GraphqlActions,Unit](
     Field(CleanField.name,CleanField.deriveType,CleanField.description,CleanField.arguments,CleanField.resolver),
     Field(AnnotationsField.name,AnnotationsField.deriveType,AnnotationsField.description,AnnotationsField.arguments,AnnotationsField.resolver),
@@ -42,7 +36,6 @@ class GraphqlSchema {
     Field(AffectExpressionsField.name,AffectExpressionsField.deriveType,AffectExpressionsField.description,AffectExpressionsField.arguments,AffectExpressionsField.resolver),
     Field(RhetoricalMovesField.name,RhetoricalMovesField.deriveType,RhetoricalMovesField.description,RhetoricalMovesField.arguments,RhetoricalMovesField.resolver),
   )
-
 
   def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",tapFields))
 
