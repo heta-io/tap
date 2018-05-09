@@ -16,13 +16,28 @@
 
 import LocalSbtSettings._
 
-name := "tap"
+//Project details
 
-version := "3.1.8"
+lazy val projectName = "tap"
+lazy val projectOrg = "io.heta"
+lazy val projectVersion = "3.2.1"
+lazy val projectScalaVersion = "2.12.6"
 
-scalaVersion := "2.12.4"
+lazy val serverName = "tap_server"
+lazy val clientName = "tap_client"
+lazy val sharedName = "tap_shared"
 
-organization := "io.heta"
+lazy val serverVersion = projectVersion
+lazy val clientVersion = projectVersion
+lazy val sharedVersion = projectVersion
+
+//name := "tap"
+
+//version := "3.2.0"
+
+//scalaVersion := "2.12.6"
+
+//organization := "io.heta"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.0"
@@ -30,15 +45,14 @@ lazy val nlytxNlpExpressionsV = "1.0.0"
 lazy val nlytxNlpCommonsV = "1.0.0"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.2.0"
+lazy val cluLabProcessorV = "7.2.2"
 
 lazy val sangriaVersion = "1.4.0"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.9"
 lazy val scalaTagsVersion = "0.6.7"
-//val twirlApiVersion = "1.3.13"
 
-lazy val akkaStreamVersion = "2.5.11"
+lazy val akkaStreamVersion = "2.5.12"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
@@ -47,11 +61,11 @@ lazy val openNlpVersion = "1.8.4"
 lazy val langToolVersion = "4.1"
 lazy val deepLearning4jVersion = "0.9.1"
 
-enablePlugins(PlayScala)
-disablePlugins(PlayLayoutPlugin)
-PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
-libraryDependencies += ws     //Http client
-libraryDependencies += guice  //Dependency injection
+//ScalaJS
+lazy val scalaJsDomVersion = "0.9.5"
+lazy val scalaJsD3Version = "0.3.4"
+lazy val scalaJsBootstrapVersion = "2.3.1"
+
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
@@ -74,7 +88,7 @@ val analyticsDependencies = Seq(
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
 )
-resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
+//resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
 val dl4jDependencies = Seq(
   "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
@@ -89,7 +103,62 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies ++ dl4jDependencies
+//Modules
+
+lazy val commonSettings = Seq(
+  scalaVersion := projectScalaVersion,
+  organization := projectOrg
+)
+
+lazy val tap_server = (project in file(serverName))
+  .settings(
+    commonSettings,
+    name := serverName,
+    version := serverVersion,
+    scalaJSProjects := Seq(tap_client),
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+    pipelineStages := Seq(digest, gzip),
+    compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
+    libraryDependencies ++= Seq(ws, guice),
+    libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ dl4jDependencies ++ testDependencies,
+    WebKeys.packagePrefix in Assets := "public/",
+    managedClasspath in Runtime += (packageBin in Assets).value,
+    PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := projectOrg,
+    buildInfoOptions += BuildInfoOption.BuildTime
+  ).enablePlugins(PlayScala,BuildInfoPlugin)
+  .disablePlugins(PlayLayoutPlugin)
+  .dependsOn(sharedJvm)
+
+lazy val tap_client = (project in file(clientName))
+  .settings(
+    commonSettings,
+    name := clientName,
+    version := clientVersion,
+//    scalaJSUseMainModuleInitializer := true,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
+      //"org.singlespaced" %%% "scalajs-d3" % scalaJsD3Version,
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % scalaJsBootstrapVersion,
+      "com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
+    )
+  ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
+  dependsOn(sharedJs)
+
+lazy val tap_shared = (crossProject.crossType(CrossType.Pure) in file(sharedName))
+  .settings(
+    commonSettings,
+    libraryDependencies ++= Seq("com.lihaoyi" %%% "scalatags" % scalaTagsVersion)
+  )
+lazy val sharedJvm = tap_shared.jvm
+lazy val sharedJs = tap_shared.js
+
+// loads the server project at sbt startup
+onLoad in Global := (onLoad in Global).value andThen {s: State => s"project $serverName" :: s}
+
+
+/*
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
@@ -128,3 +197,4 @@ javaOptions in Universal ++= Seq(
   "-J-Xmx4g",
   "-J-Xms2g"
 )
+*/
