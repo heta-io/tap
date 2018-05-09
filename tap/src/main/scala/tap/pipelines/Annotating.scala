@@ -304,7 +304,7 @@ class Annotating @Inject()(@Named("languagetool") languageTool: ActorRef, expres
     }
 
   def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[TapAffectExpressions],NotUsed] = {
-    val th = thresholds.getOrElse(AffectThresholds(0.0,0.0,0.0))
+    val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
     Flow[TapSentences].mapAsync[Vector[TapAffectExpressions]](3) { sents =>
       val results = sents.map { s =>
         for {
