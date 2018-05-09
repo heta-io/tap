@@ -23,7 +23,7 @@ lazy val projectOrg = "io.heta"
 lazy val projectVersion = "3.2.1"
 lazy val projectScalaVersion = "2.12.6"
 
-lazy val serverName = "tap_server"
+lazy val serverName = "tap"
 lazy val clientName = "tap_client"
 lazy val sharedName = "tap_shared"
 
@@ -88,7 +88,6 @@ val analyticsDependencies = Seq(
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
 )
-//resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
 val dl4jDependencies = Seq(
   "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
@@ -120,16 +119,25 @@ lazy val tap_server = (project in file(serverName))
     pipelineStages := Seq(digest, gzip),
     compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
     libraryDependencies ++= Seq(ws, guice),
+    resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
     libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ dl4jDependencies ++ testDependencies,
     WebKeys.packagePrefix in Assets := "public/",
     managedClasspath in Runtime += (packageBin in Assets).value,
     PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := projectOrg,
-    buildInfoOptions += BuildInfoOption.BuildTime
-  ).enablePlugins(PlayScala,BuildInfoPlugin)
+    buildInfoOptions += BuildInfoOption.BuildTime,
+    dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
+    dockerRepository := Some(s"$dockerRepoURI"),
+    defaultLinuxInstallLocation in Docker := "/opt/docker",
+    dockerExposedVolumes := Seq("/opt/docker/logs"),
+    dockerBaseImage := "openjdk:9-jdk"
+  ).enablePlugins(PlayScala,BuildInfoPlugin,JavaAppPackaging)
   .disablePlugins(PlayLayoutPlugin)
   .dependsOn(sharedJvm)
+
+
+
 
 lazy val tap_client = (project in file(clientName))
   .settings(
@@ -186,12 +194,7 @@ copyDocsTask := {
   IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
 }
 
-enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
-dockerRepository := Some(s"$dockerRepoURI")
-defaultLinuxInstallLocation in Docker := "/opt/docker"
-dockerExposedVolumes := Seq("/opt/docker/logs")
-dockerBaseImage := "openjdk:9-jdk"
+
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",
