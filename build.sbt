@@ -135,6 +135,8 @@ lazy val tap_server = (project in file(serverName))
   ).enablePlugins(PlayScala,BuildInfoPlugin,JavaAppPackaging)
   .disablePlugins(PlayLayoutPlugin)
   .dependsOn(sharedJvm)
+  .dependsOn(tap_client)
+  .aggregate(tap_client)
 
 
 

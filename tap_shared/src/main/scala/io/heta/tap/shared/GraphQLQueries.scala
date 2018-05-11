@@ -1,8 +1,13 @@
-package io.heta.tap.client
+package io.heta.tap.shared
 
+import scala.scalajs.js.annotation.JSExport
+
+@JSExport
 object GraphQLQueries {
 
-  var exampleQueries =
+  lazy val allQueries:String = affectExpressions
+
+  private val affectExpressions =
     """
       |# TAP Example Queries
       |
