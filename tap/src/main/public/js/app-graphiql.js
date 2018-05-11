@@ -118,6 +118,8 @@
 // import GraphiQL from 'graphiql';
 // import fetch from 'isomorphic-fetch';
 
+import GraphQLQueries;
+
 function graphQLFetcher(graphQLParams) {
     return fetch(window.location.origin + '/graphql', {
         method: 'post',
@@ -129,7 +131,8 @@ function graphQLFetcher(graphQLParams) {
 //ReactDOM.render(<GraphiQL fetcher={graphQLFetcher} />, document.body);
 ReactDOM.render(
     React.createElement(GraphiQL, {
-        fetcher: graphQLFetcher
+        fetcher: graphQLFetcher,
+        query: GraphQLQueries.exampleQueries
     }),
     document.getElementById('graphiql')
 );
