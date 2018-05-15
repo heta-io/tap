@@ -24,20 +24,12 @@ lazy val projectVersion = "3.2.1"
 lazy val projectScalaVersion = "2.12.6"
 
 lazy val serverName = "tap"
-lazy val clientName = "tap_client"
-lazy val sharedName = "tap_shared"
+lazy val clientName = "clientJS"
+lazy val sharedName = "sharedJS"
 
-lazy val serverVersion = projectVersion
+//lazy val serverVersion = projectVersion
 lazy val clientVersion = projectVersion
 lazy val sharedVersion = projectVersion
-
-//name := "tap"
-
-//version := "3.2.0"
-
-//scalaVersion := "2.12.6"
-
-//organization := "io.heta"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.0"
@@ -86,13 +78,19 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
-  "org.languagetool" % "language-en" % langToolVersion
+  "org.languagetool" % "language-en" % langToolVersion,
+  "com.typesafe.play" %% "play-json" % playJsonVersion,
 )
 
 val dl4jDependencies = Seq(
   "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
   "org.deeplearning4j" % "deeplearning4j-nlp" % deepLearning4jVersion,
   "org.nd4j" % "nd4j-native-platform" % deepLearning4jVersion % Test
+)
+
+val loggingDependencies = Seq(
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 )
 
 val testDependencies = Seq(
@@ -109,61 +107,70 @@ lazy val commonSettings = Seq(
   organization := projectOrg
 )
 
-lazy val tap_server = (project in file(serverName))
+lazy val play = (project in file("."))
   .settings(
     commonSettings,
-    name := serverName,
-    version := serverVersion,
-    scalaJSProjects := Seq(tap_client),
+    name := projectName,
+    version := projectVersion,
+    scalaJSProjects := Seq(clientJS),
     pipelineStages in Assets := Seq(scalaJSPipeline),
     pipelineStages := Seq(digest, gzip),
     compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-    libraryDependencies ++= Seq(ws, guice),
-    resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
-    libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ dl4jDependencies ++ testDependencies,
+    //
+    libraryDependencies ++= Seq(ws, guice, specs2 % Test),
+    libraryDependencies ++= apiDependencies,
+    //
     WebKeys.packagePrefix in Assets := "public/",
     managedClasspath in Runtime += (packageBin in Assets).value,
-    PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value,
-    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := projectOrg,
-    buildInfoOptions += BuildInfoOption.BuildTime,
+    //
     dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
     dockerRepository := Some(s"$dockerRepoURI"),
     defaultLinuxInstallLocation in Docker := "/opt/docker",
     dockerExposedVolumes := Seq("/opt/docker/logs"),
     dockerBaseImage := "openjdk:9-jdk"
-  ).enablePlugins(PlayScala,BuildInfoPlugin,JavaAppPackaging)
-  .disablePlugins(PlayLayoutPlugin)
+  ).enablePlugins(PlayScala,WebScalaJSBundlerPlugin,SbtWeb)
+  .dependsOn(server,sharedJvm)
+
+
+lazy val server = (project in file(serverName))
+  .settings(
+    resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
+    libraryDependencies ++= analyticsDependencies ++ dl4jDependencies ++ loggingDependencies ++ testDependencies,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := projectOrg,
+    buildInfoOptions += BuildInfoOption.BuildTime,
+  ).enablePlugins(BuildInfoPlugin)
   .dependsOn(sharedJvm)
 
-
-
-
-lazy val tap_client = (project in file(clientName))
+lazy val clientJS = (project in file(clientName))
   .settings(
     commonSettings,
     name := clientName,
     version := clientVersion,
-//    scalaJSUseMainModuleInitializer := true,
+    scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
-      //"org.singlespaced" %%% "scalajs-d3" % scalaJsD3Version,
-      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % scalaJsBootstrapVersion,
-      "com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.1",
+      "me.shadaj" %%% "slinky-core" % "0.4.2", // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % "0.4.2" // React DOM, HTML and SVG tags
+    ),
+    npmDependencies in Compile ++= Seq(
+      "bootstrap" -> "4.1.1",
+      "react" -> "16.2.0",
+      "react-dom" -> "16.2.0",
+      "graphiql" -> "0.11.11"
     )
-  ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
+  ).enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
-lazy val tap_shared = (crossProject.crossType(CrossType.Pure) in file(sharedName))
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file(sharedName))
   .settings(
     commonSettings,
     libraryDependencies ++= Seq("com.lihaoyi" %%% "scalatags" % scalaTagsVersion)
   )
-lazy val sharedJvm = tap_shared.jvm
-lazy val sharedJs = tap_shared.js
+lazy val sharedJvm = shared.jvm
+lazy val sharedJs = shared.js
 
-// loads the server project at sbt startup
-onLoad in Global := (onLoad in Global).value andThen {s: State => s"project $serverName" :: s}
 
 
 /*
