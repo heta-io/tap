@@ -1,17 +1,17 @@
 /*
- * Copyright 2016-2017 original author or authors
+ * Copyright (c) 2016-2018 original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 
 package controllers.handlers
@@ -101,7 +101,7 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   def affectExpressions(text:Option[String],parameters:Option[String] = None,start:Long): Future[AffectExpressionsResult] = {
     val thresholds = extractAffectThresholds(parameters)
-    Logger.debug(s"thresholds: $thresholds")
+    Logger.info(s"thresholds: $thresholds")
     TextPipeline(text.getOrElse(""),annotate.build(CLU,pipe.affectExpress(thresholds))).run
       .map(AffectExpressionsResult(_,"",queryTime(start)))
   }
@@ -126,7 +126,7 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   private def extractAffectThresholds(parameters:Option[String]):Option[AffectThresholds] = {
     val jsonParams = validJson(parameters)
-    Logger.debug(s"PARAMS: $jsonParams")
+    Logger.info(s"PARAMS: $jsonParams")
     for {
       v <- extractParameter[Double]("valence",jsonParams)
       a <- extractParameter[Double]("arousal",jsonParams)
