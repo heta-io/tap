@@ -18,30 +18,34 @@ import LocalSbtSettings._
 
 name := "tap"
 
-version := "3.1.2"
+version := "3.1.8"
 
 scalaVersion := "2.12.4"
 
-organization := "au.edu.utscic"
+organization := "io.heta"
 
 //Scala library versions
-val nlytxNlpApiV = "1.1.0"
-val nlytxNlpCommonsV = "1.0.0"
-val factorieNlpV = "1.0.4"
-val factorieNlpModelsV = "1.0.3"
+lazy val nlytxNlpApiV = "1.1.0"
+lazy val nlytxNlpExpressionsV = "1.0.0"
+lazy val nlytxNlpCommonsV = "1.0.0"
+lazy val factorieNlpV = "1.0.4"
+lazy val factorieNlpModelsV = "1.0.3"
+lazy val cluLabProcessorV = "7.2.0"
 
-val sangriaVersion = "1.3.2"
-val sangriaJsonVersion = "1.0.4"
-val playJsonVersion = "2.6.7"
-val twirlApiVersion = "1.3.13"
+lazy val sangriaVersion = "1.4.0"
+lazy val sangriaJsonVersion = "1.0.4"
+lazy val playJsonVersion = "2.6.9"
+lazy val scalaTagsVersion = "0.6.7"
+//val twirlApiVersion = "1.3.13"
 
-val akkaStreamVersion = "2.5.6"
-val scalatestVersion = "3.0.4"
-val scalatestPlayVersion = "3.1.2"
+lazy val akkaStreamVersion = "2.5.11"
+lazy val scalatestVersion = "3.0.5"
+lazy val scalatestPlayVersion = "3.1.2"
 
 //Java library versions
-val openNlpVersion = "1.8.3"
-val langToolVersion = "3.9"
+lazy val openNlpVersion = "1.8.4"
+lazy val langToolVersion = "4.1"
+lazy val deepLearning4jVersion = "0.9.1"
 
 enablePlugins(PlayScala)
 disablePlugins(PlayLayoutPlugin)
@@ -52,20 +56,31 @@ libraryDependencies += guice  //Dependency injection
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
-  "com.typesafe.play" %% "twirl-api" % twirlApiVersion,
+  //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
+  "com.lihaoyi" %% "scalatags" % scalaTagsVersion,
   "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
 )
 
 val analyticsDependencies = Seq(
   "io.nlytx" %% "nlytx-nlp-api" % nlytxNlpApiV,
+  "io.nlytx" %% "nlytx-nlp-expressions" % nlytxNlpExpressionsV,
   "io.nlytx" %% "nlytx-nlp-commons" % nlytxNlpCommonsV,
   "io.nlytx" %% "factorie-nlp" % factorieNlpV,
   "io.nlytx" %% "factorie-nlp-models" % factorieNlpModelsV,
+  "org.clulab" %% "processors-main" % cluLabProcessorV,
+  "org.clulab" %% "processors-odin" % cluLabProcessorV,
+  "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion
 )
 resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
+
+val dl4jDependencies = Seq(
+  "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
+  "org.deeplearning4j" % "deeplearning4j-nlp" % deepLearning4jVersion,
+  "org.nd4j" % "nd4j-native-platform" % deepLearning4jVersion % Test
+)
 
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
@@ -74,8 +89,7 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies
+libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies ++ dl4jDependencies
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
@@ -108,6 +122,7 @@ dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
 dockerRepository := Some(s"$dockerRepoURI")
 defaultLinuxInstallLocation in Docker := "/opt/docker"
 dockerExposedVolumes := Seq("/opt/docker/logs")
+dockerBaseImage := "openjdk:9-jdk"
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",

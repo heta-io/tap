@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package handlers
+package tap.handlers
 
 import javax.inject.Inject
 

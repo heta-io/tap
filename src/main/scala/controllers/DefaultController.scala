@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, AnyContent, InjectedController}
+import tap.views.HomePage
 
 /**
   * Created by andrew@andrewresearch.net on 22/8/17.
@@ -27,7 +28,9 @@ import play.api.mvc.{Action, AnyContent, InjectedController}
 
 class DefaultController @Inject() (assets: AssetsFinder) extends InjectedController {
 
+
   def index:Action[AnyContent] = Action {
-    Ok(views.html.index())
+    //Ok(views.html.index())
+    Ok(HomePage.render("TAP - Text Analytics Pipeline"))
   }
 }

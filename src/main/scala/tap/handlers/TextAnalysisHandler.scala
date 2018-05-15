@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package handlers
+package tap.handlers
 
 import javax.inject.Inject
 
@@ -61,10 +61,12 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   /* Annotating Pipeline */
 
-  def annotations(text:String,pipetype:Option[String],start:Long):Future[SentencesResult] =
-    TextPipeline(text, annotate.build(validPipeType(pipetype),pipe.sentences)).run
+  def annotations(text:String,pipetype:Option[String],start:Long):Future[SentencesResult] = {
+    val pt = validPipeType(pipetype)
+    val ps = if(pt=="clu") pipe.cluSentences else pipe.sentences
+    TextPipeline(text, annotate.build(pt,ps)).run
       .map(SentencesResult(_,querytime = queryTime(start)))
-
+  }
 
   // DEFAULT pipetypes don't require parsing or NER so can use the FAST (DEFAULT) option
 
@@ -92,6 +94,9 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
     TextPipeline(text,annotate.build(DEFAULT,pipe.posStats)).run
       .map(PosStatsResult(_,querytime = queryTime(start)))
 
+  def reflectExpressions(text:String,start:Long):Future[ReflectExpressionsResult] =
+    TextPipeline(text,annotate.build(DEFAULT,pipe.reflectExpress)).run
+    .map(ReflectExpressionsResult(_, querytime = queryTime(start)))
 
   //TODO To be implemented
   def shape(text:String):Future[StringResult]   = dummyResult(text)

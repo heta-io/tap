@@ -18,7 +18,9 @@ package tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
+import io.nlytx.expressions.data.ReflectiveExpressions
 import io.nlytx.nlp.api.DocumentModel.{Document, Section}
+import org.clulab.processors
 import tap.data._ // scalastyle:ignore
 
 /**
@@ -30,16 +32,19 @@ object AnnotatingTypes {
   val STANDARD = "standard"
   val FAST = "fast"
   val NER = "ner"
+  val CLU = "clu"
   val DEFAULT = FAST
   def validPipeType(pipetype:Option[String]):String = {
     val pt = pipetype.getOrElse(DEFAULT).toLowerCase
-    if(List(STANDARD,FAST,NER).contains(pt)) pt else DEFAULT
+    if(List(STANDARD,FAST,NER,CLU).contains(pt)) pt else DEFAULT
   }
 
   /* Some convenience types */
   type TapSentences = Vector[TapSentence]
   type Sections = Vector[Section]
 
+  type CluDocumentFlow = Flow[String,processors.Document, NotUsed]
+  type CluSentencesFlow = Flow[processors.Document, TapSentences, NotUsed]
   type DocumentFlow = Flow[String, Document, NotUsed]
   type SentencesFlow = Flow[Document, TapSentences, NotUsed]
   type VocabFlow = Flow[Document, TapVocab, NotUsed]
@@ -48,4 +53,7 @@ object AnnotatingTypes {
   type SyllablesFlow = Flow[Document, Vector[TapSyllables],NotUsed]
   type SpellingFlow = Flow[Document, Vector[TapSpelling],NotUsed]
   type PosStatsFlow = Flow[Document, TapPosStats, NotUsed]
+  type ReflectExpressionFlow = Flow[Document, TapReflectExpressions, NotUsed]
+
+
 }

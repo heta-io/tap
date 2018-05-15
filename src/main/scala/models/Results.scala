@@ -18,6 +18,7 @@ package models
 
 import java.time.OffsetDateTime
 
+import io.nlytx.expressions.data.{Coded, Reflect, Summary}
 import tap.data._
 import models.Results.Implicits.ResultType
 import sangria.macros.derive.{GraphQLDescription, GraphQLName, Interfaces, deriveObjectType}
@@ -51,6 +52,8 @@ object Results {
 
   case class SpellingResult(analytics: Vector[TapSpelling], message:String = "", querytime:Int = -1) extends Result
 
+  case class ReflectExpressionsResult(analytics: TapReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+
   @GraphQLName("syllables")
   @GraphQLDescription("Get syllable counts and averages.")
   case class SyllablesResult(analytics: Vector[TapSyllables], message:String = "", querytime:Int = -1) extends Result
@@ -76,5 +79,11 @@ object Results {
     implicit val TapSpellingType:ObjectType[Unit,TapSpelling] = deriveObjectType[Unit,TapSpelling]()
     implicit val TapSpellType:ObjectType[Unit,TapSpell] = deriveObjectType[Unit,TapSpell]()
     implicit val TapPosStatsType:ObjectType[Unit,TapPosStats] = deriveObjectType[Unit,TapPosStats]()
+    implicit val TapMetaTagSummaryType:ObjectType[Unit,TapMetaTagSummary] = deriveObjectType[Unit,TapMetaTagSummary]()
+    implicit val TapPhraseTagSummaryType:ObjectType[Unit,TapPhraseTagSummary] = deriveObjectType[Unit,TapPhraseTagSummary]()
+    implicit val TapSummaryType:ObjectType[Unit,TapSummary] = deriveObjectType[Unit,TapSummary]()
+    implicit val ReflectType:ObjectType[Unit,Reflect] = deriveObjectType[Unit,Reflect]()
+    implicit val CodedType:ObjectType[Unit,Coded] = deriveObjectType[Unit,Coded]()
+    implicit val TapReflectExpressionsType:ObjectType[Unit,TapReflectExpressions] = deriveObjectType[Unit,TapReflectExpressions]()
   }
 }

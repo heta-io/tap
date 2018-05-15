@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package tap.nlp
+package tap.analysis.clu
 
-import com.google.inject.AbstractModule
+import org.clulab.processors.Document
+import org.clulab.processors.clu.CluProcessor
 import play.api.Logger
-import play.api.libs.concurrent.AkkaGuiceSupport
-import tap.analysis.affectlexicon.AffectLexiconActor
-import tap.analysis.wordvector.WordVectorActor
-import tap.nlp.factorie.LanguageToolActor
 
-/**
-  * Created by andrew@andrewresearch.net on 21/10/17.
-  */
+class CluAnnotator {
 
-class NlpInitialiserModule extends AbstractModule with AkkaGuiceSupport {
+  private val logger: Logger = Logger(this.getClass)
 
-  def configure():Unit = {
-    Logger.info("Binding LanguageToolActor")
-    bindActor[LanguageToolActor]("languagetool")
-    bindActor[AffectLexiconActor]("affectlexicon")
-    bindActor[WordVectorActor]("wordvector")
+  val processor = new CluProcessor()
+
+  this.init()
+
+  private def init():Unit = {
+    logger.info("Initialising CluProcessor")
+    val text = """CluProcessor is starting up!"""
+    val aDoc = this.annotate(text)
+    logger.info("Initialised CluProcessor >> "+aDoc.sentences.length)
   }
 
+  def annotate(text:String):Document = {
+    val doc = processor.mkDocument(text)
+    processor.annotate(doc)
+  }
 }
