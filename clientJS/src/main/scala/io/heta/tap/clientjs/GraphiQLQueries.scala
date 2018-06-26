@@ -37,7 +37,8 @@ object GraphiQLQueries {
   val aeDemoVariables =
     """{
       |  "text": "I have found this process extremely challenging. I hope that the future is more enjoyable and relaxing.",
-      |  "parameters": "{\"arousal\":0,\"valence\":0,\"dominance\":0}"
+      |  "parameters": "{\"arousal\":0,\"valence\":0,\"dominance\":0}",
+      |  "moveParams": "{\"grammar\":\"analytic\"}"
       |}
     """.stripMargin
 }

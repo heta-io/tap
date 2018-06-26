@@ -16,32 +16,27 @@
 
 package controllers.handlers
 
-import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import io.heta.tap.data.AffectThresholds
+import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.TextPipeline
 import io.heta.tap.pipelines.{Annotating, Cleaning}
-import io.heta.tap.pipelines.AnnotatingTypes._
 import javax.inject.Inject
 import models.graphql.Fields._
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Try
-import scala.reflect.runtime.universe._
 
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
-class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
+class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) extends GenericHandler {
 
   private val pipe = annotate.Pipeline
 
   def clean(text: Option[String], parameters: Option[String], start:Long): Future[StringResult] = {
     val inputStr = text.getOrElse("")
-    val json = validJson(parameters)
-    Logger.debug(s"JSON: $json")
-    val cleanType = extractParameter[String]("cleanType",json)
+    val cleanType = extractParameter[String]("cleanType",parameters)
     Logger.debug(s"STRING: $cleanType")
     val outputStr:Future[String] = cleanType match {
       case Some("visible") => TextPipeline(inputStr,clean.Pipeline.revealInvisible).run
@@ -56,9 +51,7 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
 
   def annotations(text:Option[String],parameters:Option[String],start:Long):Future[SentencesResult] = {
     val inputStr = text.getOrElse("")
-    val json = validJson(parameters)
-    Logger.debug(s"JSON: $json")
-    val pipeType = extractParameter[String]("pipeType",json)
+    val pipeType = extractParameter[String]("pipeType",parameters)
     Logger.debug(s"STRING: $pipeType")
     val analysis = pipeType match {
       case Some(CLU) => TextPipeline(inputStr, annotate.build(CLU,pipe.cluSentences)).run
@@ -107,41 +100,17 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) {
   }
 
 
-
-  private def queryTime(start:Long):Int = (System.currentTimeMillis() - start).toInt
-
-  private def validJson(parameters:Option[String]):Option[JsValue] = parameters.flatMap(p => Try(Json.parse(p)).toOption).map(_.result.get)
-
-  private def extractParameter[A:TypeTag](paramName:String,jsParams:Option[JsValue]):Option[Any] = jsParams.flatMap { jp =>
-      val result = Try((jp \ paramName).toOption).toOption.flatten
-      typeOf[A] match {
-        case t if t =:= typeOf[String] => Try(result.map(_.as[String])).toOption.flatten
-        case t if t =:= typeOf[Double] => Try(result.map(_.as[Double])).toOption.flatten
-        case t if t =:= typeOf[Int] => Try(result.map(_.as[Int])).toOption.flatten
-        case _ => None
-      }
-    }
-
-
-
   private def extractAffectThresholds(parameters:Option[String]):Option[AffectThresholds] = {
-    val jsonParams = validJson(parameters)
-    Logger.info(s"PARAMS: $jsonParams")
     for {
-      v <- extractParameter[Double]("valence",jsonParams)
-      a <- extractParameter[Double]("arousal",jsonParams)
-      d <- extractParameter[Double]("dominance",jsonParams)
+      v <- extractParameter[Double]("valence",parameters)
+      a <- extractParameter[Double]("arousal",parameters)
+      d <- extractParameter[Double]("dominance",parameters)
     } yield AffectThresholds(v.asInstanceOf[Double],a.asInstanceOf[Double],d.asInstanceOf[Double])
   }
 
 
   //TODO To be implemented
   def shape(text:String):Future[StringResult]   = dummyResult(text)
-
-
-  def dummyResult(text:String):Future[StringResult] = Future {
-    StringResult("This features is not implemented yet")
-  }
 
 
 }
