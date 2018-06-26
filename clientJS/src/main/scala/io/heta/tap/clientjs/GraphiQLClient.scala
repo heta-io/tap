@@ -37,7 +37,7 @@ object GraphiQLClient {
    // println(text)
 
     // println("loading...")
-    val result  = GraphiqlSetup.load(GraphiQLQueries.affectExpressions,GraphiQLQueries.aeDemoVariables)
+    val result  = GraphiqlSetup.load(GraphiQLQueries.allQueries, GraphiQLQueries.aeDemoVariables)
     println("result")
 
   }

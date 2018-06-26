@@ -39,7 +39,7 @@ lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
 lazy val cluLabProcessorV = "7.2.2"
 
-lazy val sangriaVersion = "1.4.0"
+lazy val sangriaVersion = "1.4.1"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.9"
 lazy val scalaTagsVersion = "0.6.7"

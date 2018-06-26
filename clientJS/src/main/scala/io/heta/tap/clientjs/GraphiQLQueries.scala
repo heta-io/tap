@@ -18,18 +18,41 @@ package io.heta.tap.clientjs
 
 object GraphiQLQueries {
 
-  val affectExpressions =
-    """query DemoQuery($text:String,$parameters:String) {
+  lazy val allQueries:String = affectExpressions + rhetoricalMoves
+
+  private val affectExpressions =
+    """
+      |# TAP Example Queries
+      |
+      |query Affect($text:String,$parameters:String) {
       |  affectExpressions(text:$text,parameters:$parameters) {
       |    message
       |    timestamp
       |    querytime
       |    analytics {
-      |  		affect {
+      |      affect {
       |        text
+      |        valence
       |        arousal
+      |        dominance
+      |        startIdx
+      |        endIdx
       |      }
       |    }
+      |  }
+      |}
+      |
+      |
+    """.stripMargin
+
+  private val rhetoricalMoves =
+    """
+      |query RhetoricalMoves($text: String,$moveParams:String) {
+      |  moves(text:$text,parameters:$moveParams) {
+      |      analytics
+      |      message
+      |      timestamp
+      |      querytime
       |  }
       |}
     """.stripMargin
