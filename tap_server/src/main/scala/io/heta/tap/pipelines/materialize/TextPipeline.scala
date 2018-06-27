@@ -14,20 +14,18 @@
  *
  */
 
-package views
+package io.heta.tap.pipelines.materialize
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+/**
+  * Created by andrew@andrewresearch.net on 19/5/17.
+  */
 
-trait GenericPage {
+import akka.NotUsed
+import akka.stream.scaladsl.{Flow, Sink, Source}
+import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
+case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
-
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
+  val source = Source.single(inputStr)
+  def run = source via flow runWith(Sink.head[T])
 }

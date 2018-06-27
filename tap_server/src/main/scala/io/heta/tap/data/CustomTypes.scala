@@ -14,20 +14,20 @@
  *
  */
 
-package views
+package io.heta.tap.data
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+/**
+  * Created by andrew@andrewresearch.net on 30/6/17.
+  */
 
-trait GenericPage {
+object CustomTypes {
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
+  type DocumentStr = String
+  type SectionStr = String
+  type SentenceStr = String
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
+  type AffectExpression = TapExpression
+  type EpistemicExpression = TapExpression
+  type ModalExpression = TapExpression
 
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
 }
