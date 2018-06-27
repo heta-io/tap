@@ -14,20 +14,25 @@
  *
  */
 
-package views
+package io.heta.tap.client
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+import org.scalajs.dom
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
-trait GenericPage {
+@JSExportTopLevel("io.heta.tap.client.GraphiQLClient")
+object GraphiQLClient {
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
+  @JSExport
+  def run(): Unit = {
+    println("Loading GraphiQLClient...")
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
+    val graphiqlDiv = dom.document.getElementById("graphiql")
+    val result  = GraphiqlSetup.load(GraphiQLQueries.allQueries, GraphiQLQueries.aeDemoVariables)
+    println(s"Load result: $result")
+  }
 
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
 }
+
+
+
+

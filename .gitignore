@@ -120,3 +120,8 @@ src/main/scala/tap/nlp/old/SentenceConverter.scala
 /project/target/
 /project/LocalSbtSettings.scala
 /src/main/scala/scratch.sc
+/node_modules/
+/public/javascripts/client-fastOptJS-entrypoint.js
+/public/javascripts/client-fastOptJS-bundle.js
+/public/javascripts/client-fastOptJS.js
+/public/javascripts/client-fastOptJS-loader.js

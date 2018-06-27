@@ -14,20 +14,33 @@
  *
  */
 
-package views
+import play.api.libs.json.{JsDefined, JsObject, JsString, Json}
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+import scala.util.Try
 
-trait GenericPage {
+val as = List.range(1,10)
+val bs = List.range(1,10)
+val cs = List.range(1,10)
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
+for {
+  ((a,b),c) <- as zip bs zip cs
+} yield (a,b,c)
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
+val parameters = Option("""{
+    |"cleanType": "visible"
+    |}""".stripMargin)
 
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
-}
+val jsonResult = Try(Json.parse(parameters.getOrElse("{}")))
+
+val jparam = jsonResult.getOrElse(JsObject(Seq()))
+
+  val result = (jparam \ "cleanType").getOrElse(JsString("")) match {
+    case JsString("visible") => "VIS"
+    case JsString("ascii") => "ASCII"
+    case _ => "No Value"
+  }
+
+println(s"RESULT: $result")
+
+
+

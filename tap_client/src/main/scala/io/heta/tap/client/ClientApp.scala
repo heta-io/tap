@@ -14,20 +14,16 @@
  *
  */
 
-package views
+package io.heta.tap.client
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
 
-trait GenericPage {
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
+object ClientApp {
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
+  def main(args: Array[String]): Unit = {
 
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
+    println("ClientApp loaded.")
+
+  }
+
 }

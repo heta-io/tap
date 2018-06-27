@@ -45,7 +45,7 @@ object HomePage extends GenericPage {
           )
         )
       ),
-      script(src:=routes.Assets.versioned("clientjs-fastopt-bundle.js").url)
+      script(src:=bundleUrl)
     )
   )
 

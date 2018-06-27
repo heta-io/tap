@@ -14,20 +14,13 @@
  *
  */
 
-package views
+package io.heta.tap
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+/**
+  * Created by andrew@andrewresearch.net on 14/11/16.
+  */
 
-trait GenericPage {
+import org.scalatest._
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
-
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
-
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
-}
+abstract class UnitSpec extends FlatSpec with Matchers with
+  OptionValues with Inside with Inspectors

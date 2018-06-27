@@ -14,20 +14,20 @@
  *
  */
 
-package views
+package tap.services.corpora.gradebook.data
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+//import spray.json.{DefaultJsonProtocol, JsonFormat}
 
-trait GenericPage {
+/**
+  * Created by andrew@andrewresearch.net on 12/05/2016.
+  */
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
 
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
+case class FileMetadata(uid:String,subjectCode:String,assignmentName:String,submitDateTime:String,userGrade:String,docFile:String)
+/*
+object FileMetadataJsonProtocol extends DefaultJsonProtocol {
+  implicit val FileJsonFormat: JsonFormat[FileMetadata] = jsonFormat6(FileMetadata)
+}*/
 
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
-}
+
+case class OriginalMetadata(Name:String, Assignment:String, DateSubmitted:String, CurrentGrade:String, SubmissionField:String, Comments:String, Files:List[String])
