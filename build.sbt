@@ -17,19 +17,16 @@
 import LocalSbtSettings._
 
 //Project details
-
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.1"
-lazy val projectScalaVersion = "2.12.6"
+lazy val projectVersion = "3.2.2"
 
-lazy val serverName = "tap"
-lazy val clientName = "clientJS"
-lazy val sharedName = "sharedJS"
+lazy val serverName = s"${projectName}_server"
+lazy val clientName = s"${projectName}_client"
+lazy val sharedName = s"${projectName}_shared"
 
-//lazy val serverVersion = projectVersion
-lazy val clientVersion = projectVersion
-lazy val sharedVersion = projectVersion
+//Versions
+scalaVersion in ThisBuild := "2.12.6"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.0"
@@ -42,11 +39,14 @@ lazy val cluLabProcessorV = "7.2.2"
 lazy val sangriaVersion = "1.4.1"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.9"
-lazy val scalaTagsVersion = "0.6.7"
 
 lazy val akkaStreamVersion = "2.5.12"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
+
+lazy val vScalaTags = "0.6.7"
+lazy val vXmlBind = "2.3.0"
+lazy val vUpickle = "0.6.6"
 
 //Java library versions
 lazy val openNlpVersion = "1.8.4"
@@ -54,16 +54,30 @@ lazy val langToolVersion = "4.1"
 lazy val deepLearning4jVersion = "0.9.1"
 
 //ScalaJS
-lazy val scalaJsDomVersion = "0.9.5"
-lazy val scalaJsD3Version = "0.3.4"
-lazy val scalaJsBootstrapVersion = "2.3.1"
+lazy val vScalaJsDom = "0.9.5"
+lazy val vWebpack = "4.10.2"
+lazy val vWebpackDevServer = "3.1.4"
 
+lazy val vBootstrap = "4.1.1"
+lazy val vJquery = "3.2.1"
+lazy val vPopper = "1.14.3"
+lazy val vD3 = "5.4.0"
+
+//Settings
+val sharedSettings = Seq(
+  organization := projectOrg,
+  version := projectVersion
+)
+
+//Dependencies
+
+val playDeps = Seq(ws, guice, ehcache, specs2 % Test)
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
   //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
-  "com.lihaoyi" %% "scalatags" % scalaTagsVersion,
+  "com.lihaoyi" %% "scalatags" % vScalaTags,
   "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
 )
 
@@ -100,78 +114,70 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-//Modules
 
-lazy val commonSettings = Seq(
-  scalaVersion := projectScalaVersion,
-  organization := projectOrg
-)
-
-lazy val play = (project in file("."))
+lazy val tap = project.in(file("."))
+  .dependsOn(server,client)
+  .aggregate(server,client)
   .settings(
-    commonSettings,
-    name := projectName,
-    version := projectVersion,
-    scalaJSProjects := Seq(clientJS),
-    pipelineStages in Assets := Seq(scalaJSPipeline),
-    pipelineStages := Seq(digest, gzip),
-    compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
-    //
-    libraryDependencies ++= Seq(ws, guice, specs2 % Test),
+    sharedSettings,
+    libraryDependencies ++= playDeps,
     libraryDependencies ++= apiDependencies,
-    //
-    WebKeys.packagePrefix in Assets := "public/",
-    managedClasspath in Runtime += (packageBin in Assets).value,
-    //
+
+    scalaJSProjects := Seq(client),
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+
     dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
     dockerRepository := Some(s"$dockerRepoURI"),
     defaultLinuxInstallLocation in Docker := "/opt/docker",
     dockerExposedVolumes := Seq("/opt/docker/logs"),
     dockerBaseImage := "openjdk:9-jdk"
-  ).enablePlugins(PlayScala,WebScalaJSBundlerPlugin,SbtWeb)
-  .dependsOn(server,sharedJvm)
-
+  ).enablePlugins(PlayScala)
+  .enablePlugins(WebScalaJSBundlerPlugin)
+  .enablePlugins(SbtWeb)
 
 lazy val server = (project in file(serverName))
   .settings(
+    sharedSettings,
     resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
     libraryDependencies ++= analyticsDependencies ++ dl4jDependencies ++ loggingDependencies ++ testDependencies,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := projectOrg,
     buildInfoOptions += BuildInfoOption.BuildTime,
-  ).enablePlugins(BuildInfoPlugin)
-  .dependsOn(sharedJvm)
 
-lazy val clientJS = (project in file(clientName))
+  ).enablePlugins(BuildInfoPlugin)
+
+
+lazy val client = project.in(file(clientName))
   .settings(
-    commonSettings,
-    name := clientName,
-    version := clientVersion,
+    sharedSettings,
     scalaJSUseMainModuleInitializer := true,
+    //artifactPath in(Compile, fastOptJS) := baseDirectory.value / ".." / "public" / "javascripts" / "client-fastopt.js",
+    webpackBundlingMode := BundlingMode.LibraryAndApplication(), //Needed for top level exports
+    version in webpack := vWebpack, // Needed for version 4 webpack
+    version in startWebpackDevServer := vWebpackDevServer, // Needed for version 4 webpack
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
+      "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
+      //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
       "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.1",
-      "me.shadaj" %%% "slinky-core" % "0.4.2", // core React functionality, no React DOM
-      "me.shadaj" %%% "slinky-web" % "0.4.2" // React DOM, HTML and SVG tags
+      "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
+      //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
+      //"com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
+      "me.shadaj" %%% "slinky-core" % "0.4.3", // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % "0.4.3" // React DOM, HTML and SVG tags
     ),
     npmDependencies in Compile ++= Seq(
-      "bootstrap" -> "4.1.1",
-      "react" -> "16.2.0",
-      "react-dom" -> "16.2.0",
-      "graphiql" -> "0.11.11"
-    )
-  ).enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin, ScalaJSWeb).
-  dependsOn(sharedJs)
-
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file(sharedName))
-  .settings(
-    commonSettings,
-    libraryDependencies ++= Seq("com.lihaoyi" %%% "scalatags" % scalaTagsVersion)
-  )
-lazy val sharedJvm = shared.jvm
-lazy val sharedJs = shared.js
-
-
+      "bootstrap" -> vBootstrap,
+      //"jquery" -> vJquery, //used by bootstrap
+      "popper.js" -> vPopper, //used by bootstrap
+      //"d3" -> vD3,
+      "react" -> "16.4.1",
+      "react-dom" -> "16.4.1",
+      "graphiql" -> "0.11.11",
+      "graphql" -> "0.13.2"
+    ),
+    //scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+  ).enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)
 
 /*
 

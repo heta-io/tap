@@ -13,21 +13,19 @@
  * language governing permissions and limitations under the License.
  *
  */
+package io.heta.tap.util
 
-package views
+import scala.util.Try
+import com.typesafe.config.ConfigFactory
 
-import play.twirl.api.Html
-import scalatags.Text
-import scalatags.Text.all._ // scalastyle:ignore
-import scalatags.Text.{tags, tags2}
+class AppConfig{
 
-trait GenericPage {
+  def parseConfig(configName: String, environmentVariable: String)= {
+    val conf = ConfigFactory.load("application.conf")
+    Try(conf.getConfig(configName).getString(environmentVariable))
+  }
 
-  def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
-
-  def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
-
-  def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
-      .find(name => getClass.getResource(s"/public/$name") != null)
-      .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")
+  def getAthanorURL() = {
+    parseConfig("play","external.servers.athanor") getOrElse "http://localhost/v2/analyse/text/rhetorical"
+  }
 }
