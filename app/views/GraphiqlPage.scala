@@ -32,7 +32,8 @@ object GraphiqlPage extends GenericPage {
     ),
     body(
       div(id:="graphiql")(),
-      script(src:=routes.Assets.versioned("clientjs-fastopt-bundle.js").url)
+      script(src:=bundleUrl),
+      script(raw("io.heta.tap.client.GraphiQLClient.run()"))
     )
   )
 
