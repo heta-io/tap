@@ -16,13 +16,17 @@
 
 import LocalSbtSettings._
 
-name := "tap"
+//Project details
+lazy val projectName = "tap"
+lazy val projectOrg = "io.heta"
+lazy val projectVersion = "3.2.2"
 
-version := "3.2.0"
+lazy val serverName = s"${projectName}_server"
+lazy val clientName = s"${projectName}_client"
+lazy val sharedName = s"${projectName}_shared"
 
-scalaVersion := "2.12.6"
-
-organization := "io.heta"
+//Versions
+scalaVersion in ThisBuild := "2.12.6"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.0"
@@ -32,31 +36,48 @@ lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
 lazy val cluLabProcessorV = "7.2.2"
 
-lazy val sangriaVersion = "1.4.0"
+lazy val sangriaVersion = "1.4.1"
 lazy val sangriaJsonVersion = "1.0.4"
 lazy val playJsonVersion = "2.6.9"
-lazy val scalaTagsVersion = "0.6.7"
 
 lazy val akkaStreamVersion = "2.5.12"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
+
+lazy val vScalaTags = "0.6.7"
+lazy val vXmlBind = "2.3.0"
+lazy val vUpickle = "0.6.6"
 
 //Java library versions
 lazy val openNlpVersion = "1.8.4"
 lazy val langToolVersion = "4.1"
 lazy val deepLearning4jVersion = "0.9.1"
 
-enablePlugins(PlayScala)
-disablePlugins(PlayLayoutPlugin)
-PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
-libraryDependencies += ws     //Http client
-libraryDependencies += guice  //Dependency injection
+//ScalaJS
+lazy val vScalaJsDom = "0.9.5"
+lazy val vWebpack = "4.10.2"
+lazy val vWebpackDevServer = "3.1.4"
+
+lazy val vBootstrap = "4.1.1"
+lazy val vJquery = "3.2.1"
+lazy val vPopper = "1.14.3"
+lazy val vD3 = "5.4.0"
+
+//Settings
+val sharedSettings = Seq(
+  organization := projectOrg,
+  version := projectVersion
+)
+
+//Dependencies
+
+val playDeps = Seq(ws, guice, ehcache, specs2 % Test)
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
   //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
-  "com.lihaoyi" %% "scalatags" % scalaTagsVersion,
+  "com.lihaoyi" %% "scalatags" % vScalaTags,
   "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
 )
 
@@ -71,14 +92,19 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
-  "org.languagetool" % "language-en" % langToolVersion
+  "org.languagetool" % "language-en" % langToolVersion,
+  "com.typesafe.play" %% "play-json" % playJsonVersion,
 )
-resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
 
 val dl4jDependencies = Seq(
   "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
   "org.deeplearning4j" % "deeplearning4j-nlp" % deepLearning4jVersion,
   "org.nd4j" % "nd4j-native-platform" % deepLearning4jVersion % Test
+)
+
+val loggingDependencies = Seq(
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 )
 
 val testDependencies = Seq(
@@ -88,7 +114,72 @@ val testDependencies = Seq(
   "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
 )
 
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies ++ dl4jDependencies
+
+lazy val tap = project.in(file("."))
+  .dependsOn(server,client)
+  .aggregate(server,client)
+  .settings(
+    sharedSettings,
+    libraryDependencies ++= playDeps,
+    libraryDependencies ++= apiDependencies,
+
+    scalaJSProjects := Seq(client),
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+
+    dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
+    dockerRepository := Some(s"$dockerRepoURI"),
+    defaultLinuxInstallLocation in Docker := "/opt/docker",
+    dockerExposedVolumes := Seq("/opt/docker/logs"),
+    dockerBaseImage := "openjdk:9-jdk"
+  ).enablePlugins(PlayScala)
+  .enablePlugins(WebScalaJSBundlerPlugin)
+  .enablePlugins(SbtWeb)
+
+lazy val server = (project in file(serverName))
+  .settings(
+    sharedSettings,
+    resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
+    libraryDependencies ++= analyticsDependencies ++ dl4jDependencies ++ loggingDependencies ++ testDependencies,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := projectOrg,
+    buildInfoOptions += BuildInfoOption.BuildTime,
+
+  ).enablePlugins(BuildInfoPlugin)
+
+
+lazy val client = project.in(file(clientName))
+  .settings(
+    sharedSettings,
+    scalaJSUseMainModuleInitializer := true,
+    //artifactPath in(Compile, fastOptJS) := baseDirectory.value / ".." / "public" / "javascripts" / "client-fastopt.js",
+    webpackBundlingMode := BundlingMode.LibraryAndApplication(), //Needed for top level exports
+    version in webpack := vWebpack, // Needed for version 4 webpack
+    version in startWebpackDevServer := vWebpackDevServer, // Needed for version 4 webpack
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
+      //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.1",
+      "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
+      //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
+      //"com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
+      "me.shadaj" %%% "slinky-core" % "0.4.3", // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % "0.4.3" // React DOM, HTML and SVG tags
+    ),
+    npmDependencies in Compile ++= Seq(
+      "bootstrap" -> vBootstrap,
+      //"jquery" -> vJquery, //used by bootstrap
+      "popper.js" -> vPopper, //used by bootstrap
+      //"d3" -> vD3,
+      "react" -> "16.4.1",
+      "react-dom" -> "16.4.1",
+      "graphiql" -> "0.11.11",
+      "graphql" -> "0.13.2"
+    ),
+    //scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+  ).enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)
+
+/*
 
 scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
 
@@ -116,14 +207,10 @@ copyDocsTask := {
   IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
 }
 
-enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
-dockerRepository := Some(s"$dockerRepoURI")
-defaultLinuxInstallLocation in Docker := "/opt/docker"
-dockerExposedVolumes := Seq("/opt/docker/logs")
-dockerBaseImage := "openjdk:9-jdk"
+
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",
   "-J-Xms2g"
 )
+*/
