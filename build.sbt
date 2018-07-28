@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.2"
+lazy val projectVersion = "3.2.4"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -115,6 +115,7 @@ val testDependencies = Seq(
 )
 
 
+
 lazy val tap = project.in(file("."))
   .dependsOn(server,client)
   .aggregate(server,client)
@@ -130,10 +131,16 @@ lazy val tap = project.in(file("."))
     dockerRepository := Some(s"$dockerRepoURI"),
     defaultLinuxInstallLocation in Docker := "/opt/docker",
     dockerExposedVolumes := Seq("/opt/docker/logs"),
-    dockerBaseImage := "openjdk:9-jdk"
+    dockerBaseImage := "openjdk:9-jdk",
+
+    //paradoxTheme := Some(builtinParadoxTheme("generic")),
+
   ).enablePlugins(PlayScala)
   .enablePlugins(WebScalaJSBundlerPlugin)
   .enablePlugins(SbtWeb)
+  //.enablePlugins(ParadoxPlugin)
+
+val ParadoxServerConfig = config("paradox-server")
 
 lazy val server = (project in file(serverName))
   .settings(
@@ -144,14 +151,19 @@ lazy val server = (project in file(serverName))
     buildInfoPackage := projectOrg,
     buildInfoOptions += BuildInfoOption.BuildTime,
 
+    paradoxTheme := Some(builtinParadoxTheme("generic")),
+    ParadoxPlugin.paradoxSettings(ParadoxServerConfig),
+    sourceDirectory in ParadoxServerConfig := baseDirectory.value /"src"/"paradox-server",
+    (target in paradox) in ParadoxServerConfig := baseDirectory.value / "paradox" / "site" / "paradox-server"
+
   ).enablePlugins(BuildInfoPlugin)
+  .enablePlugins(ParadoxPlugin)
 
 
 lazy val client = project.in(file(clientName))
   .settings(
     sharedSettings,
     scalaJSUseMainModuleInitializer := true,
-    //artifactPath in(Compile, fastOptJS) := baseDirectory.value / ".." / "public" / "javascripts" / "client-fastopt.js",
     webpackBundlingMode := BundlingMode.LibraryAndApplication(), //Needed for top level exports
     version in webpack := vWebpack, // Needed for version 4 webpack
     version in startWebpackDevServer := vWebpackDevServer, // Needed for version 4 webpack
@@ -161,7 +173,6 @@ lazy val client = project.in(file(clientName))
       "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.1",
       "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
       //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
-      //"com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
       "me.shadaj" %%% "slinky-core" % "0.4.3", // core React functionality, no React DOM
       "me.shadaj" %%% "slinky-web" % "0.4.3" // React DOM, HTML and SVG tags
     ),
@@ -174,10 +185,32 @@ lazy val client = project.in(file(clientName))
       "react-dom" -> "16.4.1",
       "graphiql" -> "0.11.11",
       "graphql" -> "0.13.2"
-    ),
-    //scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+    )
   ).enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)
+
+
+ //Generate documentation with Paradox
+//Task for copying to root level docs folder (for GitHub pages)
+//val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
+
+//Documentation - run ;paradox;copyDocs
+
+//paradoxProperties in Compile ++= Map(
+//  "github.base_url" -> s"$githubBaseUrl",
+//  "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
+//),
+
+//copyDocsTask := {
+//  val docSource = new File("target/paradox/site/main")
+//  val apiSource = new File("target/scala-2.12/api")
+//  val docDest = new File("docs")
+//  val apiDest = new File("docs/api")
+//  //if(docDest.exists) IO.delete(docDest)
+//  IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
+//  IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
+//}
+
 
 /*
 
@@ -188,24 +221,6 @@ fork in Test := true
 envVars in Test := Map("TAP_HOSTS" -> "localhost")
 
 
-//Documentation - run ;paradox;copyDocs
-enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
-paradoxTheme := Some(builtinParadoxTheme("generic"))
-paradoxProperties in Compile ++= Map(
-  "github.base_url" -> s"$githubBaseUrl",
-  "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
-)
-//Task for copying to root level docs folder (for GitHub pages)
-val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
-copyDocsTask := {
-  val docSource = new File("target/paradox/site/main")
-  val apiSource = new File("target/scala-2.12/api")
-  val docDest = new File("docs")
-  val apiDest = new File("docs/api")
-  //if(docDest.exists) IO.delete(docDest)
-  IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
-  IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
-}
 
 
 javaOptions in Universal ++= Seq(

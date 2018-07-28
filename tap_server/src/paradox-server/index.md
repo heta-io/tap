@@ -13,4 +13,4 @@ Get started immediately with the [Quick Start](overview/quick_start.html)
 
 ---
 
-@scaladoc[TAP API (Scaladoc)](api.index)
+<!-- @scaladoc[TAP API (Scaladoc)](api.index) -->
