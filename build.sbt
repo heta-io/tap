@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.8"
+lazy val projectVersion = "3.2.9"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -29,9 +29,9 @@ lazy val sharedName = s"${projectName}_shared"
 scalaVersion in ThisBuild := "2.12.6"
 
 //Scala library versions
-lazy val nlytxNlpApiV = "1.1.0"
-lazy val nlytxNlpExpressionsV = "1.0.0"
-lazy val nlytxNlpCommonsV = "1.0.0"
+lazy val nlytxNlpApiV = "1.1.2"
+lazy val nlytxNlpExpressionsV = "1.1.2"
+lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
 lazy val cluLabProcessorV = "7.2.2"
@@ -151,9 +151,6 @@ lazy val tap = project.in(file("."))
   .enablePlugins(ParadoxSitePlugin, ParadoxMaterialThemePlugin,SiteScaladocPlugin,ScalaUnidocPlugin) // Documentation plugins
 
 
-
-val ParadoxServerConfig = config("server-docs")
-
 lazy val server = (project in file(serverName))
   .settings(
     sharedSettings,
@@ -162,14 +159,7 @@ lazy val server = (project in file(serverName))
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := projectOrg,
     buildInfoOptions += BuildInfoOption.BuildTime,
-
-    paradoxTheme := Some(builtinParadoxTheme("generic")),
-    ParadoxPlugin.paradoxSettings(ParadoxServerConfig),
-    sourceDirectory in ParadoxServerConfig := baseDirectory.value /"src"/"server-docs",
-    (target in paradox) in ParadoxServerConfig := baseDirectory.value / "paradox" / "site" / "server-docs"
-
   ).enablePlugins(BuildInfoPlugin)
-  .enablePlugins(ParadoxPlugin)
 
 
 lazy val client = project.in(file(clientName))
