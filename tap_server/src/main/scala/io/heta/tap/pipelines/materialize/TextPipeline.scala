@@ -29,3 +29,4 @@ case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
   val source = Source.single(inputStr)
   def run = source via flow runWith(Sink.head[T])
 }
+

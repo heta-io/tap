@@ -19,28 +19,29 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.2"
+lazy val projectVersion = "3.2.9"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
 lazy val sharedName = s"${projectName}_shared"
 
 //Versions
-scalaVersion in ThisBuild := "2.12.6"
+scalaVersion in ThisBuild := "2.12.7"
 
 //Scala library versions
-lazy val nlytxNlpApiV = "1.1.0"
-lazy val nlytxNlpExpressionsV = "1.0.0"
-lazy val nlytxNlpCommonsV = "1.0.0"
+lazy val nlytxNlpApiV = "1.1.2"
+lazy val nlytxNlpExpressionsV = "1.1.2"
+lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.2.2"
+lazy val cluLabProcessorV = "7.4.2"
 
-lazy val sangriaVersion = "1.4.1"
-lazy val sangriaJsonVersion = "1.0.4"
-lazy val playJsonVersion = "2.6.9"
+lazy val sangriaVersion = "1.4.2"
+lazy val sangriaJsonVersion = "1.0.5"
+lazy val playJsonVersion = "2.6.10"
 
-lazy val akkaStreamVersion = "2.5.12"
+lazy val akkaStreamVersion = "2.5.17"
+lazy val alpakkaVersion = "1.0-M1"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
@@ -49,12 +50,12 @@ lazy val vXmlBind = "2.3.0"
 lazy val vUpickle = "0.6.6"
 
 //Java library versions
-lazy val openNlpVersion = "1.8.4"
-lazy val langToolVersion = "4.1"
+lazy val openNlpVersion = "1.9.0"
+lazy val langToolVersion = "4.2"
 lazy val deepLearning4jVersion = "0.9.1"
 
 //ScalaJS
-lazy val vScalaJsDom = "0.9.5"
+lazy val vScalaJsDom = "0.9.6"
 lazy val vWebpack = "4.10.2"
 lazy val vWebpackDevServer = "3.1.4"
 
@@ -78,7 +79,8 @@ val apiDependencies = Seq(
   "com.typesafe.play" %% "play-json" % playJsonVersion,
   //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
   "com.lihaoyi" %% "scalatags" % vScalaTags,
-  "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
+  "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion,
+  "org.portable-scala" %% "portable-scala-reflect" % "0.1.0" // Reflection for batch mode
 )
 
 val analyticsDependencies = Seq(
@@ -91,6 +93,7 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-odin" % cluLabProcessorV,
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
   "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "com.lightbend.akka" %% "akka-stream-alpakka-s3" % alpakkaVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
@@ -115,6 +118,7 @@ val testDependencies = Seq(
 )
 
 
+
 lazy val tap = project.in(file("."))
   .dependsOn(server,client)
   .aggregate(server,client)
@@ -130,10 +134,25 @@ lazy val tap = project.in(file("."))
     dockerRepository := Some(s"$dockerRepoURI"),
     defaultLinuxInstallLocation in Docker := "/opt/docker",
     dockerExposedVolumes := Seq("/opt/docker/logs"),
-    dockerBaseImage := "openjdk:9-jdk"
+    dockerBaseImage := "openjdk:9-jdk",
+
+    // sbt-site needs to know where to find the paradox site
+    sourceDirectory in Paradox := baseDirectory.value / "documentation",
+    // paradox needs a theme
+    ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
+    paradoxProperties in Compile ++= Map(
+      "github.base_url" -> s"$githubBaseUrl",
+      "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
+    ),
+    // Puts unified scaladocs into target/api
+    siteSubdirName in ScalaUnidoc := "api",
+    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), siteSubdirName in ScalaUnidoc)
+
   ).enablePlugins(PlayScala)
   .enablePlugins(WebScalaJSBundlerPlugin)
   .enablePlugins(SbtWeb)
+  .enablePlugins(ParadoxSitePlugin, ParadoxMaterialThemePlugin,SiteScaladocPlugin,ScalaUnidocPlugin) // Documentation plugins
+
 
 lazy val server = (project in file(serverName))
   .settings(
@@ -143,7 +162,6 @@ lazy val server = (project in file(serverName))
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := projectOrg,
     buildInfoOptions += BuildInfoOption.BuildTime,
-
   ).enablePlugins(BuildInfoPlugin)
 
 
@@ -151,19 +169,17 @@ lazy val client = project.in(file(clientName))
   .settings(
     sharedSettings,
     scalaJSUseMainModuleInitializer := true,
-    //artifactPath in(Compile, fastOptJS) := baseDirectory.value / ".." / "public" / "javascripts" / "client-fastopt.js",
     webpackBundlingMode := BundlingMode.LibraryAndApplication(), //Needed for top level exports
     version in webpack := vWebpack, // Needed for version 4 webpack
     version in startWebpackDevServer := vWebpackDevServer, // Needed for version 4 webpack
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
       //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
-      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.1",
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.3",
       "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
       //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
-      //"com.github.japgolly.scalajs-react" %%% "core" % "1.2.0"
-      "me.shadaj" %%% "slinky-core" % "0.4.3", // core React functionality, no React DOM
-      "me.shadaj" %%% "slinky-web" % "0.4.3" // React DOM, HTML and SVG tags
+      "me.shadaj" %%% "slinky-core" % "0.5.0", // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % "0.5.0" // React DOM, HTML and SVG tags
     ),
     npmDependencies in Compile ++= Seq(
       "bootstrap" -> vBootstrap,
@@ -174,40 +190,25 @@ lazy val client = project.in(file(clientName))
       "react-dom" -> "16.4.1",
       "graphiql" -> "0.11.11",
       "graphql" -> "0.13.2"
-    ),
-    //scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+    )
   ).enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)
 
-/*
 
-scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
+//Documentation
+//Task for building docs and copying to root level docs folder (for GitHub pages)
+val updateDocsTask = TaskKey[Unit]("updateDocs","copies paradox docs to /docs directory")
 
-//Set the environment variable for hosts allowed in testing
-fork in Test := true
-envVars in Test := Map("TAP_HOSTS" -> "localhost")
-
-
-//Documentation - run ;paradox;copyDocs
-enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
-paradoxTheme := Some(builtinParadoxTheme("generic"))
-paradoxProperties in Compile ++= Map(
-  "github.base_url" -> s"$githubBaseUrl",
-  "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
-)
-//Task for copying to root level docs folder (for GitHub pages)
-val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
-copyDocsTask := {
-  val docSource = new File("target/paradox/site/main")
-  val apiSource = new File("target/scala-2.12/api")
+updateDocsTask := {
+  val siteResult = makeSite.value
+  val docSource = new File("target/site")
   val docDest = new File("docs")
-  val apiDest = new File("docs/api")
-  //if(docDest.exists) IO.delete(docDest)
   IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
-  IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
 }
 
 
+
+/*
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
   "-J-Xmx4g",
