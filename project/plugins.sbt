@@ -1,10 +1,10 @@
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 //Play framework
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.15")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.20")
 
 //ScalaJS
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.23")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.25")
 addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.8-0.6")
 addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.13.0")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.13.0")
@@ -20,7 +20,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
 
 //Documentation
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2")
-addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.4.0")
+addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.5.1")
 addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.4.1")
 
 //Code quality
