@@ -20,6 +20,14 @@ object GraphiQLQueries {
 
   lazy val allQueries:String = affectExpressions + rhetoricalMoves
 
+  val aeDemoVariables =
+    """{
+      |  "text": "I have found this process extremely challenging. I hope that the future is more enjoyable and relaxing.",
+      |  "parameters": "{\"arousal\":0,\"valence\":0,\"dominance\":0}",
+      |  "moveParams": "{\"grammar\":\"reflective\"}"
+      |}
+    """.stripMargin
+
   private val affectExpressions =
     """
       |# TAP Example Queries
@@ -45,6 +53,54 @@ object GraphiQLQueries {
       |
     """.stripMargin
 
+  private val reflectExpressions =
+    """
+      |  query ReflectExpressions($input:String,$parameters:String) {
+      |    reflectExpressions(text:$input,parameters:$parameters) {
+      |      querytime
+      |      message
+      |      timestamp
+      |      analytics {
+      |        counts {
+      |          wordCount
+      |          avgWordLength
+      |          sentenceCount
+      |          avgSentenceLength
+      |        }
+      |        summary {
+      |          metaTagSummary {
+      |            knowledge
+      |            experience
+      |            regulation
+      |            none
+      |          }
+      |          phraseTagSummary {
+      |            outcome
+      |            temporal
+      |            pertains
+      |            consider
+      |            anticipate
+      |            definite
+      |            possible
+      |            selfReflexive
+      |            emotive
+      |            selfPossessive
+      |            compare
+      |            manner
+      |            none
+      |          }
+      |        }
+      |        tags {
+      |          sentence
+      |          phrases
+      |          subTags
+      |          metaTags
+      |        }
+      |      }
+      |    }
+      |  }
+    """.stripMargin
+
   private val rhetoricalMoves =
     """
       |query RhetoricalMoves($text: String,$moveParams:String) {
@@ -57,11 +113,5 @@ object GraphiQLQueries {
       |}
     """.stripMargin
 
-  val aeDemoVariables =
-    """{
-      |  "text": "I have found this process extremely challenging. I hope that the future is more enjoyable and relaxing.",
-      |  "parameters": "{\"arousal\":0,\"valence\":0,\"dominance\":0}",
-      |  "moveParams": "{\"grammar\":\"reflective\"}"
-      |}
-    """.stripMargin
+
 }

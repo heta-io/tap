@@ -32,14 +32,36 @@ object HomePage extends GenericPage {
     ),
     body(
       div(`class`:="container-fluid",
-        div(`class`:="row"),
         div(`class`:="row",
-          div(`class`:="col-sm-3"),
-          div(`class`:="col-sm-6",
+          div(`class`:="col",
+            h3("Text Analytics Pipeline (TAP)")
+          )
+        ),
+        div(`class`:="row",
+          div(`class`:="col-1"),
+          div(`class`:="col-5",
             div(`class`:="card card-default",
-              div(`class`:="card-header", b(titleStr)),
+              div(`class`:="card-header", b("Learn more")),
               div(`class`:="card-body",
-                a(href:=routes.GraphQlController.graphiql().url)("Use the graphiql interface to connect to TAP.")
+                p(
+                  "Read the ",a(href:="#")("docs")
+                ),
+                p(
+                  "Get the ",a(href:="#")("source code")
+                ),
+                p(
+                  "Get ",a(href:="#")("example queries")
+                )
+              )
+            )
+          ),
+          div(`class`:="col-5",
+            div(`class`:="card card-default",
+              div(`class`:="card-header", b("Try TAP")),
+              div(`class`:="card-body",
+                p(
+                  "Use the ",a(href:=routes.GraphQlController.graphiql().url)("graphiql interface")," to connect to TAP."
+                )
               )
             )
           )

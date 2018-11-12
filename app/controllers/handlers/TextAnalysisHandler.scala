@@ -35,9 +35,10 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) exte
   private val pipe = annotate.Pipeline
 
   def clean(text: Option[String], parameters: Option[String], start:Long): Future[StringResult] = {
+    Logger.warn(s"TEXT: $text")
     val inputStr = text.getOrElse("")
     val cleanType = extractParameter[String]("cleanType",parameters)
-    Logger.debug(s"STRING: $cleanType")
+    Logger.info(s"cleanType: $cleanType - text: ${inputStr.take(10)}")
     val outputStr:Future[String] = cleanType match {
       case Some("visible") => TextPipeline(inputStr,clean.Pipeline.revealInvisible).run
       case Some("minimal") => TextPipeline(inputStr,clean.Pipeline.utfMinimal).run
