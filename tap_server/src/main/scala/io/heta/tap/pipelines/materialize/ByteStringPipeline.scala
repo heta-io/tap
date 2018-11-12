@@ -21,12 +21,19 @@ package io.heta.tap.pipelines.materialize
   */
 
 import akka.NotUsed
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.scaladsl.{Keep, Sink, Source}
+import akka.util.ByteString
 import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
-case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
+import scala.concurrent.Future
 
-  val source = Source.single(inputStr)
-  def run = source via flow runWith(Sink.head[T])
+
+case class ByteStringPipeline(source:Source[ByteString,NotUsed], sink:Sink[ByteString,Future[Any]]) extends Pipeline {
+  private val pipeline =  source.toMat(sink)(Keep.right)
+  def run = pipeline.run()
 }
+
+
+
+
 

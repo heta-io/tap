@@ -16,17 +16,27 @@
 
 package io.heta.tap.pipelines.materialize
 
-/**
-  * Created by andrew@andrewresearch.net on 19/5/17.
-  */
+import java.time.Instant
 
-import akka.NotUsed
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.{Done, NotUsed}
+import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import akka.util.ByteString
+import io.heta.tap.pipelines.materialize.FilePipeline.File
 import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
-case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
+import scala.concurrent.Future
 
-  val source = Source.single(inputStr)
-  def run = source via flow runWith(Sink.head[T])
+object FilePipeline {
+  case class FileInfo(name:String,size:Long,lastModified:Instant)
+  case class File(name:String,contents:ByteString)
 }
+
+case class FilePipeline(source:Source[File,NotUsed], flow:Flow[File,File,NotUsed], sink:Sink[File,Future[Done]]) extends Pipeline {
+  private val pipeline =  source.via(flow).toMat(sink)(Keep.right)
+  def run: Future[Done] = pipeline.run()
+}
+
+
+
+
 
