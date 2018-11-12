@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.9"
+lazy val projectVersion = "3.2.10"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -58,8 +58,10 @@ lazy val deepLearning4jVersion = "0.9.1"
 lazy val vScalaJsDom = "0.9.6"
 lazy val vWebpack = "4.10.2"
 lazy val vWebpackDevServer = "3.1.4"
+lazy val vSlinky = "0.5.1"
 
-lazy val vBootstrap = "4.1.1"
+lazy val vBootstrap = "4.1.3"
+lazy val vSjsBootstrap = "2.3.4"
 lazy val vJquery = "3.2.1"
 lazy val vPopper = "1.14.3"
 lazy val vD3 = "5.4.0"
@@ -175,19 +177,19 @@ lazy val client = project.in(file(clientName))
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
       //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
-      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.3",
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % vSjsBootstrap,
       "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
       //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
-      "me.shadaj" %%% "slinky-core" % "0.5.0", // core React functionality, no React DOM
-      "me.shadaj" %%% "slinky-web" % "0.5.0" // React DOM, HTML and SVG tags
+      "me.shadaj" %%% "slinky-core" % vSlinky, // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % vSlinky // React DOM, HTML and SVG tags
     ),
     npmDependencies in Compile ++= Seq(
       "bootstrap" -> vBootstrap,
       //"jquery" -> vJquery, //used by bootstrap
       "popper.js" -> vPopper, //used by bootstrap
       //"d3" -> vD3,
-      "react" -> "16.4.1",
-      "react-dom" -> "16.4.1",
+      "react" -> "16.6.1",
+      "react-dom" -> "16.6.1",
       "graphiql" -> "0.11.11",
       "graphql" -> "0.13.2"
     )
