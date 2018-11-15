@@ -28,7 +28,12 @@ import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
 import io.heta.tap.data._
-import io.heta.tap.pipelines.AnnotatingTypes._
+import io.heta.tap.data.doc._
+import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions, AffectThresholds}
+import io.heta.tap.data.doc.reflect.{MetaTagSummary, PhraseTagSummary, ReflectExpressions, Summary}
+import io.heta.tap.data.doc.spell.Spelling
+import io.heta.tap.pipelines
+import io.heta.tap.pipelines.AnnotatingTypes.{CLU, FAST, NER, STANDARD, Sections, TapSentences}
 import io.heta.tap.pipelines.materialize.PipelineContext
 
 import scala.concurrent.Future
@@ -43,7 +48,7 @@ import scala.util.{Failure, Success, Try}
 class Annotating(cluAnnotator:ActorRef) {
 
   //val languageTool: ActorRef = ???
-  val expressions:Expressions = new Expressions()
+  val expressions:pipelines.Expressions = new Expressions()
   //val ca:CluAnnotatorActor = new CluAnnotatorActor()
 
   val logger: Logger = Logger(this.getClass)
@@ -54,16 +59,16 @@ class Annotating(cluAnnotator:ActorRef) {
 
   /* The main pipelines for performing annotating text analysis */
   object Pipeline {
-    val cluSentences: CluSentencesFlow = cluTapSentences
-    val sentences: SentencesFlow  = tapSentences
-    val vocab: VocabFlow = tapSentences via tapVocab
-    val metrics: MetricsFlow = tapSentences via tapMetrics
-    val expressions: ExpressionsFlow = tapSentences via tapExpressions
-    val syllables: SyllablesFlow = tapSentences via tapSyllables
-    val spelling: SpellingFlow = tapSentences via tapSpelling
-    val posStats: PosStatsFlow = tapSentences via tapPosStats
-    val reflectExpress: ReflectExpressionFlow = reflectExpressions
-    def affectExpress(thresholds:Option[AffectThresholds] = None): AffectExpressionFlow = cluTapSentences via affectExpressions(thresholds)
+    val cluSentences = cluTapSentences
+    val sentences  = tapSentences
+    val vocab = tapSentences via tapVocab
+    val metrics = tapSentences via tapMetrics
+    val expressions = tapSentences via tapExpressions
+    val syllables = tapSentences via tapSyllables
+    val spelling = tapSentences via tapSpelling
+    val posStats = tapSentences via tapPosStats
+    val reflectExpress = reflectExpressions
+    def affectExpress(thresholds:Option[AffectThresholds] = None) = cluTapSentences via affectExpressions(thresholds)
   }
 
   def build[A,B](pipetype:String,pipeline: Flow[A,B,NotUsed]):Flow[String,B,NotUsed] = {
@@ -109,25 +114,25 @@ class Annotating(cluAnnotator:ActorRef) {
    *
    */
 
-  val makeCluDocument: CluDocumentFlow = Flow[String]
+  val makeCluDocument = Flow[String]
     .mapAsync[org.clulab.processors.Document](parallelism) { text =>
     implicit val timeout: Timeout = 5.seconds
     (cluAnnotator ? AnnotateRequest(text)).mapTo[org.clulab.processors.Document]
   }
 
-  val makeDocument: DocumentFlow = Flow[String]
+  val makeDocument = Flow[String]
     .mapAsync[Document](2) { text =>
     ap.process(text,ap.parserPipeline)
   }
 
   //If parser info is NOT required
-  val makeFastDocument: DocumentFlow = Flow[String]
+  val makeFastDocument = Flow[String]
     .mapAsync[Document](2) { text =>
     ap.process(text,ap.defaultPipeline)
   }
 
   //If nertags ARE required
-  val makeNerDocument: DocumentFlow = Flow[String]
+  val makeNerDocument = Flow[String]
     .mapAsync[Document](2) { text =>
     ap.process(text,ap.completePipeline)
   }
@@ -135,7 +140,7 @@ class Annotating(cluAnnotator:ActorRef) {
   val sections: Flow[Document,Sections,NotUsed] = Flow[Document]
     .map(_.sections.toVector)
 
-  val cluTapSentences: CluSentencesFlow = Flow[org.clulab.processors.Document]
+  val cluTapSentences = Flow[org.clulab.processors.Document]
       .map { doc =>
         logger.info("Extracting sentences")
         doc.sentences
@@ -143,7 +148,7 @@ class Annotating(cluAnnotator:ActorRef) {
     .map { sentArray =>
       sentArray.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
-        TapSentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
+        Sentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
     }
 
@@ -160,12 +165,12 @@ class Annotating(cluAnnotator:ActorRef) {
 
     val tapTokens = for {
       ((((i,w),l),pt),nt) <- is zip ws zip ls zip pts zip nts
-    } yield TapToken(i,w,l,pt,nt,-1,Vector(),"",false)
+    } yield Token(i,w,l,pt,nt,-1,Vector(),"",false)
 
     tapTokens.toVector
   }
 
-  val tapSentences: SentencesFlow = Flow[Document]
+  val tapSentences = Flow[Document]
     .map { doc =>
       doc.sentences
     }
@@ -174,10 +179,10 @@ class Annotating(cluAnnotator:ActorRef) {
         val tokens = s.tokens.toVector.map { t =>
           val (children,parent,parseLabel) = getParseData(t).toOption.getOrElse((Vector(),-1,""))
           val nerTag = Try(t.nerTag.baseCategoryValue).toOption.getOrElse("")
-          TapToken(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
+          Token(t.positionInSentence,t.string,t.lemmaString,t.posTag.value.toString,
             nerTag,parent,children,parseLabel,t.isPunctuation)
         }
-        TapSentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
+        Sentence(s.documentString ,tokens, s.start, s.end, s.length, idx)
       }.toVector
     }
 
@@ -223,14 +228,14 @@ class Annotating(cluAnnotator:ActorRef) {
         sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
     }
 
-  val tapExpressions: Flow[TapSentences, Vector[TapExpressions], NotUsed] = Flow[TapSentences]
-    .mapAsync[Vector[TapExpressions]](3) { v =>
+  val tapExpressions: Flow[TapSentences, Vector[doc.Expressions], NotUsed] = Flow[TapSentences]
+    .mapAsync[Vector[doc.Expressions]](3) { v =>
     val results = v.map { sent =>
       for {
         ae <- expressions.affect(sent.tokens)
         ee <- expressions.epistemic(sent.tokens)
         me <- expressions.modal(sent.tokens)
-      } yield TapExpressions(ae, ee, me, sent.idx)
+      } yield Expressions(ae, ee, me, sent.idx)
     }
     Future.sequence(results)
   }
@@ -245,11 +250,11 @@ class Annotating(cluAnnotator:ActorRef) {
     }
 
   //TODO Fix spelling implementation to use streams
-  val tapSpelling: Flow[TapSentences,Vector[TapSpelling],NotUsed] = Flow[TapSentences]
-    .mapAsync[Vector[TapSpelling]](2) { v =>
+  val tapSpelling: Flow[TapSentences,Vector[Spelling],NotUsed] = Flow[TapSentences]
+    .mapAsync[Vector[Spelling]](2) { v =>
     val checked = v.map { sent =>
       //ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
-      TapSpelling(sent.idx,Vector())
+      Spelling(sent.idx,Vector())
     }
     //Future.sequence(checked)
     Future(checked)
@@ -284,7 +289,7 @@ class Annotating(cluAnnotator:ActorRef) {
       TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
 
-  val reflectExpressions:Flow[Document,TapReflectExpressions,NotUsed] = Flow[Document]
+  val reflectExpressions:Flow[Document,ReflectExpressions,NotUsed] = Flow[Document]
     .map { doc =>
       val REP = ReflectiveExpressionPipeline
       val codedSents = REP.getCodedSents(doc)
@@ -293,13 +298,13 @@ class Annotating(cluAnnotator:ActorRef) {
       val summary =  REP.getSummary(codedSents)
       val metaMap = summary.metaTagSummary
       val phraseMap = summary.phraseTagSummary
-      val metaTagSummary = TapMetaTagSummary(
+      val metaTagSummary = MetaTagSummary(
         metaMap.getOrElse("knowledge",0),
         metaMap.getOrElse("experience",0),
         metaMap.getOrElse("regulation",0),
         metaMap.getOrElse("none",0)
       )
-      val phraseTagSummary = TapPhraseTagSummary(
+      val phraseTagSummary = PhraseTagSummary(
         phraseMap.getOrElse("outcome", 0),
         phraseMap.getOrElse("temporal", 0),
         phraseMap.getOrElse("pertains", 0),
@@ -314,22 +319,22 @@ class Annotating(cluAnnotator:ActorRef) {
         phraseMap.getOrElse("manner", 0),
         phraseMap.getOrElse("none", 0)
       )
-     TapReflectExpressions(reflect,TapSummary(metaTagSummary,phraseTagSummary),tags)
+     ReflectExpressions(reflect,Summary(metaTagSummary,phraseTagSummary),tags)
     }
 
-  def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[TapAffectExpressions],NotUsed] = {
+  def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[AffectExpressions],NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
-    Flow[TapSentences].mapAsync[Vector[TapAffectExpressions]](3) { sents =>
+    Flow[TapSentences].mapAsync[Vector[AffectExpressions]](3) { sents =>
       val results = sents.map { s =>
         for {
           ae <- expressions.affective(s.tokens)
-        } yield TapAffectExpressions(filterAffectThresholds(ae,th),s.idx)
+        } yield AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
       Future.sequence(results)
     }
   }
 
-  private def filterAffectThresholds(affectExpressions:Vector[TapAffectExpression],thresholds:AffectThresholds) = {
+  private def filterAffectThresholds(affectExpressions:Vector[AffectExpression], thresholds:AffectThresholds) = {
     affectExpressions.filter{ ae =>
       ae.valence >= thresholds.valence &&
       ae.arousal >= thresholds.arousal &&

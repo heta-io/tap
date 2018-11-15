@@ -14,12 +14,15 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-/**
-  * Created by andrew@andrewresearch.net on 17/10/17.
-  */
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapSpelling(sentIdx:Int,spelling:Vector[TapSpell]) extends TapAnalytics
+object ModalExpression {
+  implicit val ttWrites: OWrites[ModalExpression] = Json.writes[ModalExpression]
+}
+case class ModalExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}
 
-case class TapSpell(message:String,suggestions:Vector[String],start:Int, end:Int)
+

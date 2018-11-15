@@ -14,12 +14,13 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-import play.api.libs.json.{JsValue, Json}
+import java.time.OffsetDateTime
 
-trait AnalyticsResult {
-  val name:String
-  val analytics:AnyRef
-  def asJson: JsValue
+trait Result {
+  val analytics: Any
+  val timestamp: String = OffsetDateTime.now().toString
+  val querytime: Int
+  val message: String
 }

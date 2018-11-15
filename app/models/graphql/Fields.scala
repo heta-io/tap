@@ -22,6 +22,11 @@ import io.nlytx.expressions.data.{Coded, Reflect}
 import sangria.macros.derive.{Interfaces, deriveObjectType}
 import sangria.schema.{Argument, Context, Field, IntType, InterfaceType, ObjectType, OptionInputType, StringType, fields}
 import io.heta.tap.data._
+import io.heta.tap.data.doc._
+import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions}
+import io.heta.tap.data.doc.reflect.{MetaTagSummary, PhraseTagSummary, ReflectExpressions, Summary}
+import io.heta.tap.data.doc.spell.{Spell, Spelling}
+import io.heta.tap.data.results.{ExpressionsResult, Result}
 
 import scala.concurrent.Future
 
@@ -59,7 +64,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.annotations(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class SentencesResult(analytics: Vector[TapSentence], message:String = "", querytime:Int = -1) extends Result
+    case class SentencesResult(analytics: Vector[Sentence], message:String = "", querytime:Int = -1) extends Result
 
     object VocabularyField {
         import Fields.FieldTypes._
@@ -114,7 +119,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.spelling(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class SpellingResult(analytics: Vector[TapSpelling], message:String = "", querytime:Int = -1) extends Result
+    case class SpellingResult(analytics: Vector[Spelling], message:String = "", querytime:Int = -1) extends Result
 
     object ExpressionsField {
         import Fields.FieldTypes._
@@ -125,7 +130,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.expressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class ExpressionsResult(analytics: Vector[TapExpressions], message:String = "", querytime:Int = -1) extends Result
+
 
     object ReflectExpressionsField {
         import Fields.FieldTypes._
@@ -136,7 +141,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.reflectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class ReflectExpressionsResult(analytics: TapReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+    case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
 
     object AffectExpressionsField {
         import Fields.FieldTypes._
@@ -146,7 +151,7 @@ object Fields {
         val deriveType = deriveObjectType[Unit,AffectExpressionsResult](Interfaces[Unit, AffectExpressionsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.affectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
-    case class AffectExpressionsResult(analytics: Vector[TapAffectExpressions], message:String = "", querytime:Int = -1) extends Result
+    case class AffectExpressionsResult(analytics: Vector[AffectExpressions], message:String = "", querytime:Int = -1) extends Result
 
     object RhetoricalMovesField {
         import Fields.FieldTypes._
@@ -184,25 +189,28 @@ object Fields {
             )
         )
 
-        implicit val TokenType:ObjectType[Unit,TapToken] = deriveObjectType[Unit,TapToken]()
-        implicit val SentenceType:ObjectType[Unit,TapSentence] = deriveObjectType[Unit,TapSentence]()
+        implicit val TokenType:ObjectType[Unit,Token] = deriveObjectType[Unit,Token]()
+        implicit val SentenceType:ObjectType[Unit,Sentence] = deriveObjectType[Unit,Sentence]()
         implicit val TermCountType:ObjectType[Unit,TermCount] = deriveObjectType[Unit,TermCount]()
         implicit val VocabType:ObjectType[Unit,TapVocab] = deriveObjectType[Unit,TapVocab]()
         implicit val MetricsType:ObjectType[Unit,TapMetrics] = deriveObjectType[Unit,TapMetrics]()
-        implicit val TapExpressionType:ObjectType[Unit,TapExpression] = deriveObjectType[Unit,TapExpression]()
-        implicit val TapExpressionsType:ObjectType[Unit,TapExpressions] = deriveObjectType[Unit,TapExpressions]()
+        //implicit val TapExpressionType:ObjectType[Unit,Expression] = deriveObjectType[Unit,Expression]()
+        implicit val AffectExpressionType:ObjectType[Unit,AffectExpression] = deriveObjectType[Unit,AffectExpression]()
+        implicit val ModalExpressionType:ObjectType[Unit,ModalExpression] = deriveObjectType[Unit,ModalExpression]()
+        implicit val EpistemicExpressionType:ObjectType[Unit,EpistemicExpression] = deriveObjectType[Unit,EpistemicExpression]()
+        implicit val TapExpressionsType:ObjectType[Unit,Expressions] = deriveObjectType[Unit,Expressions]()
         implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
-        implicit val TapSpellingType:ObjectType[Unit,TapSpelling] = deriveObjectType[Unit,TapSpelling]()
-        implicit val TapSpellType:ObjectType[Unit,TapSpell] = deriveObjectType[Unit,TapSpell]()
+        implicit val TapSpellingType:ObjectType[Unit,Spelling] = deriveObjectType[Unit,Spelling]()
+        implicit val TapSpellType:ObjectType[Unit,Spell] = deriveObjectType[Unit,Spell]()
         implicit val TapPosStatsType:ObjectType[Unit,TapPosStats] = deriveObjectType[Unit,TapPosStats]()
-        implicit val TapMetaTagSummaryType:ObjectType[Unit,TapMetaTagSummary] = deriveObjectType[Unit,TapMetaTagSummary]()
-        implicit val TapPhraseTagSummaryType:ObjectType[Unit,TapPhraseTagSummary] = deriveObjectType[Unit,TapPhraseTagSummary]()
-        implicit val TapSummaryType:ObjectType[Unit,TapSummary] = deriveObjectType[Unit,TapSummary]()
+        implicit val TapMetaTagSummaryType:ObjectType[Unit,MetaTagSummary] = deriveObjectType[Unit,MetaTagSummary]()
+        implicit val TapPhraseTagSummaryType:ObjectType[Unit,PhraseTagSummary] = deriveObjectType[Unit,PhraseTagSummary]()
+        implicit val TapSummaryType:ObjectType[Unit,Summary] = deriveObjectType[Unit,Summary]()
         implicit val ReflectType:ObjectType[Unit,Reflect] = deriveObjectType[Unit,Reflect]()
         implicit val CodedType:ObjectType[Unit,Coded] = deriveObjectType[Unit,Coded]()
-        implicit val TapReflectExpressionsType:ObjectType[Unit,TapReflectExpressions] = deriveObjectType[Unit,TapReflectExpressions]()
-        implicit val TapAffectExpressionType:ObjectType[Unit,TapAffectExpression] = deriveObjectType[Unit,TapAffectExpression]()
-        implicit val TapAffectExpressionsType:ObjectType[Unit,TapAffectExpressions] = deriveObjectType[Unit,TapAffectExpressions]()
+        implicit val TapReflectExpressionsType:ObjectType[Unit,ReflectExpressions] = deriveObjectType[Unit,ReflectExpressions]()
+        //implicit val TapAffectExpressionType:ObjectType[Unit,AffectExpression] = deriveObjectType[Unit,AffectExpression]()
+        implicit val TapAffectExpressionsType:ObjectType[Unit,AffectExpressions] = deriveObjectType[Unit,AffectExpressions]()
     }
 
 }

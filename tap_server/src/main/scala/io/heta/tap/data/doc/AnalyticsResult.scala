@@ -14,13 +14,12 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.JsValue
 
-//object Analytics {
-//  implicit val saWrites: OWrites[Analytics] = Json.writes[Analytics]
-//}
-//case class Analytics(analytics:AnalyticsResult) {
-//  def asJson: JsValue = Json.toJson(this)
-//}
+trait AnalyticsResult {
+  val name:String
+  val analytics:AnyRef
+  def asJson: JsValue
+}

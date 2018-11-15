@@ -14,7 +14,17 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapAffectExpressions(affect: Vector[TapAffectExpression], sentIdx: Int) extends TapAnalytics
+/**
+  * Created by andrew@andrewresearch.net on 6/9/17.
+  */
+
+object Sentence {
+  implicit val tsWrites: OWrites[Sentence] = Json.writes[Sentence]
+}
+case class Sentence(original:String, tokens: Vector[Token], start: Int, end: Int, length: Int, idx: Int) {
+  def asJson: JsValue = Json.toJson(this)
+}

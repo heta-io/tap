@@ -14,17 +14,17 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
+import io.heta.tap.data.doc.Analytics
+import io.nlytx.expressions.data.{Coded, Reflect}
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object CluTapSentences {
-  implicit val ttWrites: OWrites[TapToken] = Json.writes[TapToken]
-  implicit val tsWrites: OWrites[TapSentence] = Json.writes[TapSentence]
-  implicit val ctsWrites: OWrites[CluTapSentences] = Json.writes[CluTapSentences]
+object ReflectExpressions {
+  implicit val tsWrites: OWrites[ReflectExpressions] = Json.writes[ReflectExpressions]
+  implicit val refWrites: OWrites[Reflect] = Json.writes[Reflect]
+  implicit val cWrites: OWrites[Coded] = Json.writes[Coded]
 }
-
-case class CluTapSentences(name:String,analytics:Vector[TapSentence]) extends AnalyticsResult {
+case class ReflectExpressions(counts:Reflect, summary:Summary, tags:Seq[Coded]) extends Analytics {
   def asJson: JsValue = Json.toJson(this)
 }
-

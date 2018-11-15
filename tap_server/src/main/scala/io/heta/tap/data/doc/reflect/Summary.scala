@@ -14,11 +14,12 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
-/**
-  * Created by andrew@andrewresearch.net on 29/8/17.
-  */
-case class TapToken(idx:Int, term:String, lemma:String, postag:String, nertag:String, parent:Int, children:Vector[Int], deptype:String,
-                    isPunctuation:Boolean,
-                   )
+import play.api.libs.json.{Json, OWrites}
+
+object Summary {
+  implicit val tsWrites: OWrites[Summary] = Json.writes[Summary]
+}
+case class Summary(metaTagSummary:MetaTagSummary,
+                   phraseTagSummary:PhraseTagSummary)

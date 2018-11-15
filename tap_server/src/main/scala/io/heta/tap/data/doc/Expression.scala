@@ -14,13 +14,18 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-case class TapPhraseTagSummary(
-                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
-                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
-                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
-                                none:Int
-                              )
+import play.api.libs.json.{JsValue, Json, OWrites}
 
+/**
+  * Created by andrew@andrewresearch.net on 16/10/17.
+  */
 
+trait Expression {
+  val text:String
+  val startIdx:Int
+  val endIdx:Int
+
+  def asJson: JsValue
+}

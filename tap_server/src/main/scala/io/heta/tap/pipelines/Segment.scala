@@ -21,7 +21,8 @@ import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
-import io.heta.tap.data._
+import io.heta.tap.data.doc._
+import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions, AffectExpressionsResult, AffectThresholds}
 import io.heta.tap.pipelines.materialize.FilePipeline.File
 import org.clulab.processors.Document
 import play.api.libs.json.Json
@@ -33,32 +34,32 @@ object Segment {
 
   private val logger: Logger = Logger(this.getClass)
 
-  val cluTapSentences: Flow[Document, CluTapSentences, NotUsed] = Flow[org.clulab.processors.Document]
+  val cluTapSentences: Flow[Document, SentencesResult, NotUsed] = Flow[org.clulab.processors.Document]
     .map { doc =>
       logger.info("Extracting sentences")
       val sents = doc.sentences.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
-        TapSentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
+        Sentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
-      CluTapSentences(doc.id.getOrElse("unknown"),sents)
+      SentencesResult(doc.id.getOrElse("unknown"),sents)
     }
 
   val FileFromAnalyticsResult: Flow[AnalyticsResult,File,NotUsed] = Flow[AnalyticsResult]
     .map[File](ar => File(ar.name,ByteString(Json.prettyPrint(ar.asJson))))
 
 
-  def affectExpressions(thresholds:Option[AffectThresholds] = None): Flow[CluTapSentences, CluTapAffectExpressions, NotUsed] = {
+  def affectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesResult, AffectExpressionsResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
-    Flow[CluTapSentences].map[CluTapAffectExpressions] { sents =>
+    Flow[SentencesResult].map[AffectExpressionsResult] { sents =>
       val aes = sents.analytics.map { s =>
         val ae = AffectLexicon.getAllMatchingTerms(s.tokens)
-        TapAffectExpressions(filterAffectThresholds(ae,th),s.idx)
+        AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
-      CluTapAffectExpressions(sents.name,aes)
+      AffectExpressionsResult(sents.name,aes)
     }
   }
 
-  private def filterAffectThresholds(affectExpressions:Vector[TapAffectExpression],thresholds:AffectThresholds) = {
+  private def filterAffectThresholds(affectExpressions:Vector[AffectExpression], thresholds:AffectThresholds) = {
     affectExpressions.filter{ ae =>
       ae.valence >= thresholds.valence &&
         ae.arousal >= thresholds.arousal &&
@@ -79,7 +80,7 @@ object Segment {
 
     val tapTokens = for {
       ((((i,w),l),pt),nt) <- is zip ws zip ls zip pts zip nts
-    } yield TapToken(i,w,l,pt,nt,-1,Vector(),"",false)
+    } yield Token(i,w,l,pt,nt,-1,Vector(),"",false)
 
     tapTokens.toVector
   }

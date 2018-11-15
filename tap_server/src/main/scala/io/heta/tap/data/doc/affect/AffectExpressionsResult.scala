@@ -14,12 +14,16 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.affect
 
-/**
-  * Created by andrew@andrewresearch.net on 16/10/17.
-  */
+import io.heta.tap.data.doc.AnalyticsResult
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapExpression(text: String, startIdx: Int, endIdx: Int) extends TapAnalytics
+object AffectExpressionsResult {
+  implicit val ctsWrites: OWrites[AffectExpressionsResult] = Json.writes[AffectExpressionsResult]
+}
 
+case class AffectExpressionsResult(name:String, analytics:Vector[AffectExpressions]) extends AnalyticsResult {
+  def asJson: JsValue = Json.toJson(this)
+}
 

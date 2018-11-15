@@ -14,17 +14,16 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.{Json, OWrites}
 
-object CluTapAffectExpressions {
-  implicit val ttWrites: OWrites[TapAffectExpression] = Json.writes[TapAffectExpression]
-  implicit val tsWrites: OWrites[TapAffectExpressions] = Json.writes[TapAffectExpressions]
-  implicit val ctsWrites: OWrites[CluTapAffectExpressions] = Json.writes[CluTapAffectExpressions]
+object PhraseTagSummary {
+  implicit val tsWrites: OWrites[PhraseTagSummary] = Json.writes[PhraseTagSummary]
 }
-
-case class CluTapAffectExpressions(name:String,analytics:Vector[TapAffectExpressions]) extends AnalyticsResult {
-  def asJson: JsValue = Json.toJson(this)
-}
-
+case class PhraseTagSummary(
+                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
+                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
+                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
+                                none:Int
+                              )

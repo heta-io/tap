@@ -17,6 +17,7 @@
 package models.graphql
 
 import controllers.handlers.{BatchAnalysisHandler, ExternalAnalysisHandler, TextAnalysisHandler}
+import io.heta.tap.data.results.ExpressionsResult
 import javax.inject.Inject
 import models.graphql.Fields._
 

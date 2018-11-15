@@ -14,6 +14,19 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-case class AffectThresholds(valence: Double,arousal:Double,dominance:Double)
+import io.heta.tap.data.doc.affect.AffectExpression
+import play.api.libs.json.{JsValue, Json, OWrites}
+
+/**
+  * Created by andrew@andrewresearch.net on 16/10/17.
+  */
+
+object Expressions {
+  implicit val tsWrites: OWrites[Expressions] = Json.writes[Expressions]
+}
+case class Expressions(affect: Vector[AffectExpression], epistemic: Vector[EpistemicExpression],
+                       modal: Vector[ModalExpression], sentIdx: Int) extends Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}
