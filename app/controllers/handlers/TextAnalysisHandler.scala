@@ -41,7 +41,7 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
 
   val logger: Logger = Logger(this.getClass)
 
-  val annotate = Annotating
+  val annotate = new Annotating(cluAnnotator)
 
   private val pipe = annotate.Pipeline
 

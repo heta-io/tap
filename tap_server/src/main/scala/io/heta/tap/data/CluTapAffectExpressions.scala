@@ -18,9 +18,13 @@ package io.heta.tap.data
 
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object SentsAnalytics {
-  implicit val saWrites: OWrites[SentsAnalytics] = Json.writes[SentsAnalytics]
+object CluTapAffectExpressions {
+  implicit val ttWrites: OWrites[TapAffectExpression] = Json.writes[TapAffectExpression]
+  implicit val tsWrites: OWrites[TapAffectExpressions] = Json.writes[TapAffectExpressions]
+  implicit val ctsWrites: OWrites[CluTapAffectExpressions] = Json.writes[CluTapAffectExpressions]
 }
-case class SentsAnalytics(result:CluTapSentences) {
+
+case class CluTapAffectExpressions(name:String,analytics:Vector[TapAffectExpressions]) extends AnalyticsResult {
   def asJson: JsValue = Json.toJson(this)
 }
+

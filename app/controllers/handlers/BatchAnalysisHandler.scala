@@ -33,11 +33,9 @@ import scala.util.Success
 
 
 /* Possible parameters
-
 analysisType: any valid pipeline query name
 s3bucket: any valid s3 bucket name which TAP has been given access to
 progressCheck: batchId [UUID]
-
  */
 
 
@@ -58,7 +56,6 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
       case scala.util.Failure(exception) => logger.error(exception.getMessage)
     }
   }
-
 
   def analyse(parameters:Option[String],start:Long):Future[BatchResult] = {
     logger.info(s"Batch analysis with parameters: $parameters")
@@ -87,11 +84,9 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
     case error => Left(error)
   }
 
-
   def sendRequest(requestType:RequestType,bucket:String,payLoad:String):Either[Throwable,Future[ResultMessage]] = {
     implicit val timeout: Timeout = 5.seconds
-    //awsS3Client.instance match {
-     // case Some(s3client) => {
+
         val request = requestType match {
           case ANALYSE => AnalyseSource(bucket,payLoad,cluAnnotator)
           case PROGRESS => CheckProgress(bucket,payLoad)
@@ -106,8 +101,4 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
   type RequestType = String
   lazy val ANALYSE:RequestType = "analyse"
   lazy val PROGRESS:RequestType = "progress"
-
-
-
 }
-

@@ -24,7 +24,7 @@ object CluTapSentences {
   implicit val ctsWrites: OWrites[CluTapSentences] = Json.writes[CluTapSentences]
 }
 
-case class CluTapSentences(name:String,sentences:Vector[TapSentence]) {
+case class CluTapSentences(name:String,analytics:Vector[TapSentence]) extends AnalyticsResult {
   def asJson: JsValue = Json.toJson(this)
 }
 

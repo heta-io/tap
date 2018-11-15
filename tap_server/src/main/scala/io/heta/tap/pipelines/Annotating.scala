@@ -40,7 +40,7 @@ import scala.util.{Failure, Success, Try}
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
 
-object Annotating { //(@Named("cluAnnotator")cluAnnotator:ActorRef)  {
+class Annotating(cluAnnotator:ActorRef) {
 
   //val languageTool: ActorRef = ???
   val expressions:Expressions = new Expressions()
@@ -50,7 +50,7 @@ object Annotating { //(@Named("cluAnnotator")cluAnnotator:ActorRef)  {
 
   val parallelism = 5
 
-  private val cluAnnotator = PipelineContext.system.actorSelection("user/cluAnnotator")
+  //private val cluAnnotator = PipelineContext.system.actorSelection("user/cluAnnotator")
 
   /* The main pipelines for performing annotating text analysis */
   object Pipeline {
