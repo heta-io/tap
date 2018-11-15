@@ -16,31 +16,14 @@
 
 package io.heta.tap.pipelines
 
+import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import akka.util.ByteString
-import io.heta.tap.analysis.clu.CluAnnotator
 import io.heta.tap.pipelines.materialize.FilePipeline.File
 import org.clulab.processors.Document
 
-class DocumentAnnotating {
-
-  object Pipeline {
-    val cluDoc = CluDocFromFile via FileFromCluDoc
-  }
-
-  val ca:CluAnnotator = new CluAnnotator()
-
-  val CluDocFromFile = Flow[File]
-    .map[org.clulab.processors.Document] { file =>
-    val doc = ca.annotate(file.contents.utf8String)
-    doc.id = Some(file.name)
-    doc
-  }
-
-  val FileFromCluDoc = Flow[Document].map[File] { doc =>
-    val name = doc.id.getOrElse("No Name")
-    val tree = doc.sentences.toList.map(_.tags.getOrElse(Array()).mkString(",")).mkString("|")
-    File(name,ByteString(tree))
-  }
-
+/*
+These Pipes are connected Flow Segments ready to be deployed in a Pipeline
+ */
+object Pipe {
+  val cluSentences: Flow[Document, File, NotUsed] = Segment.cluTapSentences via Segment.FileFromTapSentences
 }

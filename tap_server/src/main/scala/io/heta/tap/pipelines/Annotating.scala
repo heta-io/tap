@@ -17,19 +17,22 @@
 package io.heta.tap.pipelines
 
 import akka.NotUsed
+import akka.actor.ActorRef
+import akka.pattern.ask
 import akka.stream.scaladsl.Flow
+import akka.util.Timeout
 import com.typesafe.scalalogging.Logger
 import io.nlytx.expressions.ReflectiveExpressionPipeline
 import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.{Document, Token}
-
 import io.heta.tap.analysis.Syllable
-import io.heta.tap.analysis.clu.CluAnnotator
+import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
 import io.heta.tap.data._
 import io.heta.tap.pipelines.AnnotatingTypes._
+import io.heta.tap.pipelines.materialize.PipelineContext
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
 
@@ -37,13 +40,17 @@ import scala.util.{Failure, Success, Try}
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
 
-class Annotating  {
+object Annotating { //(@Named("cluAnnotator")cluAnnotator:ActorRef)  {
 
   //val languageTool: ActorRef = ???
   val expressions:Expressions = new Expressions()
-  val ca:CluAnnotator = new CluAnnotator()
+  //val ca:CluAnnotatorActor = new CluAnnotatorActor()
 
   val logger: Logger = Logger(this.getClass)
+
+  val parallelism = 5
+
+  private val cluAnnotator = PipelineContext.system.actorSelection("user/cluAnnotator")
 
   /* The main pipelines for performing annotating text analysis */
   object Pipeline {
@@ -80,16 +87,21 @@ class Annotating  {
 //    case Failure(e) => logger.error("LanguageTool encountered an error on startup: " + e.toString)
 //  }
 
-  /* Initialise Factorie models by running a test through docBuilder */
-  logger.info("Initialising Factorie models")
+  import PipelineContext.executor
+
   private val ap = AnnotatorPipelines
-  val docStart = Future(ap.profile("Please start Factorie!",ap.fastPipeline))
-  docStart.onComplete{
-    case Success(doc) => logger.info(s"Factorie started successfully [${doc.tokenCount} tokens]")
-    case Failure(e) => logger.error("Factorie start failure:" + e.toString)
+
+  {
+
+    /* Initialise Factorie models by running a test through docBuilder */
+    logger.info("Initialising Factorie models")
+    val docStart = Future(ap.profile("Please start Factorie!", ap.fastPipeline))
+    docStart.onComplete {
+      case Success(doc) => logger.info(s"Factorie started successfully [${doc.tokenCount} tokens]")
+      case Failure(e) => logger.error("Factorie start failure:" + e.toString)
+    }
+
   }
-
-
 
 
 
@@ -98,8 +110,9 @@ class Annotating  {
    */
 
   val makeCluDocument: CluDocumentFlow = Flow[String]
-    .map[org.clulab.processors.Document] { text =>
-    ca.annotate(text)
+    .mapAsync[org.clulab.processors.Document](parallelism) { text =>
+    implicit val timeout: Timeout = 5.seconds
+    (cluAnnotator ? AnnotateRequest(text)).mapTo[org.clulab.processors.Document]
   }
 
   val makeDocument: DocumentFlow = Flow[String]
