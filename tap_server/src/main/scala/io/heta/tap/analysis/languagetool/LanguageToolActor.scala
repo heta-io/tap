@@ -46,7 +46,7 @@ class LanguageToolActor extends Actor {
     case INIT => sender ! init
     case cs:CheckSpelling => sender ! check(cs.text)
     case msg:Any => {
-      logger.error(s"FactorieAnnotatorActor received unkown msg: $msg")
+      logger.error(s"LanguageToolAnnotatorActor received unkown msg: $msg")
     }
   }
 
