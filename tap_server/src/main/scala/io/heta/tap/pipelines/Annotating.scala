@@ -130,7 +130,7 @@ class Annotating  {
     .map { sentArray =>
       sentArray.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
-        TapSentence(s.getSentenceText(),tokens,-1,-1,s.words.length,idx)
+        TapSentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
     }
 

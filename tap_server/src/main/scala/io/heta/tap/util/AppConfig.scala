@@ -20,12 +20,16 @@ import com.typesafe.config.ConfigFactory
 
 class AppConfig{
 
-  def parseConfig(configName: String, environmentVariable: String)= {
-    val conf = ConfigFactory.load("application.conf")
-    Try(conf.getConfig(configName).getString(environmentVariable))
-  }
+  def getAthanorURL: Option[String] = AppConfig.parseConfig("external.servers","athanor")
 
-  def getAthanorURL() = {
-    parseConfig("play","external.servers.athanor") getOrElse "http://localhost/v2/analyse/text/rhetorical"
-  }
+  def getAwsAccessKey: Option[String] = AppConfig.parseConfig("external.aws","accessKey")
+
+  def getAwsAccessPassword: Option[String] = AppConfig.parseConfig("external.aws","password")
+
+  def getAwsRegion: Option[String] = AppConfig.parseConfig("external.aws","region")
+
+}
+object AppConfig {
+  private lazy val conf = ConfigFactory.load("application.conf")
+  private def parseConfig(configPath: String, configKey: String)= Try(conf.getConfig(configPath).getString(configKey)).toOption
 }

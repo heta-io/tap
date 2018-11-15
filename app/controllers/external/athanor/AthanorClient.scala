@@ -1,17 +1,17 @@
 /*
- * Copyright 2016-2017 original author or authors
+ * Copyright (c) 2016-2018 original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 
 package controllers.external.athanor
@@ -35,7 +35,7 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
 
   val logger: Logger = Logger(this.getClass)
 
-  val athanorURL= config.getAthanorURL()
+  val athanorURL= config.getAthanorURL
 
   def process(text:String,parameter:String,start:Long):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")

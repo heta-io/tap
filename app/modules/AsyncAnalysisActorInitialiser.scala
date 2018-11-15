@@ -14,19 +14,23 @@
  *
  */
 
-package io.heta.tap.pipelines.materialize
+package modules
 
-/**
-  * Created by andrew@andrewresearch.net on 19/5/17.
-  */
+import com.google.inject.AbstractModule
+import com.typesafe.scalalogging.Logger
+import io.heta.tap.analysis.batch.BatchActor
+import play.api.libs.concurrent.AkkaGuiceSupport
 
-import akka.NotUsed
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import io.heta.tap.pipelines.materialize.PipelineContext.materializer
+class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport {
 
-case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
+  val logger: Logger = Logger(this.getClass)
 
-  val source = Source.single(inputStr)
-  def run = source via flow runWith(Sink.head[T])
+    def configure():Unit = {
+      logger.info("Binding BatchActor")
+      bindActor[BatchActor]("batch")
+      //bindActor[LanguageToolActor]("languagetool")
+      //bindActor[AffectLexiconActor]("affectlexicon")
+      //bindActor[WordVectorActor]("wordvector")
+    }
+
 }
-
