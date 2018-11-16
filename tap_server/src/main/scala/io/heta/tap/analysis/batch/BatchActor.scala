@@ -123,7 +123,7 @@ class BatchActor extends Actor {
       .map{ doc =>
         doc.id = Some(file.name)
         logger.debug("DOC text:"+doc.text)
-        doc.sentences.foreach(s => logger.warn("SENTENCE: "+s.tags.getOrElse(Array()).mkString("|")))
+        doc.sentences.foreach(s => logger.debug("SENTENCE: "+s.tags.getOrElse(Array()).mkString("|")))
         doc
       }
   }

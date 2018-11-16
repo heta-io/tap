@@ -14,16 +14,18 @@
  *
  */
 
-package io.heta.tap.data.doc.reflect
+package io.heta.tap.data.doc.expression
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.JsValue
 
-object PhraseTagSummary {
-  implicit val tsWrites: OWrites[PhraseTagSummary] = Json.writes[PhraseTagSummary]
+/**
+  * Created by andrew@andrewresearch.net on 16/10/17.
+  */
+
+trait Expression {
+  val text:String
+  val startIdx:Int
+  val endIdx:Int
+
+  def asJson: JsValue
 }
-case class PhraseTagSummary(
-                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
-                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
-                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
-                                none:Int
-                              )

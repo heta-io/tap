@@ -14,11 +14,14 @@
  *
  */
 
-package io.heta.tap.data.doc.reflect
+package io.heta.tap.data.doc.expression
 
-import play.api.libs.json.{Json, OWrites}
+import io.heta.tap.data.doc.Analytics
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-object MetaTagSummary {
-  implicit val tsWrites: OWrites[MetaTagSummary] = Json.writes[MetaTagSummary]
+object EpistemicExpression {
+  implicit val ttWrites: OWrites[EpistemicExpression] = Json.writes[EpistemicExpression]
 }
-case class MetaTagSummary(knowledge:Int, experience:Int, regulation:Int, none:Int)
+case class EpistemicExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}

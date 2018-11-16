@@ -16,7 +16,7 @@
 
 package io.heta.tap.data
 
-import io.heta.tap.data.doc.Expression
+import io.heta.tap.data.doc.expression.Expression
 
 /**
   * Created by andrew@andrewresearch.net on 30/6/17.

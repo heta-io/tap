@@ -14,15 +14,14 @@
  *
  */
 
-package io.heta.tap.data.doc
+package io.heta.tap.data.doc.expression.affect
 
+import io.heta.tap.data.doc.Analytics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object ModalExpression {
-  implicit val ttWrites: OWrites[ModalExpression] = Json.writes[ModalExpression]
+object AffectExpressions {
+  implicit val tsWrites: OWrites[AffectExpressions] = Json.writes[AffectExpressions]
 }
-case class ModalExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+case class AffectExpressions(affect: Vector[AffectExpression], sentIdx: Int) extends Analytics {
   def asJson: JsValue = Json.toJson(this)
 }
-
-

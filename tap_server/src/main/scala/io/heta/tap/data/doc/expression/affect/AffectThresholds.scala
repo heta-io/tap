@@ -14,8 +14,11 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.affect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object AffectThresholds {
+  implicit val ttWrites: OWrites[AffectThresholds] = Json.writes[AffectThresholds]
+}
+case class AffectThresholds(valence: Double,arousal:Double,dominance:Double)

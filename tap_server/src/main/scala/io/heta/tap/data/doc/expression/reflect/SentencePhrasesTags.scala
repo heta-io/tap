@@ -14,12 +14,16 @@
  *
  */
 
-package io.heta.tap.data.doc.reflect
+package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
-object Summary {
-  implicit val tsWrites: OWrites[Summary] = Json.writes[Summary]
+object SentencePhrasesTags {
+  implicit val cWrites: OWrites[SentencePhrasesTags] = Json.writes[SentencePhrasesTags]
 }
-case class Summary(metaTagSummary:MetaTagSummary,
-                   phraseTagSummary:PhraseTagSummary)
+case class SentencePhrasesTags(
+                  sentence:String,
+                  phrases:Vector[String],
+                  subTags:Vector[String],
+                  metaTags:Vector[String]
+                )

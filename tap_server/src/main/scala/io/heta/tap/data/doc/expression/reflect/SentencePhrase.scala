@@ -14,8 +14,11 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.reflect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object SentencePhrase {
+  implicit val spWrites: OWrites[SentencePhrase] = Json.writes[SentencePhrase]
+}
+case class SentencePhrase(phraseType: String, phrase: String, start: Int, end: Int)

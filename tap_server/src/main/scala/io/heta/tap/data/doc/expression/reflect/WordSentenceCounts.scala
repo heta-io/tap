@@ -14,18 +14,16 @@
  *
  */
 
-package io.heta.tap.data.doc
+package io.heta.tap.data.doc.expression.reflect
 
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.{Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 16/10/17.
-  */
-
-trait Expression {
-  val text:String
-  val startIdx:Int
-  val endIdx:Int
-
-  def asJson: JsValue
+object WordSentenceCounts {
+  implicit val refWrites: OWrites[WordSentenceCounts] = Json.writes[WordSentenceCounts]
 }
+case class WordSentenceCounts(
+                    wordCount:Int,
+                    avgWordLength:Double,
+                    sentenceCount:Int,
+                    avgSentenceLength:Double
+                  )

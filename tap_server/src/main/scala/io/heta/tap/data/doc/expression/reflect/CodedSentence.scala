@@ -14,11 +14,20 @@
  *
  */
 
-package io.heta.tap.data.doc.affect
+package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
-object AffectThresholds {
-  implicit val ttWrites: OWrites[AffectThresholds] = Json.writes[AffectThresholds]
+object CodedSentence {
+  implicit val csWrites: OWrites[CodedSentence] = Json.writes[CodedSentence]
 }
-case class AffectThresholds(valence: Double,arousal:Double,dominance:Double)
+case class CodedSentence(
+                          index: Int,
+                          sentence: String,
+                          metacognitionTags:Vector[String],
+                          subTags:Vector[String],
+                          phraseTags:Vector[String],
+                          selfRatio:Double,
+                          othersRatio:Double,
+                          phrases:Vector[SentencePhrase]
+                        )

@@ -20,7 +20,7 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
 import io.heta.tap.analysis.clu.CluAnnotatorActor.INIT
-import io.heta.tap.data.doc.affect.AffectThresholds
+import io.heta.tap.data.doc.expression.affect.AffectThresholds
 import io.heta.tap.data.results._
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.TextPipeline

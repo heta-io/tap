@@ -17,7 +17,7 @@
 package io.heta.tap.data.results
 
 import io.heta.tap.data.doc.AnalyticsResult
-import io.heta.tap.data.doc.affect.AffectExpressions
+import io.heta.tap.data.doc.expression.affect.AffectExpressions
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 object AffectExpressionsBatchResult {
