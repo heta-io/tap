@@ -1,4 +1,7 @@
-# Developer
+## I'm a Developer
+---
+
+@@toc { depth=3 }
 
 @@@ index
 * [Getting Setup](ide_setup.md)
@@ -8,4 +11,4 @@
 
 @@@
 
----
+
