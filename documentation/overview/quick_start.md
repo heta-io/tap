@@ -1,9 +1,21 @@
 ## Quick Start
 
+- [Get started with Docker](#get-started-with-docker)
+- [Get started locally](#get-started-locally)
+
+
+
+
+
+### Get started with Docker
+Getting Started with Docker - Coming soon
+
+### Get started locally
+
 Clone the project source code with git:
 
 ```bash
-git clone https://github.com/uts-cic/tap
+git clone https://github.com/heta-io/tap
 ```
 
 Ensure you have the [latest sbt](http://www.scala-sbt.org) installed
