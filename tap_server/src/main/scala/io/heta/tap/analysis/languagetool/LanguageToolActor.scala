@@ -22,7 +22,7 @@ import org.languagetool.JLanguageTool
 import org.languagetool.language.BritishEnglish
 import org.languagetool.rules.RuleMatch
 import io.heta.tap.analysis.languagetool.Languages
-import io.heta.tap.data.TapSpell
+import io.heta.tap.data.doc.spell.Spell
 import io.heta.tap.nlp.factorie.LanguageToolActor.{CheckSpelling, INIT}
 
 import scala.collection.JavaConverters._
@@ -58,9 +58,9 @@ class LanguageToolActor extends Actor {
     langTool.getLanguage.isInstanceOf[BritishEnglish]
   }
 
-  def check(text:String):Vector[TapSpell] = {
+  def check(text:String):Vector[Spell] = {
     val matches:Vector[RuleMatch] = langTool.check(text).asScala.toVector
-    matches.map( m => TapSpell(m.getMessage,m.getSuggestedReplacements.asScala.toVector,m.getFromPos,m.getToPos))
+    matches.map( m => Spell(m.getMessage,m.getSuggestedReplacements.asScala.toVector,m.getFromPos,m.getToPos))
   }
 
 }

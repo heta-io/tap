@@ -14,13 +14,8 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-case class TapPhraseTagSummary(
-                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
-                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
-                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
-                                none:Int
-                              )
+import io.heta.tap.data.TapPosStats
 
-
+case class PosStatsResult(analytics: TapPosStats, message:String = "", querytime:Int = -1) extends Result

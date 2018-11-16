@@ -23,6 +23,8 @@ import io.nlytx.nlp.api.DocumentModel.Document
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
+import io.heta.tap.data.doc.spell.Spelling
+import io.heta.tap.data.doc.{Expression, Expressions, Sentence}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -70,8 +72,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
 
       val input = s"How can I convert a Scala array to a String? Or, more, accurately, how do I convert any Scala sequence to a String."
 
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).toMat(Sink.head[Vector[TapSentence]])(Keep.right)
-      val result:Future[Vector[TapSentence]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).toMat(Sink.head[Vector[Sentence]])(Keep.right)
+      val result:Future[Vector[Sentence]] = graph.run()
       val sent = Await.result(result, 240 seconds)
 
       assert(sent.length == 2)
@@ -139,20 +141,20 @@ class AnnotatingPipelineSpec extends PlaySpec {
 
       val input = s"I believe you are the best player on our team. I would support you for sure."
 
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[TapExpressions]])(Keep.right)
-      val result:Future[Vector[TapExpressions]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[Expressions]])(Keep.right)
+      val result:Future[Vector[Expressions]] = graph.run()
       val expression = Await.result(result, 240 seconds)
 
 
       assert(expression.length == 2)
       //assert(expression(0).affect == Vector(TapExpression("believe",1,1)))
-      assert(expression(0).epistemic == Vector(TapExpression("I believe",0,1)))
+      assert(expression(0).epistemic == Vector(Expression("I believe",0,1)))
       assert(expression(0).modal == Vector())
       assert(expression(0).sentIdx == 0)
 
       //assert(expression(1).affect == Vector(TapExpression("support",2,2)),TapExpression("sure",5,5)))
-      assert(expression(1).epistemic == Vector(TapExpression("you for sure",3,5)))
-      assert(expression(1).modal == Vector(TapExpression("I would",0,1)))
+      assert(expression(1).epistemic == Vector(Expression("you for sure",3,5)))
+      assert(expression(1).modal == Vector(Expression("I would",0,1)))
       assert(expression(1).sentIdx == 1)
     }
   }
@@ -182,8 +184,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val spellingFlow = annotator.tapSpelling
 
       val input = s"I don’t no how to swim. Your the best player on our team."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(spellingFlow).toMat(Sink.head[Vector[TapSpelling]])(Keep.right)
-      val result:Future[Vector[TapSpelling]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(spellingFlow).toMat(Sink.head[Vector[Spelling]])(Keep.right)
+      val result:Future[Vector[Spelling]] = graph.run()
       val spelling = Await.result(result, 240 seconds)
 
       assert(spelling(0).sentIdx == 0)

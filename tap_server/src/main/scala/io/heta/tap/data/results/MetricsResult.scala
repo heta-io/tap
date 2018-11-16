@@ -14,6 +14,8 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-case class AffectThresholds(valence: Double,arousal:Double,dominance:Double)
+import io.heta.tap.data.TapMetrics
+
+case class MetricsResult(analytics: TapMetrics, message:String = "", querytime:Int = -1) extends Result

@@ -16,10 +16,9 @@
 
 package controllers.external.athanor
 
+import io.heta.tap.data.results.StringListResult
 import javax.inject.Inject
-
 import io.heta.tap.util.AppConfig
-import models.graphql.Fields.StringListResult
 import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 

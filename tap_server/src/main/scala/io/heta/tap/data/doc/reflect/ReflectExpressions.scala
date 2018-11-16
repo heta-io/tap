@@ -14,12 +14,17 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
-/**
-  * Created by andrew@andrewresearch.net on 17/10/17.
-  */
+import io.heta.tap.data.doc.Analytics
+import io.nlytx.expressions.data.{Coded, Reflect}
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapSpelling(sentIdx:Int,spelling:Vector[TapSpell]) extends TapAnalytics
-
-case class TapSpell(message:String,suggestions:Vector[String],start:Int, end:Int)
+object ReflectExpressions {
+  implicit val tsWrites: OWrites[ReflectExpressions] = Json.writes[ReflectExpressions]
+  implicit val refWrites: OWrites[Reflect] = Json.writes[Reflect]
+  implicit val cWrites: OWrites[Coded] = Json.writes[Coded]
+}
+case class ReflectExpressions(counts:Reflect, summary:Summary, tags:Seq[Coded]) extends Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}
