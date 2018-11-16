@@ -19,23 +19,27 @@ The following is a run down of the most relevant files in the project.
 * app - Contains the controllers, models and views.
     * controllers - Contains the controllers of the project
         * handlers
+        <!-- TODO need to fill in more info on handlers -->
     * models
         * graphql
+        <!-- TODO Add detailed information on models used -->
     * views
         * GraphqlPage - The GraphQl Interface page which allows you to test out the graphql queries in a playground.
         * HomePage - The home page which contains links to the docs, The source code and the Graphql Interfact.
 * documentation - Contains all the documentation source code that can be automatically generated see [Documentation Updates](doc_updates.md)
 * tap_client
     * src
+    <!-- TODO add more information on the client src directory -->
 * tap_server
     * src
+    <!-- TODO add more information on the server src directory -->
         
         
 
 For more details, see the "Default SBT Layout" section in the "Anatomy of a Play Application"
 chapter in the Play 2.6 Documentation:
 
-        [play-project-anatomy](https://playframework.com/documentation/2.6.x/Anatomy)
+[play-project-anatomy](https://playframework.com/documentation/2.6.x/Anatomy)
 
 
 

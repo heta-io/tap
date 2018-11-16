@@ -1,6 +1,12 @@
-## Getting Setup
+# Getting Setup
+
+This section will help you get started with the source code on any of the following operating systems.
+
+First clone the latest version of the Dev branch from [github](https://github.com/infosci-qut/tap/tree/develop)
 
 It is recommended that you use an IDE to work on this project as it will provide many helper functions and build tools that make working with sbt and scala and lot easier to manager.
+
+### Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate
 
 The recommended IDE is Intellij IDEA ULTIMATE because of its Scala support, and relative ease
 of use. If you have any suggestions for alternate ways of working with this project please let us know by opening an issue. Otherwise the following is a guide to getting setup with IntelliJ IDEA Ultimate.
@@ -21,7 +27,7 @@ Below is the plugins that you want to install.
 In most cases it should be installed to `C:\Program Files\Java\jdk1.8.x` and click ok.
 ![demo2](https://i.imgur.com/RUToHjc.png)
 
-5. Once you click ok IntelliJ may take a while syncing the project. Keep an eye on the progress bar at the bottom and wait until it is complete.
+5. Once you click ok IntelliJ may take a while syncing the project(20-40 minutes for first time) Keep an eye on the progress bar at the bottom and wait until it is complete.
 
 6. Once it has synced open the app folder and then open the view folder. Right click on HomePage and select 'Run Play 2 App' this will automatically generate your run configuration. It may also download a number of files that SBT needs which may take some time.
 Once it has compiled and built you may find it will crash with an Out Of Memory Error. Let's fix that now.
@@ -34,5 +40,4 @@ Once it has compiled and built you may find it will crash with an Out Of Memory 
     
 8. Great now you can right click HomePage again and select 'Run Play 2 App' and it should compile and load up the homepage. 
 
-9. You are good to go! Try visiting the graphql interface and seeing what it can do!
-
+9. You are good to go! Try visiting the graphql interface and see what it can do!

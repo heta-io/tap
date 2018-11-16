@@ -1,4 +1,4 @@
-## Documentation Updates
+## How to edit documentation
 
 We use Paradox to automatically build the documentation.
 
