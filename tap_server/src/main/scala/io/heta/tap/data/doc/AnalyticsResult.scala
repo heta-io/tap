@@ -14,18 +14,12 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-import io.heta.tap.data.doc.Expression
+import play.api.libs.json.JsValue
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
+trait AnalyticsResult {
+  val name:String
+  val analytics:AnyRef
+  def asJson: JsValue
 }

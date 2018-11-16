@@ -14,7 +14,14 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.affect
 
-case class TapSummary(metaTagSummary:TapMetaTagSummary,
-                      phraseTagSummary:TapPhraseTagSummary)
+import io.heta.tap.data.doc.Analytics
+import play.api.libs.json.{JsValue, Json, OWrites}
+
+object AffectExpressions {
+  implicit val tsWrites: OWrites[AffectExpressions] = Json.writes[AffectExpressions]
+}
+case class AffectExpressions(affect: Vector[AffectExpression], sentIdx: Int) extends Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}

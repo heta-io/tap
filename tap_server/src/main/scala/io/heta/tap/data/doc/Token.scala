@@ -14,9 +14,17 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-import io.nlytx.expressions.data.{Coded, Reflect, Summary}
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapReflectExpressions(counts:Reflect, summary:TapSummary,tags:Seq[Coded]) extends TapAnalytics
-
+/**
+  * Created by andrew@andrewresearch.net on 29/8/17.
+  */
+object Token {
+  implicit val ttWrites: OWrites[Token] = Json.writes[Token]
+}
+case class Token(idx:Int, term:String, lemma:String, postag:String, nertag:String,
+                 parent:Int, children:Vector[Int], deptype:String, isPunctuation:Boolean) {
+  def asJson: JsValue = Json.toJson(this)
+}

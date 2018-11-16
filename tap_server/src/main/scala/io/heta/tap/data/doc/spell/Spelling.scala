@@ -14,6 +14,18 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.spell
 
-case class TapMetaTagSummary(knowledge:Int,experience:Int,regulation:Int,none:Int)
+import io.heta.tap.data.doc.Analytics
+import play.api.libs.json.{JsValue, Json, OWrites}
+
+/**
+  * Created by andrew@andrewresearch.net on 17/10/17.
+  */
+
+object Spelling {
+  implicit val tsWrites: OWrites[Spelling] = Json.writes[Spelling]
+}
+case class Spelling(sentIdx:Int, spelling:Vector[Spell]) extends Analytics {
+  override def asJson: JsValue = Json.toJson(this)
+}

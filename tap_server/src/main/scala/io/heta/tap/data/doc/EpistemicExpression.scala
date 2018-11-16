@@ -14,12 +14,13 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-import io.heta.tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 16/10/17.
-  */
-
-case class TapExpressions(affect: Vector[AffectExpression], epistemic: Vector[EpistemicExpression], modal: Vector[ModalExpression], sentIdx: Int)
+object EpistemicExpression {
+  implicit val ttWrites: OWrites[EpistemicExpression] = Json.writes[EpistemicExpression]
+}
+case class EpistemicExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}

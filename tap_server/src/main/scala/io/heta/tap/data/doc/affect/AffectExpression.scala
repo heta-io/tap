@@ -14,9 +14,15 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.affect
 
-/**
-  * Created by andrew@andrewresearch.net on 6/9/17.
-  */
-case class TapSentence(original:String, tokens: Vector[TapToken], start: Int, end: Int, length: Int, idx: Int)
+import io.heta.tap.data.doc.{Analytics, Expression}
+import play.api.libs.json.{JsValue, Json, OWrites}
+
+object AffectExpression {
+  implicit val ttWrites: OWrites[AffectExpression] = Json.writes[AffectExpression]
+}
+case class AffectExpression(text: String, startIdx: Int, endIdx: Int,
+                            valence: Double = 0.0, arousal: Double = 0.0, dominance: Double = 0.0) extends Expression with Analytics {
+  override def asJson: JsValue = Json.toJson(this)
+}

@@ -22,29 +22,40 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
 import io.heta.tap.analysis.batch.AwsS3Client
-import io.heta.tap.analysis.batch.BatchActor.{AnalyseSource, CheckProgress, ResultMessage}
+import io.heta.tap.analysis.batch.BatchActor.{AnalyseSource, CheckProgress, INIT, ResultMessage}
+import io.heta.tap.data.results.BatchResult
 import javax.inject.{Inject, Named}
-import models.graphql.Fields.BatchResult
 import play.api.Logger
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.Success
 
 
 /* Possible parameters
-
 analysisType: any valid pipeline query name
 s3bucket: any valid s3 bucket name which TAP has been given access to
 progressCheck: batchId [UUID]
-
  */
 
 
-class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")batch:ActorRef) extends GenericHandler {
+class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")batch:ActorRef, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
 
   import io.heta.tap.pipelines.materialize.PipelineContext.executor
 
   val logger: Logger = Logger(this.getClass)
+
+  {
+    implicit val timeout: Timeout = 5.seconds
+    (batch ? INIT).onComplete{
+      case Success(result:Boolean) => if(result) {
+        logger.info("BatchActor initialised successfully")
+      } else {
+        logger.error("There was a problem initialising the BatchActor")
+      }
+      case scala.util.Failure(exception) => logger.error(exception.getMessage)
+    }
+  }
 
   def analyse(parameters:Option[String],start:Long):Future[BatchResult] = {
     logger.info(s"Batch analysis with parameters: $parameters")
@@ -73,13 +84,11 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
     case error => Left(error)
   }
 
-
   def sendRequest(requestType:RequestType,bucket:String,payLoad:String):Either[Throwable,Future[ResultMessage]] = {
     implicit val timeout: Timeout = 5.seconds
-    //awsS3Client.instance match {
-     // case Some(s3client) => {
+
         val request = requestType match {
-          case ANALYSE => AnalyseSource(bucket,payLoad)
+          case ANALYSE => AnalyseSource(bucket,payLoad,cluAnnotator)
           case PROGRESS => CheckProgress(bucket,payLoad)
         }
         val result = (batch ? request).mapTo[Future[ResultMessage]].flatten
@@ -92,8 +101,4 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
   type RequestType = String
   lazy val ANALYSE:RequestType = "analyse"
   lazy val PROGRESS:RequestType = "progress"
-
-
-
 }
-

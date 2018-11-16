@@ -14,7 +14,6 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-
-case class TapAffectExpressions(affect: Vector[TapAffectExpression], sentIdx: Int) extends TapAnalytics
+case class StringListResult(analytics: Vector[Vector[String]], message:String = "", querytime:Int = -1) extends Result

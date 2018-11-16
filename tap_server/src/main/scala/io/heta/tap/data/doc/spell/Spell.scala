@@ -14,8 +14,11 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.spell
 
-case class TapAffectExpression(text: String, startIdx: Int, endIdx: Int, valence: Double, arousal: Double, dominance: Double) extends TapAnalytics
+import play.api.libs.json.{Json, OWrites}
 
-
+object Spell {
+  implicit val tsWrites: OWrites[Spell] = Json.writes[Spell]
+}
+case class Spell(message:String,suggestions:Vector[String],start:Int, end:Int)

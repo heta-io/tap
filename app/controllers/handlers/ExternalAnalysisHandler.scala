@@ -17,9 +17,9 @@
 package controllers.handlers
 
 import javax.inject.Inject
-import models.graphql.Fields.StringListResult
 import play.api.Logger
 import controllers.external.athanor.AthanorClient
+import io.heta.tap.data.results.StringListResult
 
 import scala.concurrent.Future
 /**

@@ -14,12 +14,8 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-/**
-  * Created by andrew@andrewresearch.net on 16/10/17.
-  */
+import io.heta.tap.data.doc.Expressions
 
-case class TapExpression(text: String, startIdx: Int, endIdx: Int) extends TapAnalytics
-
-
+case class ExpressionsResult(analytics: Vector[Expressions], message:String = "", querytime:Int = -1) extends Result
