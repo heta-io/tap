@@ -14,18 +14,8 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.Expression
+import io.heta.tap.data.doc.Sentence
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
-}
+case class SentencesResult(analytics: Vector[Sentence], message:String = "", querytime:Int = -1) extends Result

@@ -36,7 +36,7 @@ class AwsS3Client { //@Inject() (config:AppConfig) {
 
   lazy val client: S3Client = this.instance.get
 
-  def getContentsForBucket(bucket:String): Source[ListBucketResultContents, NotUsed] = client.listBucket(bucket,None)
+  def getContentsForBucket(bucket:String,prefix:Option[String]=None): Source[ListBucketResultContents, NotUsed] = client.listBucket(bucket,prefix)
 
   def sourceFileFromBucket(bucket:String,fileName:String): Source[ByteString, NotUsed] = client.download(bucket,fileName)._1
 

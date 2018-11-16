@@ -14,11 +14,18 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
+
+import play.api.libs.json.{JsValue, Json, OWrites}
 
 /**
-  * Created by andrew@andrewresearch.net on 17/10/17.
+  * Created by andrew@andrewresearch.net on 16/10/17.
   */
-trait TapAnalytics {
 
+trait Expression {
+  val text:String
+  val startIdx:Int
+  val endIdx:Int
+
+  def asJson: JsValue
 }

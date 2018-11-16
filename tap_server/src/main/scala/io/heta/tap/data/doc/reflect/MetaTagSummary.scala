@@ -14,18 +14,11 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
-import io.heta.tap.data.doc.Expression
+import play.api.libs.json.{Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
+object MetaTagSummary {
+  implicit val tsWrites: OWrites[MetaTagSummary] = Json.writes[MetaTagSummary]
 }
+case class MetaTagSummary(knowledge:Int, experience:Int, regulation:Int, none:Int)

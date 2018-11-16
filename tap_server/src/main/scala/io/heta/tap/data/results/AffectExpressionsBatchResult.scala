@@ -14,18 +14,17 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.Expression
+import io.heta.tap.data.doc.AnalyticsResult
+import io.heta.tap.data.doc.affect.AffectExpressions
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
+object AffectExpressionsBatchResult {
+  implicit val ctsWrites: OWrites[AffectExpressionsBatchResult] = Json.writes[AffectExpressionsBatchResult]
 }
+
+case class AffectExpressionsBatchResult(name:String, analytics:Vector[AffectExpressions]) extends AnalyticsResult {
+  def asJson: JsValue = Json.toJson(this)
+}
+

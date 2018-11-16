@@ -14,18 +14,16 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.reflect
 
-import io.heta.tap.data.doc.Expression
+import play.api.libs.json.{Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
+object PhraseTagSummary {
+  implicit val tsWrites: OWrites[PhraseTagSummary] = Json.writes[PhraseTagSummary]
 }
+case class PhraseTagSummary(
+                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
+                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
+                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
+                                none:Int
+                              )

@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.10"
+lazy val projectVersion = "3.3-RC1"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -40,7 +40,7 @@ lazy val sangriaVersion = "1.4.2"
 lazy val sangriaJsonVersion = "1.0.5"
 lazy val playJsonVersion = "2.6.10"
 
-lazy val akkaStreamVersion = "2.5.17"
+lazy val akkaVersion = "2.5.17"
 lazy val alpakkaVersion = "1.0-M1"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
@@ -94,7 +94,8 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-main" % cluLabProcessorV,
   "org.clulab" %% "processors-odin" % cluLabProcessorV,
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
-  "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.lightbend.akka" %% "akka-stream-alpakka-s3" % alpakkaVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion,
@@ -109,14 +110,15 @@ val dl4jDependencies = Seq(
 
 val loggingDependencies = Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
 )
 
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlayVersion % "test",
-  "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 )
 
 
@@ -190,8 +192,9 @@ lazy val client = project.in(file(clientName))
       //"d3" -> vD3,
       "react" -> "16.6.1",
       "react-dom" -> "16.6.1",
-      "graphiql" -> "0.11.11",
-      "graphql" -> "0.13.2"
+      "graphiql" -> "0.12.0",
+      "graphql" -> "14.0.2",
+      "isomorphic-fetch" -> "2.2.1"
     )
   ).enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)

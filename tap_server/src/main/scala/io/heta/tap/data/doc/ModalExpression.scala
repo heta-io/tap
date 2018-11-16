@@ -14,18 +14,15 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
 
-import io.heta.tap.data.doc.Expression
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 30/6/17.
-  */
-
-object CustomTypes {
-
-  type DocumentStr = String
-  type SectionStr = String
-  type SentenceStr = String
-
+object ModalExpression {
+  implicit val ttWrites: OWrites[ModalExpression] = Json.writes[ModalExpression]
 }
+case class ModalExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}
+
+

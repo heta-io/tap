@@ -16,18 +16,18 @@
 
 package io.heta.tap.pipelines
 
-import io.heta.tap.data.CustomTypes.{AffectExpression, EpistemicExpression, ModalExpression}
+
 import io.heta.tap.data._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import com.typesafe.scalalogging.Logger
 import io.nlytx.expressions.ReflectiveExpressionPipeline
 import io.nlytx.expressions.data.ReflectiveExpressions
 import io.heta.tap.analysis.Lexicons
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
-
+import io.heta.tap.data.doc._
+import io.heta.tap.data.doc.affect.AffectExpression
 
 import scala.util.{Failure, Success}
 /**
@@ -47,36 +47,37 @@ class Expressions {
 
   def reflective(text:String):Future[ReflectiveExpressions] = ReflectiveExpressionPipeline.process(text)
 
-  def affective(tokens:Vector[TapToken]):Future[Vector[TapAffectExpression]] = Future {
+  def affective(tokens:Vector[Token]):Future[Vector[AffectExpression]] = Future {
     AffectLexicon.getAllMatchingTerms(tokens) //Multi-dimensional affect
   }
 
 
-  def affect(tokens:Vector[TapToken]):Future[Vector[AffectExpression]] = Future {
+  def affect(tokens:Vector[Token]):Future[Vector[AffectExpression]] = Future {
     AffectLexicon.getAffectTerms(tokens)
   }
 
 
 
-  def epistemic(tokens:Vector[TapToken]):Future[Vector[EpistemicExpression]] = Future {
+  def epistemic(tokens:Vector[Token]):Future[Vector[EpistemicExpression]] = Future {
     //Get the indexes of any epistemic verbs
     val epIdx = tokens.filter( t => Lexicons.epistemicVerbLemmas.contains(t.lemma)).map(_.idx)
     //Get the indexes of any personal pronouns
     val prpIdx = tokens.filter( t => t.postag.contains("PRP")).map(_.idx)
     //For each verb, check if there is pronoun index prior within 4 steps
     val pairs = epIdx.map(ei => (prpIdx.find(pi => (ei - pi) > 0 && (ei - pi) < 5),ei))
-    pairs.map(p => TapExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
+    pairs.map(p => EpistemicExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
   }
 
 
-  def modal(tokens:Vector[TapToken]):Future[Vector[ModalExpression]] = Future {
+
+  def modal(tokens:Vector[Token]):Future[Vector[ModalExpression]] = Future {
     //Get the indexes of any modals
     val modIdx = tokens.filter( t => t.postag.contains("MD")).map(_.idx)
     //Get the indexes of any personal pronouns
     val prpIdx = tokens.filter( t => t.postag.contains("PRP")).map(_.idx)
     //For each verb, check if there is pronoun index prior within 4 steps
     val pairs = modIdx.map(mi => (prpIdx.find(pi => (mi - pi) > 0 && (mi - pi) < 4),mi))
-    pairs.map(p => TapExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
+    pairs.map(p => ModalExpression(tokens.slice(p._1.getOrElse(p._2),p._2+1).map(_.term).mkString(" "), p._1.getOrElse(p._2), p._2))
     /*
   def modal(annotations:List[(TapAnnotation,Int)],paraIndex:Int):List[Expression] = {
     val modals = annotations.filter(_._1.POS.contentEquals("MD")).filter(_._1.word.contains("ould"))
