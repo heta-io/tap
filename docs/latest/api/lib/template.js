@@ -1,3 +1,4 @@
+<<<<<<< refs/remotes/origin/develop
 /*
  * Copyright (c) 2016-2018 original author or authors
  *
@@ -14,6 +15,8 @@
  *
  */
 
+=======
+>>>>>>> Further update to docs, Fixed dead links, Fixed sidebar, adding sections
 // © 2009–2010 EPFL/LAMP
 // code by Gilles Dubochet with contributions by Pedro Furlanetto, Marcin Kubala and Felix Mulder
 

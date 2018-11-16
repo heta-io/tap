@@ -1,3 +1,4 @@
+<<<<<<< refs/remotes/origin/develop
 /*
  * Copyright (c) 2016-2018 original author or authors
  *
@@ -13,6 +14,13 @@
  * language governing permissions and limitations under the License.
  *
  */
+=======
+/*!
+ Material for MkDocs
+ Copyright (c) 2016-2018 Martin Donath
+ License: MIT
+*/
+>>>>>>> Further update to docs, Fixed dead links, Fixed sidebar, adding sections
 @charset "UTF-8";
 html {
   box-sizing: border-box; }
