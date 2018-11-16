@@ -20,10 +20,10 @@ The rest of the documentation can be written with simple markdown [Github Style]
 
 If you wish to include or change any documentation only edit the files in the documentation folder. The `docs` folder is where paradox will build the final documentation to and should not be edited locally.
 
-To build your documentation run the following command.
+To build your documentation run the following command inside the sbt shell
 
 ```
-sbt paradox; sbt copyDocs
+updateDocs
 ```  
 
 This will generate html files in the docs directory, and any modified files will be 
