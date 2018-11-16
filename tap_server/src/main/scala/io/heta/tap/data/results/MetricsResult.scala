@@ -14,15 +14,8 @@
  *
  */
 
-package io.heta.tap.data.doc
+package io.heta.tap.data.results
 
-import play.api.libs.json.{JsValue, Json, OWrites}
+import io.heta.tap.data.TapMetrics
 
-object SentencesResult {
-  implicit val ctsWrites: OWrites[SentencesResult] = Json.writes[SentencesResult]
-}
-
-case class SentencesResult(name:String, analytics:Vector[Sentence]) extends AnalyticsResult {
-  def asJson: JsValue = Json.toJson(this)
-}
-
+case class MetricsResult(analytics: TapMetrics, message:String = "", querytime:Int = -1) extends Result

@@ -14,26 +14,6 @@
  *
  */
 
-package io.heta.tap.pipelines
+package io.heta.tap.data.results
 
-import akka.NotUsed
-import akka.stream.scaladsl.Flow
-import io.heta.tap.pipelines.materialize.FilePipeline.File
-import org.clulab.processors.Document
-
-/*
-These Pipes are connected Flow Segments ready to be deployed in a Pipeline
- */
-object Pipe {
-
-  val cluSentences: Flow[Document, File, NotUsed] =
-    Segment.cluTapSentences via
-      Segment.FileFromAnalyticsResult
-
-  val affectExpressions: Flow[Document, File, NotUsed] =
-    Segment.cluTapSentences via
-      Segment.affectExpressions(None) via
-        Segment.FileFromAnalyticsResult
-
-
-}
+case class StringResult(analytics: String, message:String = "", querytime:Int = -1) extends Result

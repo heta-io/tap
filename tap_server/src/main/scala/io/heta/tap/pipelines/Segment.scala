@@ -22,7 +22,8 @@ import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.data.doc._
-import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions, AffectExpressionsResult, AffectThresholds}
+import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions, AffectThresholds}
+import io.heta.tap.data.results.{AffectExpressionsBatchResult, SentencesBatchResult}
 import io.heta.tap.pipelines.materialize.FilePipeline.File
 import org.clulab.processors.Document
 import play.api.libs.json.Json
@@ -34,28 +35,28 @@ object Segment {
 
   private val logger: Logger = Logger(this.getClass)
 
-  val cluTapSentences: Flow[Document, SentencesResult, NotUsed] = Flow[org.clulab.processors.Document]
+  val cluTapSentences: Flow[Document, SentencesBatchResult, NotUsed] = Flow[org.clulab.processors.Document]
     .map { doc =>
       logger.info("Extracting sentences")
       val sents = doc.sentences.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
         Sentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
-      SentencesResult(doc.id.getOrElse("unknown"),sents)
+      SentencesBatchResult(doc.id.getOrElse("unknown"),sents)
     }
 
   val FileFromAnalyticsResult: Flow[AnalyticsResult,File,NotUsed] = Flow[AnalyticsResult]
     .map[File](ar => File(ar.name,ByteString(Json.prettyPrint(ar.asJson))))
 
 
-  def affectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesResult, AffectExpressionsResult, NotUsed] = {
+  def affectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
-    Flow[SentencesResult].map[AffectExpressionsResult] { sents =>
+    Flow[SentencesBatchResult].map[AffectExpressionsBatchResult] { sents =>
       val aes = sents.analytics.map { s =>
         val ae = AffectLexicon.getAllMatchingTerms(s.tokens)
         AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
-      AffectExpressionsResult(sents.name,aes)
+      AffectExpressionsBatchResult(sents.name,aes)
     }
   }
 
@@ -72,10 +73,10 @@ object Segment {
     val numTokens = words.length
     val is = List.range(0, numTokens)
     val ws = words.toVector
-    logger.info(words.mkString("|"))
+    logger.debug(words.mkString("|"))
     val ls = lemmas.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
     val pts = posTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
-    logger.info(pts.mkString("|"))
+    logger.debug(pts.mkString("|"))
     val nts = nerTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
 
     val tapTokens = for {

@@ -14,26 +14,17 @@
  *
  */
 
-package io.heta.tap.pipelines
+package io.heta.tap.data.results
 
-import akka.NotUsed
-import akka.stream.scaladsl.Flow
-import io.heta.tap.pipelines.materialize.FilePipeline.File
-import org.clulab.processors.Document
+import io.heta.tap.data.doc.AnalyticsResult
+import io.heta.tap.data.doc.affect.AffectExpressions
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-/*
-These Pipes are connected Flow Segments ready to be deployed in a Pipeline
- */
-object Pipe {
-
-  val cluSentences: Flow[Document, File, NotUsed] =
-    Segment.cluTapSentences via
-      Segment.FileFromAnalyticsResult
-
-  val affectExpressions: Flow[Document, File, NotUsed] =
-    Segment.cluTapSentences via
-      Segment.affectExpressions(None) via
-        Segment.FileFromAnalyticsResult
-
-
+object AffectExpressionsBatchResult {
+  implicit val ctsWrites: OWrites[AffectExpressionsBatchResult] = Json.writes[AffectExpressionsBatchResult]
 }
+
+case class AffectExpressionsBatchResult(name:String, analytics:Vector[AffectExpressions]) extends AnalyticsResult {
+  def asJson: JsValue = Json.toJson(this)
+}
+

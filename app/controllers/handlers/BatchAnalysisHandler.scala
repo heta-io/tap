@@ -23,8 +23,8 @@ import akka.pattern.ask
 import akka.util.Timeout
 import io.heta.tap.analysis.batch.AwsS3Client
 import io.heta.tap.analysis.batch.BatchActor.{AnalyseSource, CheckProgress, INIT, ResultMessage}
+import io.heta.tap.data.results.BatchResult
 import javax.inject.{Inject, Named}
-import models.graphql.Fields.BatchResult
 import play.api.Logger
 
 import scala.concurrent.Future

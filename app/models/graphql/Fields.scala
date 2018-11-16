@@ -26,7 +26,7 @@ import io.heta.tap.data.doc._
 import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions}
 import io.heta.tap.data.doc.reflect.{MetaTagSummary, PhraseTagSummary, ReflectExpressions, Summary}
 import io.heta.tap.data.doc.spell.{Spell, Spelling}
-import io.heta.tap.data.results.{ExpressionsResult, Result}
+import io.heta.tap.data.results._
 
 import scala.concurrent.Future
 
@@ -53,7 +53,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.clean(actions.argOpt(TEXT), actions.argOpt(PARAMETERS))
     }
 
-    case class StringResult(analytics: String, message:String = "", querytime:Int = -1) extends Result
+
 
     object AnnotationsField {
         import Fields.FieldTypes._
@@ -64,7 +64,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.annotations(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class SentencesResult(analytics: Vector[Sentence], message:String = "", querytime:Int = -1) extends Result
+
 
     object VocabularyField {
         import Fields.FieldTypes._
@@ -75,7 +75,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.vocabulary(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class VocabResult(analytics: TapVocab, message:String = "", querytime:Int = -1) extends Result
+
 
     object MetricsField {
         import Fields.FieldTypes._
@@ -86,7 +86,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.metrics(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class MetricsResult(analytics: TapMetrics, message:String = "", querytime:Int = -1) extends Result
+
 
     object PosStatsField {
         import Fields.FieldTypes._
@@ -97,7 +97,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.posStats(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class PosStatsResult(analytics: TapPosStats, message:String = "", querytime:Int = -1) extends Result
+
 
     object SyllablesField {
         import Fields.FieldTypes._
@@ -108,7 +108,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.syllables(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class SyllablesResult(analytics: Vector[TapSyllables], message:String = "", querytime:Int = -1) extends Result
+
 
     object SpellingField {
         import Fields.FieldTypes._
@@ -119,7 +119,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.spelling(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class SpellingResult(analytics: Vector[Spelling], message:String = "", querytime:Int = -1) extends Result
+
 
     object ExpressionsField {
         import Fields.FieldTypes._
@@ -141,7 +141,7 @@ object Fields {
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.reflectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
-    case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+
 
     object AffectExpressionsField {
         import Fields.FieldTypes._
@@ -151,7 +151,7 @@ object Fields {
         val deriveType = deriveObjectType[Unit,AffectExpressionsResult](Interfaces[Unit, AffectExpressionsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.affectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
-    case class AffectExpressionsResult(analytics: Vector[AffectExpressions], message:String = "", querytime:Int = -1) extends Result
+
 
     object RhetoricalMovesField {
         import Fields.FieldTypes._
@@ -161,7 +161,7 @@ object Fields {
         val deriveType = deriveObjectType[Unit,StringListResult](Interfaces[Unit,StringListResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.moves(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
-    case class StringListResult(analytics: Vector[Vector[String]], message:String = "", querytime:Int = -1) extends Result
+
 
     object BatchField {
         import Fields.FieldTypes._
@@ -171,7 +171,7 @@ object Fields {
         val deriveType = deriveObjectType[Unit,BatchResult](Interfaces[Unit,BatchResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.batch(actions.argOpt(PARAMETERS))
     }
-    case class BatchResult(analytics: String, message:String="",querytime:Int = -1) extends Result
+
 
     object FieldTypes {
 

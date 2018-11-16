@@ -71,7 +71,7 @@ class BatchActor extends Actor {
   }
 
   def analyse(bucket:String,analysisType:String,annotator:ActorRef): Future[ResultMessage] = {
-    logger.warn(s"Started batch $analysisType for bucket: $bucket")
+    logger.info(s"Started batch $analysisType for bucket: $bucket")
     val batchId = UUID.randomUUID().toString
     createBatchFolder(bucket,batchId)
     val result = getPipeline(analysisType,annotator)
@@ -89,13 +89,13 @@ class BatchActor extends Actor {
   }
 
   def progress(bucket:String,batchId:String): Future[ResultMessage] = {
-    logger.warn(s"Checking batch progress for: $bucket/$batchId")
+    logger.info(s"Checking batch progress for: $bucket/$batchId")
     Future.successful(ResultMessage("",s"Progress checked for $bucket/$batchId"))
   }
 
   private def createBatchFolder(bucket:String,folderName:String) = Future {
     val key = s"$folderName/__metadata"
-    logger.info(s"Creating destination: $key")
+    logger.debug(s"Creating destination: $key")
     ByteStringPipeline(Source.empty[ByteString],awsS3.sinkfileToBucket(bucket,key)).run
   }
 
@@ -117,13 +117,12 @@ class BatchActor extends Actor {
 
   private def annotatedDocFromFile(annotator:ActorRef): Flow[File, Document, NotUsed] = Flow[File]
     .mapAsync[org.clulab.processors.Document](parallelism) { file =>
-    logger.warn("CluDocFromFile")
-    logger.warn(s"|${annotator.path.toString}|")
+    logger.debug(s"|${annotator.path.toString}|")
     implicit val timeout: Timeout = 60.seconds
     (annotator ? AnnotateRequest(file.contents.utf8String)).mapTo[Document]
       .map{ doc =>
         doc.id = Some(file.name)
-        logger.warn("DOC text:"+doc.text)
+        logger.debug("DOC text:"+doc.text)
         doc.sentences.foreach(s => logger.warn("SENTENCE: "+s.tags.getOrElse(Array()).mkString("|")))
         doc
       }

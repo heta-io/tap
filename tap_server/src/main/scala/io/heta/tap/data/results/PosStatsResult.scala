@@ -14,16 +14,8 @@
  *
  */
 
-package io.heta.tap.data.doc.affect
+package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.AnalyticsResult
-import play.api.libs.json.{JsValue, Json, OWrites}
+import io.heta.tap.data.TapPosStats
 
-object AffectExpressionsResult {
-  implicit val ctsWrites: OWrites[AffectExpressionsResult] = Json.writes[AffectExpressionsResult]
-}
-
-case class AffectExpressionsResult(name:String, analytics:Vector[AffectExpressions]) extends AnalyticsResult {
-  def asJson: JsValue = Json.toJson(this)
-}
-
+case class PosStatsResult(analytics: TapPosStats, message:String = "", querytime:Int = -1) extends Result
