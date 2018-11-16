@@ -187,6 +187,14 @@
                         <a href="Parsing_OpenNLP$.html" title="Created by andrew@andrewresearch.net on 24/2/17.">Parsing_OpenNLP</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a href="Pipe$.html" title="">Pipe</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="Segment$.html" title=""></a>
+                        <a href="Segment$.html" title="">Segment</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="object" href="Tfidf$.html" title="Created by andrew@andrewresearch.net on 27/2/17."></a>
                         <a href="Tfidf$.html" title="Created by andrew@andrewresearch.net on 27/2/17.">Tfidf</a>
                       </li>
@@ -269,9 +277,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="io.heta.tap.pipelines.Annotating#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():io.heta.tap.pipelines.Annotating"></a><a id="&lt;init&gt;:Annotating"></a>
+      <a id="&lt;init&gt;(cluAnnotator:akka.actor.ActorRef):io.heta.tap.pipelines.Annotating"></a><a id="&lt;init&gt;:Annotating"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#&lt;init&gt;():io.heta.tap.pipelines.Annotating" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#&lt;init&gt;(cluAnnotator:akka.actor.ActorRef):io.heta.tap.pipelines.Annotating" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -280,7 +288,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Annotating</span><span class="params">()</span>
+        <span class="name">Annotating</span><span class="params">(<span name="cluAnnotator">cluAnnotator: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>)</span>
       </span>
       
       
@@ -343,9 +351,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="io.heta.tap.pipelines.Annotating#affectExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="affectExpressions(thresholds:Option[io.heta.tap.data.AffectThresholds]):akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapAffectExpressions],akka.NotUsed]"></a><a id="affectExpressions(Option[AffectThresholds]):Flow[TapSentences,Vector[TapAffectExpressions],NotUsed]"></a>
+      <a id="affectExpressions(thresholds:Option[io.heta.tap.data.doc.affect.AffectThresholds]):akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.affect.AffectExpressions],akka.NotUsed]"></a><a id="affectExpressions(Option[AffectThresholds]):Flow[TapSentences,Vector[AffectExpressions],NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#affectExpressions(thresholds:Option[io.heta.tap.data.AffectThresholds]):akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapAffectExpressions],akka.NotUsed]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#affectExpressions(thresholds:Option[io.heta.tap.data.doc.affect.AffectThresholds]):akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.affect.AffectExpressions],akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -354,7 +362,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">affectExpressions</span><span class="params">(<span name="thresholds">thresholds: <span class="extype" name="scala.Option">Option</span>[<a href="../data/AffectThresholds.html" class="extype" name="io.heta.tap.data.AffectThresholds">AffectThresholds</a>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapAffectExpressions.html" class="extype" name="io.heta.tap.data.TapAffectExpressions">TapAffectExpressions</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">affectExpressions</span><span class="params">(<span name="thresholds">thresholds: <span class="extype" name="scala.Option">Option</span>[<a href="../data/doc/affect/AffectThresholds.html" class="extype" name="io.heta.tap.data.doc.affect.AffectThresholds">AffectThresholds</a>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/affect/AffectExpressions.html" class="extype" name="io.heta.tap.data.doc.affect.AffectExpressions">AffectExpressions</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -390,22 +398,6 @@
       </span>
       
       
-    </li><li name="io.heta.tap.pipelines.Annotating#ca" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ca:io.heta.tap.analysis.clu.CluAnnotator"></a><a id="ca:CluAnnotator"></a>
-      <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#ca:io.heta.tap.analysis.clu.CluAnnotator" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ca</span><span class="result">: <a href="../analysis/clu/CluAnnotator.html" class="extype" name="io.heta.tap.analysis.clu.CluAnnotator">CluAnnotator</a></span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -433,9 +425,9 @@
               
         </dd></dl></div>
     </li><li name="io.heta.tap.pipelines.Annotating#cluTapSentences" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cluTapSentences:io.heta.tap.pipelines.AnnotatingTypes.CluSentencesFlow"></a><a id="cluTapSentences:CluSentencesFlow"></a>
+      <a id="cluTapSentences:akka.stream.scaladsl.Flow[org.clulab.processors.Document,Vector[io.heta.tap.data.doc.Sentence],akka.NotUsed]"></a><a id="cluTapSentences:Flow[Document,Vector[Sentence],NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#cluTapSentences:io.heta.tap.pipelines.AnnotatingTypes.CluSentencesFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#cluTapSentences:akka.stream.scaladsl.Flow[org.clulab.processors.Document,Vector[io.heta.tap.data.doc.Sentence],akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -444,23 +436,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">cluTapSentences</span><span class="result">: <a href="AnnotatingTypes$.html#CluSentencesFlow=akka.stream.scaladsl.Flow[org.clulab.processors.Document,io.heta.tap.pipelines.AnnotatingTypes.TapSentences,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.CluSentencesFlow">CluSentencesFlow</a></span>
-      </span>
-      
-      
-    </li><li name="io.heta.tap.pipelines.Annotating#docStart" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="docStart:scala.concurrent.Future[io.nlytx.nlp.api.DocumentModel.Document]"></a><a id="docStart:Future[Document]"></a>
-      <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#docStart:scala.concurrent.Future[io.nlytx.nlp.api.DocumentModel.Document]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">docStart</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>]</span>
+        <span class="name">cluTapSentences</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="org.clulab.processors.Document">Document</span>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Sentence.html" class="extype" name="io.heta.tap.data.doc.Sentence">Sentence</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -587,9 +563,9 @@
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#makeCluDocument" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeCluDocument:io.heta.tap.pipelines.AnnotatingTypes.CluDocumentFlow"></a><a id="makeCluDocument:CluDocumentFlow"></a>
+      <a id="makeCluDocument:akka.stream.scaladsl.Flow[String,org.clulab.processors.Document,akka.NotUsed]"></a><a id="makeCluDocument:Flow[String,Document,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeCluDocument:io.heta.tap.pipelines.AnnotatingTypes.CluDocumentFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeCluDocument:akka.stream.scaladsl.Flow[String,org.clulab.processors.Document,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -598,14 +574,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">makeCluDocument</span><span class="result">: <a href="AnnotatingTypes$.html#CluDocumentFlow=akka.stream.scaladsl.Flow[String,org.clulab.processors.Document,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.CluDocumentFlow">CluDocumentFlow</a></span>
+        <span class="name">makeCluDocument</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="org.clulab.processors.Document">Document</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#makeDocument" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow"></a><a id="makeDocument:DocumentFlow"></a>
+      <a id="makeDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]"></a><a id="makeDocument:Flow[String,Document,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -614,14 +590,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">makeDocument</span><span class="result">: <a href="AnnotatingTypes$.html#DocumentFlow=akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow">DocumentFlow</a></span>
+        <span class="name">makeDocument</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#makeFastDocument" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeFastDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow"></a><a id="makeFastDocument:DocumentFlow"></a>
+      <a id="makeFastDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]"></a><a id="makeFastDocument:Flow[String,Document,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeFastDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeFastDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -630,14 +606,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">makeFastDocument</span><span class="result">: <a href="AnnotatingTypes$.html#DocumentFlow=akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow">DocumentFlow</a></span>
+        <span class="name">makeFastDocument</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#makeNerDocument" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeNerDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow"></a><a id="makeNerDocument:DocumentFlow"></a>
+      <a id="makeNerDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]"></a><a id="makeNerDocument:Flow[String,Document,NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeNerDocument:io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#makeNerDocument:akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -646,7 +622,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">makeNerDocument</span><span class="result">: <a href="AnnotatingTypes$.html#DocumentFlow=akka.stream.scaladsl.Flow[String,io.nlytx.nlp.api.DocumentModel.Document,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.DocumentFlow">DocumentFlow</a></span>
+        <span class="name">makeNerDocument</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -708,10 +684,10 @@
                 <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="io.heta.tap.pipelines.Annotating#reflectExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="reflectExpressions:akka.stream.scaladsl.Flow[io.nlytx.nlp.api.DocumentModel.Document,io.heta.tap.data.TapReflectExpressions,akka.NotUsed]"></a><a id="reflectExpressions:Flow[Document,TapReflectExpressions,NotUsed]"></a>
+    </li><li name="io.heta.tap.pipelines.Annotating#parallelism" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="parallelism:Int"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#reflectExpressions:akka.stream.scaladsl.Flow[io.nlytx.nlp.api.DocumentModel.Document,io.heta.tap.data.TapReflectExpressions,akka.NotUsed]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#parallelism:Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -720,7 +696,23 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">reflectExpressions</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>, <a href="../data/TapReflectExpressions.html" class="extype" name="io.heta.tap.data.TapReflectExpressions">TapReflectExpressions</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">parallelism</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
+    </li><li name="io.heta.tap.pipelines.Annotating#reflectExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reflectExpressions:akka.stream.scaladsl.Flow[io.nlytx.nlp.api.DocumentModel.Document,io.heta.tap.data.doc.reflect.ReflectExpressions,akka.NotUsed]"></a><a id="reflectExpressions:Flow[Document,ReflectExpressions,NotUsed]"></a>
+      <span class="permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#reflectExpressions:akka.stream.scaladsl.Flow[io.nlytx.nlp.api.DocumentModel.Document,io.heta.tap.data.doc.reflect.ReflectExpressions,akka.NotUsed]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reflectExpressions</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="io.nlytx.nlp.api.DocumentModel.Document">Document</span>, <a href="../data/doc/reflect/ReflectExpressions.html" class="extype" name="io.heta.tap.data.doc.reflect.ReflectExpressions">ReflectExpressions</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -757,9 +749,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="io.heta.tap.pipelines.Annotating#tapExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tapExpressions:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapExpressions],akka.NotUsed]"></a><a id="tapExpressions:Flow[TapSentences,Vector[TapExpressions],NotUsed]"></a>
+      <a id="tapExpressions:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.Expressions],akka.NotUsed]"></a><a id="tapExpressions:Flow[TapSentences,Vector[data.doc.Expressions],NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapExpressions:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapExpressions],akka.NotUsed]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapExpressions:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.Expressions],akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -768,7 +760,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapExpressions</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapExpressions.html" class="extype" name="io.heta.tap.data.TapExpressions">TapExpressions</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapExpressions</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Expressions.html" class="extype" name="io.heta.tap.data.doc.Expressions">data.doc.Expressions</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -784,7 +776,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapMetrics</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapMetrics.html" class="extype" name="io.heta.tap.data.TapMetrics">TapMetrics</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapMetrics</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapMetrics.html" class="extype" name="io.heta.tap.data.TapMetrics">TapMetrics</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -800,14 +792,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapPosStats</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapPosStats.html" class="extype" name="io.heta.tap.data.TapPosStats">TapPosStats</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapPosStats</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapPosStats.html" class="extype" name="io.heta.tap.data.TapPosStats">TapPosStats</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#tapSentences" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tapSentences:io.heta.tap.pipelines.AnnotatingTypes.SentencesFlow"></a><a id="tapSentences:SentencesFlow"></a>
+      <a id="tapSentences:akka.stream.scaladsl.Flow[cc.factorie.nlp.Document,Vector[io.heta.tap.data.doc.Sentence],akka.NotUsed]"></a><a id="tapSentences:Flow[Document,Vector[Sentence],NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapSentences:io.heta.tap.pipelines.AnnotatingTypes.SentencesFlow" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapSentences:akka.stream.scaladsl.Flow[cc.factorie.nlp.Document,Vector[io.heta.tap.data.doc.Sentence],akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -816,14 +808,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapSentences</span><span class="result">: <a href="AnnotatingTypes$.html#SentencesFlow=akka.stream.scaladsl.Flow[io.nlytx.nlp.api.DocumentModel.Document,io.heta.tap.pipelines.AnnotatingTypes.TapSentences,akka.NotUsed]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.SentencesFlow">SentencesFlow</a></span>
+        <span class="name">tapSentences</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="cc.factorie.nlp.Document">Document</span>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Sentence.html" class="extype" name="io.heta.tap.data.doc.Sentence">Sentence</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Annotating#tapSpelling" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tapSpelling:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapSpelling],akka.NotUsed]"></a><a id="tapSpelling:Flow[TapSentences,Vector[TapSpelling],NotUsed]"></a>
+      <a id="tapSpelling:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.spell.Spelling],akka.NotUsed]"></a><a id="tapSpelling:Flow[TapSentences,Vector[Spelling],NotUsed]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapSpelling:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.TapSpelling],akka.NotUsed]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Annotating.html#tapSpelling:akka.stream.scaladsl.Flow[io.heta.tap.pipelines.AnnotatingTypes.TapSentences,Vector[io.heta.tap.data.doc.spell.Spelling],akka.NotUsed]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -832,7 +824,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapSpelling</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapSpelling.html" class="extype" name="io.heta.tap.data.TapSpelling">TapSpelling</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapSpelling</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/spell/Spelling.html" class="extype" name="io.heta.tap.data.doc.spell.Spelling">Spelling</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -848,7 +840,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapSyllables</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapSyllables.html" class="extype" name="io.heta.tap.data.TapSyllables">TapSyllables</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapSyllables</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapSyllables.html" class="extype" name="io.heta.tap.data.TapSyllables">TapSyllables</a>], <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       
@@ -864,7 +856,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">tapVocab</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.TapSentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapVocab.html" class="extype" name="io.heta.tap.data.TapVocab">TapVocab</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">tapVocab</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="AnnotatingTypes$.html#TapSentences=Vector[io.heta.tap.data.doc.Sentence]" class="extmbr" name="io.heta.tap.pipelines.AnnotatingTypes.TapSentences">TapSentences</a>, <a href="../data/TapVocab.html" class="extype" name="io.heta.tap.data.TapVocab">TapVocab</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       
       

@@ -16,23 +16,47 @@
 
 package controllers.handlers
 
-import io.heta.tap.data.AffectThresholds
+import akka.actor.ActorRef
+import akka.pattern.ask
+import akka.util.Timeout
+import io.heta.tap.analysis.clu.CluAnnotatorActor.INIT
+import io.heta.tap.data.doc.affect.AffectThresholds
+import io.heta.tap.data.results._
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.TextPipeline
 import io.heta.tap.pipelines.{Annotating, Cleaning}
-import javax.inject.Inject
+import javax.inject.{Inject, Named}
 import models.graphql.Fields._
 import play.api.Logger
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.Success
 
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
-class TextAnalysisHandler @Inject() (clean: Cleaning, annotate: Annotating) extends GenericHandler {
+class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
+
+  import io.heta.tap.pipelines.materialize.PipelineContext.executor
+
+  val logger: Logger = Logger(this.getClass)
+
+  val annotate = new Annotating(cluAnnotator)
 
   private val pipe = annotate.Pipeline
+
+  {
+    implicit val timeout: Timeout = 60.seconds
+    (cluAnnotator ? INIT).onComplete{
+      case Success(result:Boolean) => if(result) {
+        logger.info("CluAnnotatorActor initialised successfully")
+      } else {
+        logger.error("There was a problem initialising the CluAnnotatorActor")
+      }
+      case scala.util.Failure(exception) => logger.error(exception.getMessage)
+    }
+  }
 
   def clean(text: Option[String], parameters: Option[String], start:Long): Future[StringResult] = {
     Logger.warn(s"TEXT: $text")

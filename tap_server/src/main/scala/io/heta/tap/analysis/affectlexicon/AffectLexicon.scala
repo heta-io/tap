@@ -22,8 +22,8 @@ import akka.actor.Actor
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.Lexicons.Lexicon
 import io.heta.tap.analysis.affectlexicon.AffectLexicon._
-import io.heta.tap.data.CustomTypes.AffectExpression
-import io.heta.tap.data.{TapAffectExpression, TapExpression, TapToken}
+import io.heta.tap.data.doc.affect.AffectExpression
+import io.heta.tap.data.doc.{Expression, Token}
 
 /**
   * Created by quanie on 13/11/17.
@@ -65,26 +65,26 @@ object AffectLexicon {
     allAffectTerms.size > 0
   }
 
-  def getAllMatchingTerms(tokens:Vector[TapToken]):Vector[TapAffectExpression] = {
+  def getAllMatchingTerms(tokens:Vector[Token]):Vector[AffectExpression] = {
     val terms = tokens.map(_.lemma)
     val affectTerms = allAffectTerms.filter(a => terms.contains(a.word)).map(aff => aff.word -> aff).toMap
     tokens.map { t =>
       val affect = affectTerms.getOrElse(t.lemma,Affect(t.lemma,0,0,0))
-      TapAffectExpression(t.term,t.idx,t.idx,affect.valence,affect.arousal,affect.dominance)
+      AffectExpression(t.term,t.idx,t.idx,affect.valence,affect.arousal,affect.dominance)
     }
   }
 
-  private def getPositive(terms: Vector[String]): Vector[TapExpression] = {
+  private def getPositive(terms: Vector[String]): Vector[AffectExpression] = {
     val pos = terms.filter(l => mostPositiveTerms.contains(l))
-    pos.map(w => TapExpression(w,-1,-1))
+    pos.map(w => AffectExpression(w,-1,-1))
   }
 
-  private def getNegative(terms: Vector[String]): Vector[TapExpression] = {
+  private def getNegative(terms: Vector[String]): Vector[AffectExpression] = {
     val neg = terms.filter(l => mostNegativeTerms.contains(l))
-    neg.map(w => TapExpression(w,-1,-1))
+    neg.map(w => AffectExpression(w,-1,-1))
   }
 
-  def getAffectTerms(tokens:Vector[TapToken]):Vector[AffectExpression] = {
+  def getAffectTerms(tokens:Vector[Token]):Vector[AffectExpression] = {
     val terms = tokens.filterNot(_.isPunctuation).map(_.term.toLowerCase)
 
     val posWords = getPositive(terms)

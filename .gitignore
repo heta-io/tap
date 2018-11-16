@@ -108,6 +108,8 @@ target/scala-2.12/tap_2.12-3.0.5.pom
 target/scala-2.12/twirl/
 target/universal/
 target/web/
+tap_client/target/*
+tap_server/target/*
 /src/main/scala/tap/nlp/old/
 src/main/scala/tap/nlp/old/DocumentConverter.scala
 src/main/scala/tap/nlp/old/NlpBuilders.scala

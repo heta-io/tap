@@ -19,6 +19,7 @@ package modules
 import com.google.inject.AbstractModule
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.batch.BatchActor
+import io.heta.tap.analysis.clu.CluAnnotatorActor
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport {
@@ -28,6 +29,8 @@ class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport
     def configure():Unit = {
       logger.info("Binding BatchActor")
       bindActor[BatchActor]("batch")
+      logger.info("Binding CluAnnotatorActor")
+      bindActor[CluAnnotatorActor]("cluAnnotator")
       //bindActor[LanguageToolActor]("languagetool")
       //bindActor[AffectLexiconActor]("affectlexicon")
       //bindActor[WordVectorActor]("wordvector")

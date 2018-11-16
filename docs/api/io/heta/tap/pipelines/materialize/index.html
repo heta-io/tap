@@ -167,12 +167,20 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="io.heta.tap.pipelines">pipelines</a></dd></dl></div>
     </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="ByteStringPipeline.html" title=""></a>
+                        <a href="ByteStringPipeline.html" title="">ByteStringPipeline</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="CorpusPipeline.html" title=""></a>
                         <a href="CorpusPipeline.html" title="">CorpusPipeline</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="class" href="CorpusPipelineIter.html" title=""></a>
                         <a href="CorpusPipelineIter.html" title="">CorpusPipelineIter</a>
+                      </li><li class="current-entities indented5">
+                        <a class="object" href="FilePipeline$.html" title=""></a>
+                        <a class="class" href="FilePipeline.html" title=""></a>
+                        <a href="FilePipeline.html" title="">FilePipeline</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="trait" href="Pipeline.html" title="Created by andrew@andrewresearch.net on 27/2/17."></a>
@@ -248,7 +256,23 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="io.heta.tap.pipelines.materialize.CorpusPipeline" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="io.heta.tap.pipelines.materialize.ByteStringPipeline" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ByteStringPipelineextendsPipelinewithProductwithSerializable"></a><a id="ByteStringPipeline:ByteStringPipeline"></a>
+      <span class="permalink">
+      <a href="../../../../../io/heta/tap/pipelines/materialize/index.html#ByteStringPipelineextendsPipelinewithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ByteStringPipeline.html"><span class="name">ByteStringPipeline</span></a><span class="params">(<span name="source">source: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="akka.util.ByteString">ByteString</span>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>, <span name="sink">sink: <span class="extype" name="akka.stream.scaladsl.Sink">Sink</span>[<span class="extype" name="akka.util.ByteString">ByteString</span>, <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Any">Any</span>]]</span>)</span><span class="result"> extends <a href="Pipeline.html" class="extype" name="io.heta.tap.pipelines.materialize.Pipeline">Pipeline</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="io.heta.tap.pipelines.materialize.CorpusPipeline" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CorpusPipeline[A,B]extendsPipelinewithProductwithSerializable"></a><a id="CorpusPipeline[A,B]:CorpusPipeline[A,B]"></a>
       <span class="permalink">
       <a href="../../../../../io/heta/tap/pipelines/materialize/index.html#CorpusPipeline[A,B]extendsPipelinewithProductwithSerializable" title="Permalink">
@@ -277,6 +301,22 @@
       </span>
       <span class="symbol">
         <a title="" href="CorpusPipelineIter.html"><span class="name">CorpusPipelineIter</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="source">source: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<span class="extype" name="java.nio.file.Path">Path</span>, <span class="extype" name="io.heta.tap.pipelines.materialize.CorpusPipelineIter.A">A</span>]</span>, <span name="flow">flow: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<span class="extype" name="java.nio.file.Path">Path</span>, <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/Local$$CorpusFile.html" class="extype" name="io.heta.tap.io.Local.CorpusFile">CorpusFile</a>], <span class="extype" name="io.heta.tap.pipelines.materialize.CorpusPipelineIter.B">B</span>]</span>)</span><span class="result"> extends <a href="Pipeline.html" class="extype" name="io.heta.tap.pipelines.materialize.Pipeline">Pipeline</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="io.heta.tap.pipelines.materialize.FilePipeline" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FilePipelineextendsPipelinewithProductwithSerializable"></a><a id="FilePipeline:FilePipeline"></a>
+      <span class="permalink">
+      <a href="../../../../../io/heta/tap/pipelines/materialize/index.html#FilePipelineextendsPipelinewithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="FilePipeline.html"><span class="name">FilePipeline</span></a><span class="params">(<span name="source">source: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="FilePipeline$$File.html" class="extype" name="io.heta.tap.pipelines.materialize.FilePipeline.File">File</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>, <span name="flow">flow: <span class="extype" name="akka.stream.scaladsl.Flow">Flow</span>[<a href="FilePipeline$$File.html" class="extype" name="io.heta.tap.pipelines.materialize.FilePipeline.File">File</a>, <a href="FilePipeline$$File.html" class="extype" name="io.heta.tap.pipelines.materialize.FilePipeline.File">File</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>, <span name="sink">sink: <span class="extype" name="akka.stream.scaladsl.Sink">Sink</span>[<a href="FilePipeline$$File.html" class="extype" name="io.heta.tap.pipelines.materialize.FilePipeline.File">File</a>, <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="akka.Done">Done</span>]]</span>)</span><span class="result"> extends <a href="Pipeline.html" class="extype" name="io.heta.tap.pipelines.materialize.Pipeline">Pipeline</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
       
@@ -320,7 +360,23 @@
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="io.heta.tap.pipelines.materialize.PipelineContext" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+                <li name="io.heta.tap.pipelines.materialize.FilePipeline" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FilePipeline"></a><a id="FilePipeline:FilePipeline"></a>
+      <span class="permalink">
+      <a href="../../../../../io/heta/tap/pipelines/materialize/index.html#FilePipeline" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="FilePipeline$.html"><span class="name">FilePipeline</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="io.heta.tap.pipelines.materialize.PipelineContext" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PipelineContext"></a><a id="PipelineContext:PipelineContext"></a>
       <span class="permalink">
       <a href="../../../../../io/heta/tap/pipelines/materialize/index.html#PipelineContext" title="Permalink">

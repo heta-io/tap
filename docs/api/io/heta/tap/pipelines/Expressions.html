@@ -187,6 +187,14 @@
                         <a href="Parsing_OpenNLP$.html" title="Created by andrew@andrewresearch.net on 24/2/17.">Parsing_OpenNLP</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a href="Pipe$.html" title="">Pipe</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="Segment$.html" title=""></a>
+                        <a href="Segment$.html" title="">Segment</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="object" href="Tfidf$.html" title="Created by andrew@andrewresearch.net on 27/2/17."></a>
                         <a href="Tfidf$.html" title="Created by andrew@andrewresearch.net on 27/2/17.">Tfidf</a>
                       </li>
@@ -343,9 +351,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="io.heta.tap.pipelines.Expressions#affect" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="affect(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.AffectExpression]]"></a><a id="affect(Vector[TapToken]):Future[Vector[AffectExpression]]"></a>
+      <a id="affect(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.affect.AffectExpression]]"></a><a id="affect(Vector[Token]):Future[Vector[AffectExpression]]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Expressions.html#affect(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.AffectExpression]]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Expressions.html#affect(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.affect.AffectExpression]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -354,14 +362,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">affect</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapToken.html" class="extype" name="io.heta.tap.data.TapToken">TapToken</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/CustomTypes$.html#AffectExpression=io.heta.tap.data.TapExpression" class="extmbr" name="io.heta.tap.data.CustomTypes.AffectExpression">AffectExpression</a>]]</span>
+        <span class="name">affect</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Token.html" class="extype" name="io.heta.tap.data.doc.Token">Token</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/affect/AffectExpression.html" class="extype" name="io.heta.tap.data.doc.affect.AffectExpression">AffectExpression</a>]]</span>
       </span>
       
       
     </li><li name="io.heta.tap.pipelines.Expressions#affective" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="affective(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.TapAffectExpression]]"></a><a id="affective(Vector[TapToken]):Future[Vector[TapAffectExpression]]"></a>
+      <a id="affective(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.affect.AffectExpression]]"></a><a id="affective(Vector[Token]):Future[Vector[AffectExpression]]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Expressions.html#affective(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.TapAffectExpression]]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Expressions.html#affective(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.affect.AffectExpression]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -370,7 +378,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">affective</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapToken.html" class="extype" name="io.heta.tap.data.TapToken">TapToken</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapAffectExpression.html" class="extype" name="io.heta.tap.data.TapAffectExpression">TapAffectExpression</a>]]</span>
+        <span class="name">affective</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Token.html" class="extype" name="io.heta.tap.data.doc.Token">Token</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/affect/AffectExpression.html" class="extype" name="io.heta.tap.data.doc.affect.AffectExpression">AffectExpression</a>]]</span>
       </span>
       
       
@@ -417,9 +425,9 @@
               
         </dd></dl></div>
     </li><li name="io.heta.tap.pipelines.Expressions#epistemic" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="epistemic(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.EpistemicExpression]]"></a><a id="epistemic(Vector[TapToken]):Future[Vector[EpistemicExpression]]"></a>
+      <a id="epistemic(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.EpistemicExpression]]"></a><a id="epistemic(Vector[Token]):Future[Vector[EpistemicExpression]]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Expressions.html#epistemic(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.EpistemicExpression]]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Expressions.html#epistemic(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.EpistemicExpression]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -428,7 +436,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">epistemic</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapToken.html" class="extype" name="io.heta.tap.data.TapToken">TapToken</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/CustomTypes$.html#EpistemicExpression=io.heta.tap.data.TapExpression" class="extmbr" name="io.heta.tap.data.CustomTypes.EpistemicExpression">EpistemicExpression</a>]]</span>
+        <span class="name">epistemic</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Token.html" class="extype" name="io.heta.tap.data.doc.Token">Token</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/EpistemicExpression.html" class="extype" name="io.heta.tap.data.doc.EpistemicExpression">EpistemicExpression</a>]]</span>
       </span>
       
       
@@ -539,9 +547,9 @@
       
       
     </li><li name="io.heta.tap.pipelines.Expressions#modal" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="modal(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.ModalExpression]]"></a><a id="modal(Vector[TapToken]):Future[Vector[ModalExpression]]"></a>
+      <a id="modal(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.ModalExpression]]"></a><a id="modal(Vector[Token]):Future[Vector[ModalExpression]]"></a>
       <span class="permalink">
-      <a href="../../../../io/heta/tap/pipelines/Expressions.html#modal(tokens:Vector[io.heta.tap.data.TapToken]):scala.concurrent.Future[Vector[io.heta.tap.data.CustomTypes.ModalExpression]]" title="Permalink">
+      <a href="../../../../io/heta/tap/pipelines/Expressions.html#modal(tokens:Vector[io.heta.tap.data.doc.Token]):scala.concurrent.Future[Vector[io.heta.tap.data.doc.ModalExpression]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -550,7 +558,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">modal</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/TapToken.html" class="extype" name="io.heta.tap.data.TapToken">TapToken</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/CustomTypes$.html#ModalExpression=io.heta.tap.data.TapExpression" class="extmbr" name="io.heta.tap.data.CustomTypes.ModalExpression">ModalExpression</a>]]</span>
+        <span class="name">modal</span><span class="params">(<span name="tokens">tokens: <span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/Token.html" class="extype" name="io.heta.tap.data.doc.Token">Token</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Vector">Vector</span>[<a href="../data/doc/ModalExpression.html" class="extype" name="io.heta.tap.data.doc.ModalExpression">ModalExpression</a>]]</span>
       </span>
       
       
