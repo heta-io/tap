@@ -28,12 +28,13 @@ import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
 import io.heta.tap.data._
-import io.heta.tap.data.doc._
-import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions, AffectThresholds}
-import io.heta.tap.data.doc.reflect.{MetaTagSummary, PhraseTagSummary, ReflectExpressions, Summary}
+import io.heta.tap.data.doc.expression.Expressions
+import io.heta.tap.data.doc.{expression, _}
+import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
+import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.pipelines
-import io.heta.tap.pipelines.AnnotatingTypes.{CLU, FAST, NER, STANDARD, Sections, TapSentences}
+import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.PipelineContext
 
 import scala.concurrent.Future
@@ -157,10 +158,10 @@ class Annotating(cluAnnotator:ActorRef) {
     val numTokens = words.length
     val is = List.range(0, numTokens)
     val ws = words.toVector
-    logger.info(words.mkString("|"))
+    logger.debug(words.mkString("|"))
     val ls = lemmas.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
     val pts = posTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
-    logger.info(pts.mkString("|"))
+    logger.debug(pts.mkString("|"))
     val nts = nerTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
 
     val tapTokens = for {
@@ -228,8 +229,8 @@ class Annotating(cluAnnotator:ActorRef) {
         sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
     }
 
-  val tapExpressions: Flow[TapSentences, Vector[doc.Expressions], NotUsed] = Flow[TapSentences]
-    .mapAsync[Vector[doc.Expressions]](3) { v =>
+  val tapExpressions: Flow[TapSentences, Vector[expression.Expressions], NotUsed] = Flow[TapSentences]
+    .mapAsync[Vector[expression.Expressions]](3) { v =>
     val results = v.map { sent =>
       for {
         ae <- expressions.affect(sent.tokens)
@@ -319,7 +320,10 @@ class Annotating(cluAnnotator:ActorRef) {
         phraseMap.getOrElse("manner", 0),
         phraseMap.getOrElse("none", 0)
       )
-     ReflectExpressions(reflect,Summary(metaTagSummary,phraseTagSummary),tags)
+     ReflectExpressions(
+       WordSentenceCounts(reflect.wordCount,reflect.avgWordLength,reflect.sentenceCount,reflect.avgSentenceLength),
+       Summary(metaTagSummary,phraseTagSummary),
+       tags.map(c => SentencePhrasesTags(c.sentence,c.phrases,c.subTags,c.metaTags)))
     }
 
   def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[AffectExpressions],NotUsed] = {

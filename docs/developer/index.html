@@ -1,19 +1,3 @@
-<!--
-  ~ Copyright (c) 2016-2018 original author or authors
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ You may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software distributed under
-  ~ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  ~ CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
-  ~ language governing permissions and limitations under the License.
-  ~
-  -->
-
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -36,7 +20,7 @@
 
 <meta name="description" content="tap">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Developer · Text Analytics Pipeline (TAP)</title>
+<title>Im a Developer · Text Analytics Pipeline (TAP)</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
 <link rel="stylesheet" href="../lib/prettify/prettify.css">
@@ -72,7 +56,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 Text Analytics Pipeline (TAP)
 </span>
 <span class="md-header-nav__topic">
-Developer
+Im a Developer
 </span>
 </div>
 </div>
@@ -128,18 +112,15 @@ Text Analytics Pipeline (TAP)
     <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
     <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
   </ul></li>
-  <li><a href="../user/index.html" class="page">User</a>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/product_dependencies.html" class="page">Product Dependencies</a></li>
-    <li><a href="../user/source_code.html" class="page">Getting a local copy of TAP</a></li>
-    <li><a href="../user/build_product.html" class="page">Building TAP</a></li>
-    <li><a href="../user/run_product.html" class="page">Running TAP</a></li>
-    <li><a href="../user/aws_setup.html" class="page">Get Up and Running with AWS - Coming Soon</a></li>
-    <li><a href="../user/docker_setup.html" class="page">Get Up and running with Docker - Coming Soon</a></li>
+    <li><a href="../user/user_with_code/index.html" class="page">Building TAP with the code</a></li>
+    <li><a href="../user/user_without_code/index.html" class="page">Building TAP without the code</a></li>
+    <li><a href="../user/using_tap/index.html" class="page">Using TAP once it&rsquo;s running</a></li>
   </ul></li>
-  <li><a href="../developer/index.html" class="active page">Developer</a>
+  <li><a href="../developer/index.html" class="active page">I&rsquo;m a Developer</a>
   <ul>
-    <li><a href="../developer/ide_setup.html" class="page">Getting Setup</a></li>
+    <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a></li>
     <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
     <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
     <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
@@ -152,7 +133,7 @@ Text Analytics Pipeline (TAP)
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 3.3-RC1
+<i class="md-icon" title="Version">label_outline</i> 3.3-RC2
 </label>
 </li>
 </ul>
@@ -162,12 +143,26 @@ Text Analytics Pipeline (TAP)
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#developer" name="developer" class="anchor"><span class="anchor-link"></span></a>Developer</h1>
+<h2><a href="#im-a-developer" name="im-a-developer" class="anchor"><span class="anchor-link"></span></a>I&rsquo;m a Developer</h2>
 <hr/>
+<div class="toc ">
+<ul>
+  <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a>
+  <ul>
+    <li><a href="../developer/ide_setup.html#clone-the-repo" class="header">Clone the repo</a>
+    <ul>
+      <li><a href="../developer/ide_setup.html#working-with-windows-7-10-mac-and-linux-ubuntu-desktop-with-idea-ultimate" class="header">Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate</a></li>
+    </ul></li>
+  </ul></li>
+  <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
+  <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
+  <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
+</ul>
+</div>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-3.3-RC1
+3.3-RC2
 </span>
 </div>
 </article>
@@ -177,7 +172,7 @@ Text Analytics Pipeline (TAP)
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../user/docker_setup.html" title="Get Up and running with Docker - Coming Soon" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../user/using_tap/queries.html" title="TAP Queries" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -186,17 +181,17 @@ Text Analytics Pipeline (TAP)
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Get Up and running with Docker - Coming Soon
+TAP Queries
 </span>
 </div>
 </a>
-<a href="../developer/ide_setup.html" title="Getting Setup" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../developer/ide_setup.html" title="Getting setup with an IDE" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Getting Setup
+Getting setup with an IDE
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

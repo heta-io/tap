@@ -16,6 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.reflect.ReflectExpressions
+import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
 
 case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result

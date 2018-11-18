@@ -1,12 +1,15 @@
-# Getting Setup
+# Getting setup with an IDE
 
 This section will help you get started with the source code on any of the following operating systems.
 
+## Clone the repo
 First clone the latest version of the Dev branch from [github](https://github.com/infosci-qut/tap/tree/develop)
 
-It is recommended that you use an IDE to work on this project as it will provide many helper functions and build tools that make working with sbt and scala and lot easier to manager.
-
 ### Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate
+
+@@@ note { title=Notice }
+It is recommended that you use an IDE to work on this project as it will provide many helper functions and build tools that make working with sbt and scala and lot easier to manage.
+@@@ 
 
 The recommended IDE is Intellij IDEA ULTIMATE because of its Scala support, and relative ease
 of use. If you have any suggestions for alternate ways of working with this project please let us know by opening an issue. Otherwise the following is a guide to getting setup with IntelliJ IDEA Ultimate.

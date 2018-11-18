@@ -22,8 +22,8 @@ import akka.actor.Actor
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.Lexicons.Lexicon
 import io.heta.tap.analysis.affectlexicon.AffectLexicon._
-import io.heta.tap.data.doc.affect.AffectExpression
-import io.heta.tap.data.doc.{Expression, Token}
+import io.heta.tap.data.doc.expression.affect.AffectExpression
+import io.heta.tap.data.doc.Token
 
 /**
   * Created by quanie on 13/11/17.

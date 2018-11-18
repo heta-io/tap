@@ -16,6 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.affect.AffectExpressions
+import io.heta.tap.data.doc.expression.affect.AffectExpressions
 
 case class AffectExpressionsResult(analytics: Vector[AffectExpressions], message:String = "", querytime:Int = -1) extends Result

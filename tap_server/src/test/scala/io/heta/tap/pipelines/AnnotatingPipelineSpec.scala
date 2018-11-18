@@ -24,7 +24,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{Expression, Expressions, Sentence}
+import io.heta.tap.data.doc.Sentence
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
