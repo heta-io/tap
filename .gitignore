@@ -127,7 +127,7 @@ src/main/scala/tap/nlp/old/SentenceConverter.scala
 /public/javascripts/client-fastOptJS-bundle.js
 /public/javascripts/client-fastOptJS.js
 /public/javascripts/client-fastOptJS-loader.js
-/target/
+target/
 .DS_Store
 
 target/scala-2.12/tap_2.12-3.2.11-javadoc.jar
