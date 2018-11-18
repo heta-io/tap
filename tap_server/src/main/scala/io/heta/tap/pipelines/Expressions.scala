@@ -27,7 +27,8 @@ import io.nlytx.expressions.data.ReflectiveExpressions
 import io.heta.tap.analysis.Lexicons
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.data.doc._
-import io.heta.tap.data.doc.affect.AffectExpression
+import io.heta.tap.data.doc.expression.{EpistemicExpression, ModalExpression}
+import io.heta.tap.data.doc.expression.affect.AffectExpression
 
 import scala.util.{Failure, Success}
 /**

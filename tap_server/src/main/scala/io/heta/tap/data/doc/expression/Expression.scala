@@ -14,8 +14,18 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.JsValue
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+/**
+  * Created by andrew@andrewresearch.net on 16/10/17.
+  */
+
+trait Expression {
+  val text:String
+  val startIdx:Int
+  val endIdx:Int
+
+  def asJson: JsValue
+}

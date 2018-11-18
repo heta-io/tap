@@ -14,8 +14,11 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.reflect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object MetaTagSummary {
+  implicit val tsWrites: OWrites[MetaTagSummary] = Json.writes[MetaTagSummary]
+}
+case class MetaTagSummary(knowledge:Int, experience:Int, regulation:Int, none:Int)

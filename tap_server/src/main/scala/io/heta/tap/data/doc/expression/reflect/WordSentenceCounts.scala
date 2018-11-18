@@ -14,8 +14,16 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.reflect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object WordSentenceCounts {
+  implicit val refWrites: OWrites[WordSentenceCounts] = Json.writes[WordSentenceCounts]
+}
+case class WordSentenceCounts(
+                    wordCount:Int,
+                    avgWordLength:Double,
+                    sentenceCount:Int,
+                    avgSentenceLength:Double
+                  )

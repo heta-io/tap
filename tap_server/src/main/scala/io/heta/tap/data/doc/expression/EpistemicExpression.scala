@@ -14,8 +14,14 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import io.heta.tap.data.doc.Analytics
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object EpistemicExpression {
+  implicit val ttWrites: OWrites[EpistemicExpression] = Json.writes[EpistemicExpression]
+}
+case class EpistemicExpression(text: String, startIdx: Int, endIdx: Int) extends Expression with Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}

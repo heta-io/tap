@@ -14,8 +14,14 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.reflect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import io.heta.tap.data.doc.Analytics
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object ReflectExpressions {
+  implicit val tsWrites: OWrites[ReflectExpressions] = Json.writes[ReflectExpressions]
+}
+case class ReflectExpressions(counts:WordSentenceCounts, summary:Summary, tags:Seq[SentencePhrasesTags]) extends Analytics {
+  def asJson: JsValue = Json.toJson(this)
+}

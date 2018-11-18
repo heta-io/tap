@@ -14,8 +14,16 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc.expression.reflect
 
-import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object PhraseTagSummary {
+  implicit val tsWrites: OWrites[PhraseTagSummary] = Json.writes[PhraseTagSummary]
+}
+case class PhraseTagSummary(
+                                outcome:Int,temporal:Int,pertains:Int,consider:Int,
+                                anticipate:Int,definite:Int,possible:Int,selfReflexive:Int,
+                                emotive:Int,selfPossessive:Int,compare:Int,manner:Int,
+                                none:Int
+                              )

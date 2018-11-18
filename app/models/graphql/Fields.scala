@@ -18,13 +18,13 @@ package models.graphql
 
 import java.io.Serializable
 
-import io.nlytx.expressions.data.{Coded, Reflect}
 import sangria.macros.derive.{Interfaces, deriveObjectType}
 import sangria.schema.{Argument, Context, Field, IntType, InterfaceType, ObjectType, OptionInputType, StringType, fields}
 import io.heta.tap.data._
 import io.heta.tap.data.doc._
-import io.heta.tap.data.doc.affect.{AffectExpression, AffectExpressions}
-import io.heta.tap.data.doc.reflect.{MetaTagSummary, PhraseTagSummary, ReflectExpressions, Summary}
+import io.heta.tap.data.doc.expression.{EpistemicExpression, Expressions, ModalExpression}
+import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions}
+import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.{Spell, Spelling}
 import io.heta.tap.data.results._
 
@@ -206,8 +206,8 @@ object Fields {
         implicit val TapMetaTagSummaryType:ObjectType[Unit,MetaTagSummary] = deriveObjectType[Unit,MetaTagSummary]()
         implicit val TapPhraseTagSummaryType:ObjectType[Unit,PhraseTagSummary] = deriveObjectType[Unit,PhraseTagSummary]()
         implicit val TapSummaryType:ObjectType[Unit,Summary] = deriveObjectType[Unit,Summary]()
-        implicit val ReflectType:ObjectType[Unit,Reflect] = deriveObjectType[Unit,Reflect]()
-        implicit val CodedType:ObjectType[Unit,Coded] = deriveObjectType[Unit,Coded]()
+        implicit val ReflectType:ObjectType[Unit,WordSentenceCounts] = deriveObjectType[Unit,WordSentenceCounts]()
+        implicit val CodedType:ObjectType[Unit,SentencePhrasesTags] = deriveObjectType[Unit,SentencePhrasesTags]()
         implicit val TapReflectExpressionsType:ObjectType[Unit,ReflectExpressions] = deriveObjectType[Unit,ReflectExpressions]()
         //implicit val TapAffectExpressionType:ObjectType[Unit,AffectExpression] = deriveObjectType[Unit,AffectExpression]()
         implicit val TapAffectExpressionsType:ObjectType[Unit,AffectExpressions] = deriveObjectType[Unit,AffectExpressions]()

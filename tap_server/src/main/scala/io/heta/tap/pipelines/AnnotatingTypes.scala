@@ -22,9 +22,9 @@ import io.nlytx.expressions.data.ReflectiveExpressions
 import io.nlytx.nlp.api.DocumentModel.{Document, Section}
 import org.clulab.processors
 import io.heta.tap.data._
-import io.heta.tap.data.doc.reflect.ReflectExpressions
+import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{Expressions, Sentence} // scalastyle:ignore
+import io.heta.tap.data.doc.Sentence // scalastyle:ignore
 
 /**
   * Created by andrew@andrewresearch.net on 6/11/17.
