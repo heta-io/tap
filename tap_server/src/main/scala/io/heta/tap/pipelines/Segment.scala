@@ -186,10 +186,11 @@ object Segment {
     val pts = posTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
     logger.debug(pts.mkString("|"))
     val nts = nerTags.map(_.toVector).getOrElse(Vector.fill(numTokens)(""))
+    val puncs = posTags.map(_.toVector.map(_.length==1)).getOrElse(Vector.fill(numTokens)(false))
 
     val tapTokens = for {
-      ((((i,w),l),pt),nt) <- is zip ws zip ls zip pts zip nts
-    } yield Token(i,w,l,pt,nt,-1,Vector(),"",false)
+      (((((i,w),l),pt),nt),punc) <- is zip ws zip ls zip pts zip nts zip puncs
+    } yield Token(i,w,l,pt,nt,-1,Vector(),"",punc)
 
     tapTokens.toVector
   }
