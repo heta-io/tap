@@ -22,11 +22,13 @@ import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.analysis.reflectiveExpressions.PosTagAnalyser
-import io.heta.tap.data.doc._
+import io.heta.tap.data.doc.{Metrics, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
-import io.heta.tap.data.results.{AffectExpressionsBatchResult, ReflectExpressionsBatchResult, SentencesBatchResult}
+import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
+import io.heta.tap.data.results._
 import io.heta.tap.pipelines.materialize.FilePipeline.File
+import org.antlr.v4.runtime
 import org.clulab.processors.Document
 import play.api.libs.json.Json
 
@@ -51,7 +53,52 @@ object Segment {
     .map[File](ar => File(ar.name,ByteString(Json.prettyPrint(ar.asJson))))
 
 
-  def SentencesBatchResult_AffectExpressionsBatchResult(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
+  val Sentences_Vocabulary: Flow[SentencesBatchResult, AnalyticsResult, NotUsed] =
+    Flow[SentencesBatchResult].map[AnalyticsResult] { res =>
+
+      val vocab = res.analytics.flatMap(_.tokens)
+        .map(_.term.toLowerCase)
+        .groupBy((term: String) => term)
+        .mapValues(_.length)
+        .map {case (k,v) => TermCount(k, v)}
+        .toVector
+
+      VocabularyBatchResult(res.name,Vocabulary(vocab.size, vocab))
+    }
+
+
+
+  val Sentences_Metrics: Flow[SentencesBatchResult, MetricsBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .map { res =>
+      val counts = res.analytics.map { s =>
+        val tokens:Int = s.tokens.length
+        val characters:Int = s.original.length
+        val punctuation:Int = s.tokens.count(_.isPunctuation)
+        val words:Int = tokens - punctuation
+        val wordLengths:Vector[Int] = s.tokens.filterNot(_.isPunctuation).map(_.term.length)
+        //val totalWordChars = wordLengths.sum
+        val whitespace:Int = s.original.count(_.toString.matches("\\s"))
+        val averageWordLength:Double = wordLengths.sum / words.toDouble
+        (tokens,words,characters,punctuation,whitespace,wordLengths,averageWordLength)
+      }
+      val sentCount:Int = counts.length
+      val sentWordCounts = counts.map(_._2)
+      val wordCount = sentWordCounts.sum
+      val averageSentWordCount = wordCount / sentCount.toDouble
+      val wordLengths = counts.map(_._6)
+      val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
+      val averageSentWordLength = counts.map(_._7)
+
+      val metrics = Metrics(counts.length, counts.map(_._1).sum, wordCount,counts.map(_._3).sum, counts.map(_._4).sum, counts.map(_._5).sum,
+        sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
+
+      MetricsBatchResult(res.name,metrics)
+    }
+
+
+
+  def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
     Flow[SentencesBatchResult].map[AffectExpressionsBatchResult] { sents =>
       val aes = sents.analytics.map { s =>
@@ -61,8 +108,6 @@ object Segment {
       AffectExpressionsBatchResult(sents.name,aes)
     }
   }
-
-
 
   val Document_ReflectiveExpressionsBatchResult: Flow[Document, ReflectExpressionsBatchResult, NotUsed] = Flow[Document].map { doc =>
     val codedSents = getCodedSents(doc)

@@ -118,9 +118,7 @@ src/main/scala/tap/nlp/old/OldNlpSentence.scala
 src/main/scala/tap/nlp/old/SentenceConverter.scala
 /src/main/scala/worksheet.sc
 /src/main/scala/experiments.sc
-/project/project/
 /project/target/
-/project/LocalSbtSettings.scala
 /src/main/scala/scratch.sc
 /node_modules/
 /public/javascripts/client-fastOptJS-entrypoint.js

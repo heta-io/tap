@@ -31,11 +31,36 @@ object Pipe {
     Segment.Document_SentencesBatchResult via
       Segment.AnalyticsResult_File
 
-  val affectExpressions: Flow[Document, File, NotUsed] =
+  val vocabulary: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-      Segment.SentencesBatchResult_AffectExpressionsBatchResult(Some(AffectThresholds(arousal=0.0,valence = 0.0,dominance = 0.0))) via
+      Segment.Sentences_Vocabulary via
         Segment.AnalyticsResult_File
 
+  val metrics: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+      Segment.Sentences_Metrics via
+        Segment.AnalyticsResult_File
+
+  val posStats: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+    Segment.AnalyticsResult_File
+
+  val syllables: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+    Segment.AnalyticsResult_File
+
+  val spelling: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+    Segment.AnalyticsResult_File
+
+  val expressions: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+    Segment.AnalyticsResult_File
+
+  val affectExpressions: Flow[Document, File, NotUsed] =
+    Segment.Document_SentencesBatchResult via
+      Segment.Sentences_AffectExpressions(Some(AffectThresholds(arousal=0.0,valence = 0.0,dominance = 0.0))) via
+        Segment.AnalyticsResult_File
 
   val reflectExpressions: Flow[Document, File, NotUsed] =
     Segment.Document_ReflectiveExpressionsBatchResult via

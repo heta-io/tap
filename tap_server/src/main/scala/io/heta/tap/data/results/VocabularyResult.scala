@@ -14,11 +14,8 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-/**
-  * Created by andrew@andrewresearch.net on 6/9/17.
-  */
+import io.heta.tap.data.doc.vocabulary.Vocabulary
 
-
-case class CountTerms(count:Int,terms:Vector[String])
+case class VocabularyResult(analytics: Vocabulary, message:String = "", querytime:Int = -1) extends Result

@@ -24,7 +24,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.Sentence
+import io.heta.tap.data.doc.{Sentence, Metrics}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -117,8 +117,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val metricFlow = annotator.tapMetrics
 
       val input = s"How can I convert a Scala array to a String? Or, more, accurately, how do I convert any Scala sequence to a String."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(metricFlow).toMat(Sink.head[TapMetrics])(Keep.right)
-      val result:Future[TapMetrics] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(metricFlow).toMat(Sink.head[Metrics])(Keep.right)
+      val result:Future[Metrics] = graph.run()
       val metric = Await.result(result, 240 seconds)
 
       assert(metric.sentences == 2)

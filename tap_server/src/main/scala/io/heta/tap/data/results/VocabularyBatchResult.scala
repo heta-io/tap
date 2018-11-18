@@ -14,11 +14,16 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-/**
-  * Created by andrew@andrewresearch.net on 6/9/17.
-  */
+import io.heta.tap.data.doc.AnalyticsResult
+import io.heta.tap.data.doc.vocabulary.Vocabulary
+import play.api.libs.json.{JsValue, Json, OWrites}
 
+object VocabularyBatchResult {
+  implicit val ctsWrites: OWrites[VocabularyBatchResult] = Json.writes[VocabularyBatchResult]
+}
+case class VocabularyBatchResult(name:String, analytics:Vocabulary) extends AnalyticsResult {
+  def asJson: JsValue = Json.toJson(this)
+}
 
-case class CountTerms(count:Int,terms:Vector[String])
