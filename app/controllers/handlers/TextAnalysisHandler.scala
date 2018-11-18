@@ -101,9 +101,9 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.spelling)).run
       .map(SpellingResult(_,querytime = queryTime(start)))
 
-  def vocabulary(text:Option[String],parameters:Option[String],start:Long):Future[VocabResult] =
+  def vocabulary(text:Option[String],parameters:Option[String],start:Long):Future[VocabularyResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.vocab)).run
-      .map(VocabResult(_,querytime = queryTime(start)))
+      .map(VocabularyResult(_,querytime = queryTime(start)))
 
   def metrics(text:Option[String],parameters:Option[String],start:Long):Future[MetricsResult]  =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.metrics)).run

@@ -24,7 +24,7 @@ import org.clulab.processors
 import io.heta.tap.data._
 import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.Sentence // scalastyle:ignore
+import io.heta.tap.data.doc.{Sentence, Metrics} // scalastyle:ignore
 
 /**
   * Created by andrew@andrewresearch.net on 6/11/17.
@@ -47,8 +47,8 @@ object AnnotatingTypes {
   //type CluSentencesFlow = Flow[processors.Document, TapSentences, NotUsed]
   type DocumentFlow = Flow[String, Document, NotUsed]
   //type SentencesFlow = Flow[Document, TapSentences, NotUsed]
-  type VocabFlow = Flow[Document, TapVocab, NotUsed]
-  type MetricsFlow = Flow[Document, TapMetrics, NotUsed]
+  //type VocabFlow = Flow[Document, TapVocab, NotUsed]
+  type MetricsFlow = Flow[Document, Metrics, NotUsed]
   //type ExpressionsFlow = Flow[Document, Vector[Expressions], NotUsed]
   type SyllablesFlow = Flow[Document, Vector[TapSyllables],NotUsed]
   type SpellingFlow = Flow[Document, Vector[Spelling],NotUsed]

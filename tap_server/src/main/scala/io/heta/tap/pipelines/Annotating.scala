@@ -33,6 +33,7 @@ import io.heta.tap.data.doc.{expression, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.Spelling
+import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
 import io.heta.tap.pipelines
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.PipelineContext
@@ -191,7 +192,7 @@ class Annotating(cluAnnotator:ActorRef) {
     (t.parseChildren.toVector.map(_.positionInSentence),t.parseParentIndex,t.parseLabel.value.toString)
   }
 
-  val tapVocab: Flow[TapSentences, TapVocab, NotUsed] = Flow[TapSentences]
+  val tapVocab: Flow[TapSentences, Vocabulary, NotUsed] = Flow[TapSentences]
     .map { v =>
       v.flatMap(_.tokens)
         .map(_.term.toLowerCase)
@@ -199,10 +200,10 @@ class Annotating(cluAnnotator:ActorRef) {
         .mapValues(_.length)
     }.map { m =>
     val lst: Vector[TermCount] = m.toVector.map { case (k, v) => TermCount(k, v) }
-    TapVocab(m.size, lst)
+    Vocabulary(m.size, lst)
   }
 
-  val tapMetrics: Flow[TapSentences, TapMetrics, NotUsed] = Flow[TapSentences]
+  val tapMetrics: Flow[TapSentences, Metrics, NotUsed] = Flow[TapSentences]
     .map { v =>
       v.map { s =>
         val tokens:Int = s.tokens.length
@@ -225,7 +226,7 @@ class Annotating(cluAnnotator:ActorRef) {
       val averageWordLength = wordLengths.flatten.sum / wordCount.toDouble
       val averageSentWordLength = res.map(_._7)
 
-      TapMetrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
+      Metrics(res.length, res.map(_._1).sum, wordCount,res.map(_._3).sum, res.map(_._4).sum, res.map(_._5).sum,
         sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
     }
 

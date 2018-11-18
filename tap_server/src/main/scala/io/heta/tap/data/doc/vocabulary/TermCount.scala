@@ -14,11 +14,11 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc.vocabulary
 
-/**
-  * Created by andrew@andrewresearch.net on 6/9/17.
-  */
+import play.api.libs.json.{Json, OWrites}
 
-
-case class CountTerms(count:Int,terms:Vector[String])
+object TermCount {
+  implicit val ctsWrites: OWrites[TermCount] = Json.writes[TermCount]
+}
+case class TermCount(term:String,count:Int)
