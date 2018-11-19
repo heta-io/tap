@@ -132,9 +132,7 @@ Text Analytics Pipeline (TAP)
   <li><a href="../user/user_with_code.html#building-tap-from-source-code" class="header">Building TAP from source code</a>
   <ul>
     <li><a href="../user/user_with_code.html#product-dependencies" class="header">Product Dependencies</a></li>
-    <li><a href="../user/user_with_code.html#getting-a-local-copy-of-the-source-code" class="header">Getting a local copy of the source code</a></li>
-    <li><a href="../user/user_with_code.html#building-tap" class="header">Building TAP</a></li>
-    <li><a href="../user/user_with_code.html#running-tap" class="header">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html#building-and-running-locally" class="header">Building and running locally</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -159,9 +157,7 @@ Text Analytics Pipeline (TAP)
   <li><a href="../user/user_with_code.html#building-tap-from-source-code" class="header">Building TAP from source code</a>
   <ul>
     <li><a href="../user/user_with_code.html#product-dependencies" class="header">Product Dependencies</a></li>
-    <li><a href="../user/user_with_code.html#getting-a-local-copy-of-the-source-code" class="header">Getting a local copy of the source code</a></li>
-    <li><a href="../user/user_with_code.html#building-tap" class="header">Building TAP</a></li>
-    <li><a href="../user/user_with_code.html#running-tap" class="header">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html#building-and-running-locally" class="header">Building and running locally</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -177,9 +173,7 @@ Text Analytics Pipeline (TAP)
 <div class="toc ">
 <ul>
   <li><a href="../user/user_with_code.html#product-dependencies" class="header">Product Dependencies</a></li>
-  <li><a href="../user/user_with_code.html#getting-a-local-copy-of-the-source-code" class="header">Getting a local copy of the source code</a></li>
-  <li><a href="../user/user_with_code.html#building-tap" class="header">Building TAP</a></li>
-  <li><a href="../user/user_with_code.html#running-tap" class="header">Running TAP</a></li>
+  <li><a href="../user/user_with_code.html#building-and-running-locally" class="header">Building and running locally</a></li>
 </ul>
 </div>
 <h4><a href="#product-dependencies" name="product-dependencies" class="anchor"><span class="anchor-link"></span></a>Product Dependencies</h4>
@@ -235,126 +229,8 @@ Text Analytics Pipeline (TAP)
     <p>Press on the Download 2.6.6 button and follow the appropriate instructions for your operating system.</p>
   </li>
 </ol>
-<h4><a href="#getting-a-local-copy-of-the-source-code" name="getting-a-local-copy-of-the-source-code" class="anchor"><span class="anchor-link"></span></a>Getting a local copy of the source code</h4>
-<ol>
-  <li>Clone the github repository to your local repository copy on your PC, or download the zip file if you just want to build the project, and have no intention to submit a contribution.</li>
-</ol>
-<p>To clone the project, position to the directory where you want the local repository placed (Your home directory is fine) and issue the following command. This will create a copy of the repository in the tap directory.</p>
-<pre><code>    git clone https://github.com/uts-cic/tap.git
-</code></pre>
-<ol>
-  <li>
-    <p>The following jar files should also be placed in the lib directory:  (Note that the models jar is relatively large at around 750M so it might take  some time to download depending on your internet speed).</p>
-    <pre><code>[tap-models-jar](https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/cc.factorie.app.nlp.all-models-1.0.0.jar)
-[tap-factorie-jar](https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/nlpfactorie_2.12-0.1.jar)
-</code></pre>
-    <p>Copy the files to the lib directory:</p>
-    <pre><code>cd ~/tap
-mkdir -p lib
-cd lib
-wget https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/cc.factorie.app.nlp.all-models-1.0.0.jar
-wget https://s3-ap-southeast-2.amazonaws.com/dev-tap-cic-uts/nlpfactorie_2.12-0.1.jar
-</code></pre>
-  </li>
-  <li>
-    <p>For Word Vector, a pre-trained model from Google News should be downloaded here: </p>
-    <pre><code>[GoogleNews-vectors-negative300.bin.gz](https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing)
-</code></pre>
-    <p>Create models/googleNews directory:</p>
-    <pre><code>cd ~/tap/models
-mkdir -p googleNews
-</code></pre>
-    <p>Copy the downloaded file to the models/googleNews directory.</p>
-  </li>
-</ol>
-<h4><a href="#building-tap" name="building-tap" class="anchor"><span class="anchor-link"></span></a>Building TAP</h4>
-<p>(1) Move to the directory where you placed the tap product. Assuming it is in the home directory, you should see a build.sbt file containing instruction on how the build is done, as well as this README.md file:</p>
-<pre class="prettyprint"><code class="language-bash">cd ~/tap
-</code></pre>
-<p>(2) Create a <code>LocalSbtSettings.scala</code> file in the <code>project</code> directory. This will hold your specific settings for your build:</p>
-<pre><code>import sbt._
-
-object LocalSbtSettings {
-
-  val githubBaseUrl = &quot;https://github.com/uts-cic/tap&quot; //Change this to your fork
-  val scaladocApiBaseUrl = &quot;https://uts-cic.github.io/tap&quot; //Change this to your fork
-
-  val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot;
-}
-</code></pre>
-<p>(3) Compile the product.</p>
-<p>The first compile will be very slow as dependencies have to be fetched and placed in the <code>~/.ivy2 directory</code>.</p>
-<pre class="prettyprint"><code class="language-bash">sbt compile
-</code></pre>
-<p>The following compile warnings seem to be safe to ignore, but ensure the last compile ends with [SUCCESS] :</p>
-<pre class="prettyprint"><code class="language-sbtshell">  com.typesafe.akka:akka-stream_2.12:2.5.6 is selected over {2.5.4, 2.5.3, 2.4.19}
-  com.typesafe.akka:akka-actor_2.12:2.5.6 is selected over {2.5.4, 2.4.19}
-  com.google.guava:guava:22.0 is selected over 19.0
-  ...srcc/main/scala/handlers/GraphQlHandler.scala:42: match may not be exhaustive.
-  ...
-  there were 8 feature warnings; re-run with -feature for details
-  two warnings found^[[0m
-  Total time: 11 s, completed Oct 7, 2017 12:39:37 PM^[[0m
-</code></pre>
-<h4><a href="#running-tap" name="running-tap" class="anchor"><span class="anchor-link"></span></a>Running TAP</h4>
-<ol>
-  <li>
-    <p>Move to the directory where you placed the tap product. Assuming it is in the home directory:</p>
-    <pre><code>cd ~/tap
-</code></pre>
-  </li>
-  <li>
-    <p>Ensure the JVM has enough memory to run the application.</p>
-    <pre><code>export _JAVA_OPTIONS=&quot;-Xmx2048M -Xss1M&quot;
-</code></pre>
-  </li>
-  <li>
-    <p>You can either run TAP using either of the following methods:</p>
-    <ul>
-      <li>
-        <p>Using sbt:</p>
-        <p>sbt run</p>
-      </li>
-      <li>
-        <p>Using play: play</p>
-        <p>If you get an exception in the SBtParser as in the following lines :</p>
-        <pre><code>java.lang.UnsupportedOperationException: Position.start on class scala.reflect.internal.util.OffsetPosition
-at scala.reflect.internal.util.Position.start(Position.scala:114)
-at sbt.internals.parser.SbtParser.sbt$internals$parser$SbtParser$$convertStatement$1(SbtParser.scala:148)
-</code></pre>
-        <p>This means Play is picking up an old SBT Parser that cannot deal with parsing the latest layout of the SBT files as explained in this exchange: <a href="https://github.com/sbt/sbt/issues/1739">play-parse-bug</a></p>
-        <p>In order to avoid this error, and run the application with play, you should update play to use the 2.10.4 Parser which is the minimum level parser that fixes the error. This update will take a long time to run, but is a one off.</p>
-        <pre><code>SBT_SCALA_VERSION=2.10.4 play update
-</code></pre>
-        <p>You then have to run play always specifying the SBT Scala version as described in the next step.</p>
-      </li>
-      <li>
-        <p>Using play, but determining the SBT Scala version</p>
-        <p>This is necessary if you want to run play and need to avoid the SbtParser exception.</p>
-        <pre><code>  SBT_SCALA_VERSION=2.10.4 play run
-</code></pre>
-      </li>
-    </ul>
-    <p>After you run the TAP Server, you should see the following lines, indicating that the server is running and listening to requests :</p>
-    <pre><code>Picked up _JAVA_OPTIONS: -Xms512M -Xmx2048M -Xss1M
-[info] Loading global plugins from ~/.sbt/0.13/plugins
-[info] Loading project definition from ~/tap/project
-[info] Set current project to tap (in build file:~/tap/)
---- (Running the application, auto-reloading is enabled) ---
-[info] p.c.s.AkkaHttpServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
-</code></pre>
-    <p>You can now connect to the server by typing the following in your browser:</p>
-    <pre><code>http://localhost:9000/
-</code></pre>
-    <p>The product should start and you can use it. You should see the following in your browser.</p>
-    <pre><code>TAP Server with GraphQL
-Use the graphiql IDE here
-</code></pre>
-    <p>To end the server, close your browser session then type return in your console where the server is running. The following message should appear on the console.</p>
-    <pre><code>[info] p.c.s.AkkaHttpServer - Stopping server...
-</code></pre>
-  </li>
-</ol>
+<h4><a href="#building-and-running-locally" name="building-and-running-locally" class="anchor"><span class="anchor-link"></span></a>Building and running locally</h4>
+<p>See <a href="../overview/quick_start.html#get-started-locally-without-docker">Quick Start</a></p>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">

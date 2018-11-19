@@ -296,31 +296,105 @@ use this referral code to receive $10 in free credit upon signing up and adding 
 
 ### Get started locally without Docker
 
-Clone the project source code with git:
+1. First clone the project source code with git:
 
-```bash
-git clone https://github.com/heta-io/tap
-```
+        git clone https://github.com/heta-io/tap
+        
+2. Ensure you have the [latest sbt](http://www.scala-sbt.org) installed
 
-Ensure you have the [latest sbt](http://www.scala-sbt.org) installed
-
-Add a ```LocalSbtSettings.scala``` file in the ```project``` directory. This will hold your specific settings for your build:
+3. Create a file called ```LocalSbtSettings.scala``` in the /project directory. This will hold your specific settings for your build:
    
-```scala
-import sbt._
+        import sbt._
+        
+        object LocalSbtSettings {
+         val githubBaseUrl = "https://github.com/heta-io/tap" //Change this to your fork
+         val scaladocApiBaseUrl = "https://heta-io.github.io/tap/" //Change this to your fork
+         val dockerRepoURI = "the.url.to.publish.docker.images.to" //leave as is if not using docker
+        }
+        
+4. Now we need to setup some variables.
+    
+    #### Windows 10
+    1. Open Start and type "path"
+    2. Click "Edit System Environment Variables"
+    3. Click Environment Variables
+    4. Click New under "User Variables"
+    5. Enter `SBT_OPTS` for name and under value enter `-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G`
+    6. Click ok
+    7. Click New under "User Variables"
+    8. Enter `TAP_HOSTS` for name and under value enter `localhost:9000`
+    9. Click ok
+    10. Click New under "User Variables"
+    11. Enter `TAP_SECRET` for name and under value enter `test`
+    12. Click ok
+    13. Click Path under "User Variables" and click Edit
+    14. Ensure you have an entry that links to your java directory eg `C:\Program Files\Java\jdk1.8.0_181\bin`
+    15. if it not present, add it and make sure it puts to your jdk director and the bin folder.
+    16. Click ok and exit the variables screen.
+    17. close and reopen your terminal window to refresh the variables
+    
+    #### Windows 7/Vista/8
+    1. Open Start > Control Panel > System > Advanced system settings > environment variables
+    2. Click "Edit System Environment Variables"
+    3. Click Environment Variables
+    4. Click New under "User Variables"
+    5. Enter `SBT_OPTS` for name and under value enter `-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G`
+    6. Click ok
+    7. Click New under "User Variables"
+    8. Enter `TAP_HOSTS` for name and under value enter `localhost:9000`
+    9. Click ok
+    10. Click New under "User Variables"
+    11. Enter `TAP_SECRET` for name and under value enter `test`
+    12. Click ok
+    13. Click Path under "User Variables" and click Edit
+    14. Ensure you have an entry that links to your java directory eg `C:\Program Files\Java\jdk1.8.0_181\bin`
+    15. if it not present, add it and make sure it puts to your jdk director and the bin folder.
+    16. Click ok and exit the variables screen.
+    17. close and reopen your terminal window to refresh the variables
+    
+    #### MacOS
+    1. Find your bash profile
+        
+            ~/.bash_profile
+    2. Open your bash profile file
+    
+            nano .bash_profile
+    3.  Add the following lines
+            
+            export SBT_OPTS='-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G'
+            export TAP_HOSTS='localhost:9000'
+            export TAP_SECRET='test'
+    4. Press Ctrl+X and Y to save and exit
+    5. Open your path variables
+            
+            sudo nano /etc/paths
+    6. ensure that one of the lines leads to your jdk folder. 
+        See [this guide](https://www.java.com/en/download/help/path.xml) for help
+        
+    
+    
+5. Open terminal in the root directory of the tap project.
 
-object LocalSbtSettings {
- val githubBaseUrl = "https://github.com/uts-cic/tap" //Change this to your fork
- val scaladocApiBaseUrl = "https://uts-cic.github.io/tap" //Change this to your fork
- val dockerRepoURI = "the.url.to.publish.docker.images.to"
-}
-```
+6. Run the following command inside the terminal
+        sbt run
 
-4. Run TAP with enough memory to process larger models:
+7. Connect to ```http://localhost:9000``` with your web browser
 
-  ```bash
-  sbt -J-Xmx4096M run
-  ```
 
-5. Connect to ```http://localhost:9000``` with your web browser
+#### FAQ and common issues.
+
+    sbt is not recognised
+You have not installed SBT and setup the path variable.
+
+Install SBT from [here](https://www.scala-sbt.org/download.html) and ensure set path environment variables is selected
+
+    javac is not found in this directory
+You have not setup your javac path variable, or it is not pointing to the correct directory.
+
+See [here](https://stackoverflow.com/questions/32241179/setting-up-enviromental-variables-in-windows-10-to-use-java-and-javac) for help setting this up
+
+
+
+
+
 

@@ -179,7 +179,10 @@ Text Analytics Pipeline (TAP)
     <li><a href="../overview/quick_start.html#docker-ce-for-linux" class="header">Docker CE for Linux</a></li>
     <li><a href="../overview/quick_start.html#run-docker-on-digital-ocean" class="header">Run Docker on Digital Ocean</a></li>
   </ul></li>
-  <li><a href="../overview/quick_start.html#get-started-locally-without-docker" class="header">Get started locally without Docker</a></li>
+  <li><a href="../overview/quick_start.html#get-started-locally-without-docker" class="header">Get started locally without Docker</a>
+  <ul>
+    <li><a href="../overview/quick_start.html#faq-and-common-issues-" class="header">FAQ and common issues.</a></li>
+  </ul></li>
 </ul>
 </div>
 <h3><a href="#get-started-with-docker" name="get-started-with-docker" class="anchor"><span class="anchor-link"></span></a>Get started with Docker</h3>
@@ -412,28 +415,107 @@ Text Analytics Pipeline (TAP)
   </li>
 </ol>
 <h3><a href="#get-started-locally-without-docker" name="get-started-locally-without-docker" class="anchor"><span class="anchor-link"></span></a>Get started locally without Docker</h3>
-<p>Clone the project source code with git:</p>
-<pre class="prettyprint"><code class="language-bash">git clone https://github.com/heta-io/tap
+<ol>
+  <li>
+    <p>First clone the project source code with git:</p>
+    <pre><code>git clone https://github.com/heta-io/tap
 </code></pre>
-<p>Ensure you have the <a href="http://www.scala-sbt.org">latest sbt</a> installed</p>
-<p>Add a <code>LocalSbtSettings.scala</code> file in the <code>project</code> directory. This will hold your specific settings for your build:</p>
-<pre class="prettyprint"><code class="language-scala">import sbt._
+  </li>
+  <li>
+  <p>Ensure you have the <a href="http://www.scala-sbt.org">latest sbt</a> installed</p></li>
+  <li>
+    <p>Create a file called <code>LocalSbtSettings.scala</code> in the /project directory. This will hold your specific settings for your build:</p>
+    <pre><code>import sbt._
 
 object LocalSbtSettings {
- val githubBaseUrl = &quot;https://github.com/uts-cic/tap&quot; //Change this to your fork
- val scaladocApiBaseUrl = &quot;https://uts-cic.github.io/tap&quot; //Change this to your fork
- val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot;
+ val githubBaseUrl = &quot;https://github.com/heta-io/tap&quot; //Change this to your fork
+ val scaladocApiBaseUrl = &quot;https://heta-io.github.io/tap/&quot; //Change this to your fork
+ val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot; //leave as is if not using docker
 }
 </code></pre>
-<ol>
-  <li>Run TAP with enough memory to process larger models:</li>
+  </li>
+  <li>
+    <p>Now we need to setup some variables.</p>
+    <h4><a href="#windows-10" name="windows-10" class="anchor"><span class="anchor-link"></span></a>Windows 10</h4>
+    <ol>
+      <li>Open Start and type &ldquo;path&rdquo;</li>
+      <li>Click &ldquo;Edit System Environment Variables&rdquo;</li>
+      <li>Click Environment Variables</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>SBT_OPTS</code> for name and under value enter <code>-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_HOSTS</code> for name and under value enter <code>localhost:9000</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_SECRET</code> for name and under value enter <code>test</code></li>
+      <li>Click ok</li>
+      <li>Click Path under &ldquo;User Variables&rdquo; and click Edit</li>
+      <li>Ensure you have an entry that links to your java directory eg <code>C:\Program Files\Java\jdk1.8.0_181\bin</code></li>
+      <li>if it not present, add it and make sure it puts to your jdk director and the bin folder.</li>
+      <li>Click ok and exit the variables screen.</li>
+      <li>close and reopen your terminal window to refresh the variables</li>
+    </ol>
+    <h4><a href="#windows-7-vista-8" name="windows-7-vista-8" class="anchor"><span class="anchor-link"></span></a>Windows 7/Vista/8</h4>
+    <ol>
+      <li>Open Start &gt; Control Panel &gt; System &gt; Advanced system settings &gt; environment variables</li>
+      <li>Click &ldquo;Edit System Environment Variables&rdquo;</li>
+      <li>Click Environment Variables</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>SBT_OPTS</code> for name and under value enter <code>-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_HOSTS</code> for name and under value enter <code>localhost:9000</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_SECRET</code> for name and under value enter <code>test</code></li>
+      <li>Click ok</li>
+      <li>Click Path under &ldquo;User Variables&rdquo; and click Edit</li>
+      <li>Ensure you have an entry that links to your java directory eg <code>C:\Program Files\Java\jdk1.8.0_181\bin</code></li>
+      <li>if it not present, add it and make sure it puts to your jdk director and the bin folder.</li>
+      <li>Click ok and exit the variables screen.</li>
+      <li>close and reopen your terminal window to refresh the variables</li>
+    </ol>
+    <h4><a href="#macos" name="macos" class="anchor"><span class="anchor-link"></span></a>MacOS</h4>
+    <ol>
+      <li>Find your bash profile
+        <pre><code>~/.bash_profile
+</code></pre>
+      </li>
+      <li>Open your bash profile file
+        <pre><code>nano .bash_profile
+</code></pre>
+      </li>
+      <li>Add the following lines
+        <pre><code>export SBT_OPTS=&#39;-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G&#39;
+export TAP_HOSTS=&#39;localhost:9000&#39;
+export TAP_SECRET=&#39;test&#39;
+</code></pre>
+      </li>
+      <li>Press Ctrl+X and Y to save and exit</li>
+      <li>Open your path variables
+        <pre><code>sudo nano /etc/paths
+</code></pre>
+      </li>
+      <li>ensure that one of the lines leads to your jdk folder. See <a href="https://www.java.com/en/download/help/path.xml">this guide</a> for help</li>
+    </ol>
+  </li>
+  <li>
+  <p>Open terminal in the root directory of the tap project.</p></li>
+  <li>
+  <p>Run the following command inside the terminal  sbt run</p></li>
+  <li>
+  <p>Connect to <code>http://localhost:9000</code> with your web browser</p></li>
 </ol>
-<p><code>bash
-  sbt -J-Xmx4096M run
-</code></p>
-<ol>
-  <li>Connect to <code>http://localhost:9000</code> with your web browser</li>
-</ol>
+<h4><a href="#faq-and-common-issues-" name="faq-and-common-issues-" class="anchor"><span class="anchor-link"></span></a>FAQ and common issues.</h4>
+<pre><code>sbt is not recognised
+</code></pre>
+<p>You have not installed SBT and setup the path variable.</p>
+<p>Install SBT from <a href="https://www.scala-sbt.org/download.html">here</a> and ensure set path environment variables is selected</p>
+<pre><code>javac is not found in this directory
+</code></pre>
+<p>You have not setup your javac path variable, or it is not pointing to the correct directory.</p>
+<p>See <a href="https://stackoverflow.com/questions/32241179/setting-up-enviromental-variables-in-windows-10-to-use-java-and-javac">here</a> for help setting this up</p>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
