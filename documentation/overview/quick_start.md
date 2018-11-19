@@ -2,7 +2,8 @@
 
 - [Get started with Docker](#get-started-with-docker)
     - [Docker for Windows (Windows 10 Pro/ Hyper-V)](#docker-for-windows-10)
-    - [Docker ToolBox (Mac, Linux, Windows 7, 8 and 10 Home)](#docker-toolbox)
+    - [Docker ToolBox (Mac, Windows 7, 8 and 10 Home)](#docker-toolbox)
+    - [Docker CE for Linux](#docker-ce-for-linux)
 - [Get started locally without Docker](#get-started-locally-without-docker)
 
 
@@ -85,8 +86,9 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
 
 7. That's it! if all went well, The docker should mention `factorie-nlp-api - Completed in xms` and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 10.1.1.190:9000)
 
-    ![docker demo](https://i.imgur.com/Hb1FBSB.png)
-    If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).
+    ![docker demo](https://i.imgur.com/FG7F0EM.png)
+    
+    **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**
    
         
 
@@ -155,9 +157,72 @@ Once you have Docker Toolbox running and have run the Quick Setup Icon it create
 6. That's it! TAP is now running in a docker machine, You should be able to use TAP in the browser by navigating to you machine IP with the port 9000
 
     **In my case i would navigate to 192.168.99.100:9000**
-    ![browser](https://i.imgur.com/LHFJAij.png) 
+    ![browser](https://i.imgur.com/KLQIn6n.png) 
     
     **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**   
+
+
+#### Docker CE for Linux
+
+Ensure you have installed Docker CE
+
+They have instructions for several versions of linux, Ensure you follow the instructions for your particular version of linux.
+
+[Installing Docker CE on Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+Ensure you have installed Docker Machine
+
+[Install docker machine on linux](https://docs.docker.com/machine/install-machine/#install-machine-directly)
+
+Ensure you have installed Oracle VirtualBox for linux
+
+[VirtualBox Instructions](https://www.virtualbox.org/wiki/Downloads)
+
+1. Create a Virtual Machine to run our docker container.
+
+        docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+        
+2. run `docker-machine ls` to get the IP of our new machine.
+
+    ![linux dm ls](https://i.imgur.com/02pce0v.png)
+    
+    In my case the IP is 192.168.99.100. Let's write that down for later.
+    
+3. We need to set our new docker machine as our active environment.
+
+        docker-machine env myvm1
+    
+    ![linux dm env](https://i.imgur.com/WOB0679.png)
+    
+    This will return a command we can run which will set our environment to the active docker machine.
+    Copy and paste the last line into your terminal.
+    
+        eval $(docker-machine env myvm1)
+    Now any docker commands we run will run on the docker machine.
+    
+4. Run our TAP image.
+        
+        docker run -e JAVA_OPTS="-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M" -e TAP_HOSTS="192.168.99.100:9000" -e TAP_SECRET="test" -p 9000:9000 andrewresearch/tap:3.2.2
+        
+    There are a few parameters here:
+           
+    * JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.
+    * TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000
+    * TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include "test"
+    * -p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000
+    * lastly we include the docker image name in this case is "andrewresearch/tap:3.2.2" (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)
+            
+    Great once that completes you should see the message `[info] factorie-nlp-api - Completed in xxxxx ms`
+
+5. That's it! you should be good to go. You can now access the TAP instance by navigating to your machine ip in your browser with the port 9000
+    
+    **In my case that would 192.168.99.100:9000**
+    
+    ![linux browser](https://i.imgur.com/RUzxqch.png)
+    
+    **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**
+    
+    
 
 #### Run Docker on AWS
 Docker AWS - Coming Soon

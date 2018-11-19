@@ -173,7 +173,8 @@ Text Analytics Pipeline (TAP)
   <li><a href="#get-started-with-docker">Get started with Docker</a>
     <ul>
       <li><a href="#docker-for-windows-10">Docker for Windows (Windows 10 Pro/ Hyper-V)</a></li>
-      <li><a href="#docker-toolbox">Docker ToolBox (Mac, Linux, Windows 7, 8 and 10 Home)</a></li>
+      <li><a href="#docker-toolbox">Docker ToolBox (Mac, Windows 7, 8 and 10 Home)</a></li>
+      <li><a href="#docker-ce-for-linux">Docker CE for Linux</a></li>
     </ul>
   </li>
   <li><a href="#get-started-locally-without-docker">Get started locally without Docker</a></li>
@@ -242,7 +243,8 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>That&rsquo;s it! if all went well, The docker should mention <code>factorie-nlp-api - Completed in xms</code> and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 10.1.1.190:9000)</p>
-    <p><img src="https://i.imgur.com/Hb1FBSB.png" alt="docker demo" /> If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</p>
+    <p><img src="https://i.imgur.com/FG7F0EM.png" alt="docker demo" /></p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
   </li>
 </ol>
 <h4><a href="#docker-toolbox" name="docker-toolbox" class="anchor"><span class="anchor-link"></span></a>Docker ToolBox</h4>
@@ -297,8 +299,58 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>That&rsquo;s it! TAP is now running in a docker machine, You should be able to use TAP in the browser by navigating to you machine IP with the port 9000</p>
-    <p><strong>In my case i would navigate to 192.168.99.100:9000</strong> <img src="https://i.imgur.com/LHFJAij.png" alt="browser" /> </p>
+    <p><strong>In my case i would navigate to 192.168.99.100:9000</strong> <img src="https://i.imgur.com/KLQIn6n.png" alt="browser" /> </p>
     <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong> </p>
+  </li>
+</ol>
+<h4><a href="#docker-ce-for-linux" name="docker-ce-for-linux" class="anchor"><span class="anchor-link"></span></a>Docker CE for Linux</h4>
+<p>Ensure you have installed Docker CE</p>
+<p>They have instructions for several versions of linux, Ensure you follow the instructions for your particular version of linux.</p>
+<p><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Installing Docker CE on Linux</a></p>
+<p>Ensure you have installed Docker Machine</p>
+<p><a href="https://docs.docker.com/machine/install-machine/#install-machine-directly">Install docker machine on linux</a></p>
+<p>Ensure you have installed Oracle VirtualBox for linux</p>
+<p><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox Instructions</a></p>
+<ol>
+  <li>
+    <p>Create a Virtual Machine to run our docker container.</p>
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+</code></pre>
+  </li>
+  <li>
+    <p>run <code>docker-machine ls</code> to get the IP of our new machine.</p>
+    <p><img src="https://i.imgur.com/02pce0v.png" alt="linux dm ls" /></p>
+    <p>In my case the IP is 192.168.99.100. Let&rsquo;s write that down for later.</p>
+  </li>
+  <li>
+    <p>We need to set our new docker machine as our active environment.</p>
+    <pre><code>docker-machine env myvm1
+</code></pre>
+    <p><img src="https://i.imgur.com/WOB0679.png" alt="linux dm env" /></p>
+    <p>This will return a command we can run which will set our environment to the active docker machine. Copy and paste the last line into your terminal.</p>
+    <pre><code>eval $(docker-machine env myvm1)
+</code></pre>
+    <p>Now any docker commands we run will run on the docker machine.</p>
+  </li>
+  <li>
+    <p>Run our TAP image.</p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;192.168.99.100:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>There are a few parameters here:</p>
+    <ul>
+      <li>JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.</li>
+      <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000</li>
+      <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
+      <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
+    </ul>
+    <p>Great once that completes you should see the message <code>[info] factorie-nlp-api - Completed in xxxxx ms</code></p>
+  </li>
+  <li>
+    <p>That&rsquo;s it! you should be good to go. You can now access the TAP instance by navigating to your machine ip in your browser with the port 9000</p>
+    <p><strong>In my case that would 192.168.99.100:9000</strong></p>
+    <p><img src="https://i.imgur.com/RUzxqch.png" alt="linux browser" /></p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
   </li>
 </ol>
 <h4><a href="#run-docker-on-aws" name="run-docker-on-aws" class="anchor"><span class="anchor-link"></span></a>Run Docker on AWS</h4>
