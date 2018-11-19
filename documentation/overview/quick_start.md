@@ -1,15 +1,7 @@
 ## Quick Start
+---
 
-- [Get started with Docker](#get-started-with-docker)
-    - [Docker for Windows (Windows 10 Pro/ Hyper-V)](#docker-for-windows-10)
-    - [Docker ToolBox (Mac, Windows 7, 8 and 10 Home)](#docker-toolbox)
-    - [Docker CE for Linux](#docker-ce-for-linux)
-- [Get started locally without Docker](#get-started-locally-without-docker)
-
-
-
-
-
+@@toc { depth=5 }
 ### Get started with Docker
 
 #### Docker for Windows 10
@@ -224,8 +216,8 @@ Ensure you have installed Oracle VirtualBox for linux
     
     
 
-#### Run Docker on AWS
-Docker AWS - Coming Soon
+#### Run Docker on Digital Ocean
+Docker Droplet - Coming Soon
 
 ### Get started locally without Docker
 
