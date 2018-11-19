@@ -1,8 +1,8 @@
 ## Quick Start
 
 - [Get started with Docker](#get-started-with-docker)
-    - [Docker for Windows (Windows 10/ Hyper-V)](#docker-for-windows-windows-10-hyper-v)
-    - [Docker ToolBox (Mac, Linux, Windows 7 and 8)](#docker-toolbox-mac-linux-windows-7-and-8)
+    - [Docker for Windows (Windows 10 Pro/ Hyper-V)](#docker-for-windows-10)
+    - [Docker ToolBox (Mac, Linux, Windows 7, 8 and 10 Home)](#docker-toolbox)
 - [Get started locally without Docker](#get-started-locally-without-docker)
 
 
@@ -11,7 +11,7 @@
 
 ### Get started with Docker
 
-#### Docker for Windows (Windows 10/ Hyper-V)
+#### Docker for Windows 10
 @@@ note { title=Notice }
 Docker for Windows requires:
 
@@ -24,11 +24,13 @@ CPU SLAT-capable feature.
 At least 4GB of RAM.
 @@@
 
+**If you do not have windows 10 Pro, Enterprise or Education, Please use [Docker Toolbox](#docker-toolbox).**
+
 This is the easiest way to get started with docker and TAP. Windows 10 has an app called Docker For Windows which will handle everything automatically for you.
 See [How To install Docker For Windows](https://docs.docker.com/docker-for-windows/install/)
 
 1. Ensure you have docker for windows installed and it is running.
-2. First, quickly create a virtual switch for your virtual machines (VMs) to share, so they can connect to each other.
+2. First, quickly create a virtual switch for your virtual machine (VM) to use, so they can use your network adapter.
    
     * Launch Hyper-V Manager
     * Click Virtual Switch Manager in the right-hand menu
@@ -39,12 +41,11 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
   
 3. Now create a VM we can use to run TAP on. (You may need to run this in admin, press windows key + x > Command Prompt (Admin))
 
-        docker-machine create -d hyperv --hyperv-memory 4096 --hyperv-cpu-count 2 --hyperv-virtual-switch "myswitch" myvm1
+        docker-machine create -d hyperv --hyperv-memory 2048  --hyperv-virtual-switch "myswitch" myvm1
         
     Notice we are passing in some custom variables
 
-    * We are giving it 4gb of ram
-    * We are allocating 2 cpus
+    * We are giving it 2gb of ram 
     * We are choosing the switch we just created "myswitch"
     * We are naming it "myvm1"
 
@@ -80,7 +81,7 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
     * TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 10.1.1.190:9000
     * TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include "test"
     * -p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000
-    * lastly we include the docker image name in this case is "andrewresearch/tap:3.2.2" (3.2.2 is the version number, which may change at a later date. be sure to use the lastest availible)
+    * lastly we include the docker image name in this case is "andrewresearch/tap:3.2.2" (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)
 
 7. That's it! if all went well, The docker should mention `factorie-nlp-api - Completed in xms` and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 10.1.1.190:9000)
 
@@ -91,11 +92,75 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
 
 
 
-#### Docker ToolBox (Mac, Linux, Windows 7 and 8)
-this is how u run docker on win 7 etc docker toolbox
+#### Docker ToolBox 
+
+Ensure you have installed Docker Toolbox
+
+[Install Docker Toolbox for Windows](https://docs.docker.com/toolbox/toolbox_install_windows/)
+
+[Install Docker Toolbox for Mac](https://docs.docker.com/toolbox/toolbox_install_mac/)
+
+**When installing Docker Toolbox, Ensure you install VirtualBox and Git, To ensure the program works correctly.**
+
+Once you have Docker Toolbox running and have run the Quick Setup Icon it created you should have this screen.
+![docker ready](https://i.imgur.com/UK8jLl3.png)
+
+
+1. Firstly let's remove the default docker machine, as we need to create one with 2gb memory.
+
+        docker-machine rm default
+        
+    ![remove machine](https://i.imgur.com/9cbCH3f.png)
+    
+2. Great, Let's create a new one and pass in some custom parameters
+
+        docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+        
+    This created a new machine called "myvm1" and gives it 2gb of ram instead of the default 1gb.
+    
+3. Great! let's get our docker machine IP.
+
+        docker-machine ls
+    
+    ![dm ls](https://i.imgur.com/X4NdtNS.png)   
+    
+    My ip in this case would be 192.168.99.100 
+    
+4. Now we want to control our docker machine
+        
+        docker-machine env myvm1
+        
+    this will return a command we can run to set our machine as the active environment.       
+    
+    ![docker env](https://i.imgur.com/AaN1ntr.png)
+    
+    The last line is what we want, copy and paste it to set this machine as active.
+    
+            eval $("C:\Program Files\Docker Toolbox\docker-machine.exe" env myvm1)   
+            
+5. Now we can start our Tap Image.
+        
+        docker run -e JAVA_OPTS="-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M" -e TAP_HOSTS="192.168.99.100:9000" -e TAP_SECRET="test" -p 9000:9000 andrewresearch/tap:3.2.2
+    
+    There are a few parameters here:
+       
+    * JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.
+    * TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000
+    * TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include "test"
+    * -p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000
+    * lastly we include the docker image name in this case is "andrewresearch/tap:3.2.2" (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)
+        
+    Once that runs it will automatically download everything you require and then let you know it is running with `[info] factorie-nlp-api - Completed in xxxxx ms`
+    
+6. That's it! TAP is now running in a docker machine, You should be able to use TAP in the browser by navigating to you machine IP with the port 9000
+
+    **In my case i would navigate to 192.168.99.100:9000**
+    ![browser](https://i.imgur.com/LHFJAij.png) 
+    
+    **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**   
 
 #### Run Docker on AWS
-this is how u run docker on aws
+Docker AWS - Coming Soon
 
 ### Get started locally without Docker
 
