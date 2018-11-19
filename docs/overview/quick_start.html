@@ -172,23 +172,24 @@ Text Analytics Pipeline (TAP)
 <ul>
   <li><a href="#get-started-with-docker">Get started with Docker</a>
     <ul>
-      <li><a href="#docker-for-windows-windows-10-hyper-v">Docker for Windows (Windows 10/ Hyper-V)</a></li>
-      <li><a href="#docker-toolbox-mac-linux-windows-7-and-8">Docker ToolBox (Mac, Linux, Windows 7 and 8)</a></li>
+      <li><a href="#docker-for-windows-10">Docker for Windows (Windows 10 Pro/ Hyper-V)</a></li>
+      <li><a href="#docker-toolbox">Docker ToolBox (Mac, Linux, Windows 7, 8 and 10 Home)</a></li>
     </ul>
   </li>
   <li><a href="#get-started-locally-without-docker">Get started locally without Docker</a></li>
 </ul>
 <h3><a href="#get-started-with-docker" name="get-started-with-docker" class="anchor"><span class="anchor-link"></span></a>Get started with Docker</h3>
-<h4><a href="#docker-for-windows-windows-10-hyper-v-" name="docker-for-windows-windows-10-hyper-v-" class="anchor"><span class="anchor-link"></span></a>Docker for Windows (Windows 10/ Hyper-V)</h4><div class="callout note "><div class="callout-title">Notice</div>
+<h4><a href="#docker-for-windows-10" name="docker-for-windows-10" class="anchor"><span class="anchor-link"></span></a>Docker for Windows 10</h4><div class="callout note "><div class="callout-title">Notice</div>
 <p>Docker for Windows requires:</p>
 <p>Windows 10 64bit: Pro, Enterprise or Education (1607 Anniversary Update, Build 14393 or later).</p>
 <p>Virtualization is enabled in BIOS. Typically, virtualization is enabled by default. This is different from having Hyper-V enabled. For more detail see <a href="https://docs.docker.com/docker-for-windows/troubleshoot/#virtualization-must-be-enabled">Virtualization must be enabled</a> in Troubleshooting.</p>
 <p>CPU SLAT-capable feature.</p>
 <p>At least 4GB of RAM.</p></div>
+<p><strong>If you do not have windows 10 Pro, Enterprise or Education, Please use <a href="#docker-toolbox">Docker Toolbox</a>.</strong></p>
 <p>This is the easiest way to get started with docker and TAP. Windows 10 has an app called Docker For Windows which will handle everything automatically for you. See <a href="https://docs.docker.com/docker-for-windows/install/">How To install Docker For Windows</a></p>
 <ol>
   <li>Ensure you have docker for windows installed and it is running.</li>
-  <li>First, quickly create a virtual switch for your virtual machines (VMs) to share, so they can connect to each other.
+  <li>First, quickly create a virtual switch for your virtual machine (VM) to use, so they can use your network adapter.
     <ul>
       <li>Launch Hyper-V Manager</li>
       <li>Click Virtual Switch Manager in the right-hand menu</li>
@@ -199,12 +200,11 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>Now create a VM we can use to run TAP on. (You may need to run this in admin, press windows key + x &gt; Command Prompt (Admin))</p>
-    <pre><code>docker-machine create -d hyperv --hyperv-memory 4096 --hyperv-cpu-count 2 --hyperv-virtual-switch &quot;myswitch&quot; myvm1
+    <pre><code>docker-machine create -d hyperv --hyperv-memory 2048  --hyperv-virtual-switch &quot;myswitch&quot; myvm1
 </code></pre>
     <p>Notice we are passing in some custom variables</p>
     <ul>
-      <li>We are giving it 4gb of ram</li>
-      <li>We are allocating 2 cpus</li>
+      <li>We are giving it 2gb of ram</li>
       <li>We are choosing the switch we just created &ldquo;myswitch&rdquo;</li>
       <li>We are naming it &ldquo;myvm1&rdquo;</li>
     </ul>
@@ -237,7 +237,7 @@ Text Analytics Pipeline (TAP)
       <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 10.1.1.190:9000</li>
       <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
       <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
-      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the lastest availible)</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
     </ul>
   </li>
   <li>
@@ -245,10 +245,64 @@ Text Analytics Pipeline (TAP)
     <p><img src="https://i.imgur.com/Hb1FBSB.png" alt="docker demo" /> If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</p>
   </li>
 </ol>
-<h4><a href="#docker-toolbox-mac-linux-windows-7-and-8-" name="docker-toolbox-mac-linux-windows-7-and-8-" class="anchor"><span class="anchor-link"></span></a>Docker ToolBox (Mac, Linux, Windows 7 and 8)</h4>
-<p>this is how u run docker on win 7 etc docker toolbox</p>
+<h4><a href="#docker-toolbox" name="docker-toolbox" class="anchor"><span class="anchor-link"></span></a>Docker ToolBox</h4>
+<p>Ensure you have installed Docker Toolbox</p>
+<p><a href="https://docs.docker.com/toolbox/toolbox_install_windows/">Install Docker Toolbox for Windows</a></p>
+<p><a href="https://docs.docker.com/toolbox/toolbox_install_mac/">Install Docker Toolbox for Mac</a></p>
+<p><strong>When installing Docker Toolbox, Ensure you install VirtualBox and Git, To ensure the program works correctly.</strong></p>
+<p>Once you have Docker Toolbox running and have run the Quick Setup Icon it created you should have this screen. <img src="https://i.imgur.com/UK8jLl3.png" alt="docker ready" /></p>
+<ol>
+  <li>
+    <p>Firstly let&rsquo;s remove the default docker machine, as we need to create one with 2gb memory.</p>
+    <pre><code>docker-machine rm default
+</code></pre>
+    <p><img src="https://i.imgur.com/9cbCH3f.png" alt="remove machine" /></p>
+  </li>
+  <li>
+    <p>Great, Let&rsquo;s create a new one and pass in some custom parameters</p>
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+</code></pre>
+    <p>This created a new machine called &ldquo;myvm1&rdquo; and gives it 2gb of ram instead of the default 1gb.</p>
+  </li>
+  <li>
+    <p>Great! let&rsquo;s get our docker machine IP.</p>
+    <pre><code>docker-machine ls
+</code></pre>
+    <p><img src="https://i.imgur.com/X4NdtNS.png" alt="dm ls" /> </p>
+    <p>My ip in this case would be 192.168.99.100 </p>
+  </li>
+  <li>
+    <p>Now we want to control our docker machine</p>
+    <pre><code>docker-machine env myvm1
+</code></pre>
+    <p>this will return a command we can run to set our machine as the active environment. </p>
+    <p><img src="https://i.imgur.com/AaN1ntr.png" alt="docker env" /></p>
+    <p>The last line is what we want, copy and paste it to set this machine as active.</p>
+    <pre><code>    eval $(&quot;C:\Program Files\Docker Toolbox\docker-machine.exe&quot; env myvm1)   
+</code></pre>
+  </li>
+  <li>
+    <p>Now we can start our Tap Image.</p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;192.168.99.100:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>There are a few parameters here:</p>
+    <ul>
+      <li>JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.</li>
+      <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000</li>
+      <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
+      <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
+    </ul>
+    <p>Once that runs it will automatically download everything you require and then let you know it is running with <code>[info] factorie-nlp-api - Completed in xxxxx ms</code></p>
+  </li>
+  <li>
+    <p>That&rsquo;s it! TAP is now running in a docker machine, You should be able to use TAP in the browser by navigating to you machine IP with the port 9000</p>
+    <p><strong>In my case i would navigate to 192.168.99.100:9000</strong> <img src="https://i.imgur.com/LHFJAij.png" alt="browser" /> </p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong> </p>
+  </li>
+</ol>
 <h4><a href="#run-docker-on-aws" name="run-docker-on-aws" class="anchor"><span class="anchor-link"></span></a>Run Docker on AWS</h4>
-<p>this is how u run docker on aws</p>
+<p>Docker AWS - Coming Soon</p>
 <h3><a href="#get-started-locally-without-docker" name="get-started-locally-without-docker" class="anchor"><span class="anchor-link"></span></a>Get started locally without Docker</h3>
 <p>Clone the project source code with git:</p>
 <pre class="prettyprint"><code class="language-bash">git clone https://github.com/heta-io/tap
