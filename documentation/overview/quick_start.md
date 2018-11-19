@@ -217,7 +217,82 @@ Ensure you have installed Oracle VirtualBox for linux
     
 
 #### Run Docker on Digital Ocean
-Docker Droplet - Coming Soon
+
+Digital Ocean offers a 1 click Docker Droplet that is capable of running TAP for $10 a month.
+
+use this referral code to receive $10 in free credit upon signing up and adding a payment method. 
+    
+    https://m.do.co/c/694c2ae2c08b
+    
+1. Once you have an account Create a new Project to use for TAP.
+    ![do create](https://i.imgur.com/506Ew2B.png)
+    
+    Once created, Click Create > Droplet
+    ![do droplet create](https://i.imgur.com/36rGJfQ.png)
+    
+    Choose Docker and change the size to the $10 droplet.
+    ![do droplet size](https://i.imgur.com/DC9xTyw.png)
+    
+    Disable backups, and choose a datacenter that is closest to you.
+    ![do backups](https://i.imgur.com/bDWPhVz.png)
+    
+    Add an SSH key or use your existing one. See [here for instructions](https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/) on this.
+    
+    Finally give it a name you will recognize and choose the project you created.
+    ![do create](https://i.imgur.com/G487S6n.png)
+    
+    Then click create.
+    
+    It may take a few minutes to setup.
+    
+2. There are 2 ways we can "talk" to our new droplet.
+    
+    We can use the built in console (requires setting up a root password) Or we can use our ssh key and a client called Putty.
+
+    To connect with Putty follow [this guide](https://www.digitalocean.com/docs/droplets/how-to/connect-with-ssh/putty/)
+    
+    To Set a Root Password and use the console follow [this guide](https://www.digitalocean.com/docs/droplets/how-to/connect-with-console/)
+    
+3. Once you are logged in on your droplet you should have a command line in front of you.
+
+4. We need to add a swapfile to enable enough ram to get java running.
+
+    Run the following command to add a swap file.
+
+        sudo fallocate -l 1G /swapfile
+    
+    let's lock down the swap file so no one else can use it
+        
+        sudo chmod 600 /swapfile
+    
+    verify that it's permissions are correct by typing
+    
+        ls -lh /swapfile
+        
+    You should see the following
+    
+    ![swap perms](https://i.imgur.com/l5TpRWf.png)
+    
+    Great, Now mark it as swap so we can actually use it
+        
+        sudo mkswap /swapfile
+        
+    Now we can enable it
+        
+        sudo swapon /swapfile
+        
+    **please note this will be removed if you restart the server. 
+    If you wish to make it permanent please see the following guide [here](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-18-04)**
+        
+5. Great now we can run the following command to setup your droplet.
+
+    **Please note you need to replace DROPLET-IP with the IP of your droplet.**
+    
+        docker run -e JAVA_OPTS="-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M" -e TAP_HOSTS="DROPLET-IP:9000" -e TAP_SECRET="test" -p 9000:9000 andrewresearch/tap:3.2.2
+        
+    That's it! You should be up and running and now can access your Tap Client from the browser by typing in your Droplet IP and adding the port.
+    
+        DROPLET-IP:9000
 
 ### Get started locally without Docker
 

@@ -357,7 +357,60 @@ Text Analytics Pipeline (TAP)
   </li>
 </ol>
 <h4><a href="#run-docker-on-digital-ocean" name="run-docker-on-digital-ocean" class="anchor"><span class="anchor-link"></span></a>Run Docker on Digital Ocean</h4>
-<p>Docker Droplet - Coming Soon</p>
+<p>Digital Ocean offers a 1 click Docker Droplet that is capable of running TAP for $10 a month.</p>
+<p>use this referral code to receive $10 in free credit upon signing up and adding a payment method. </p>
+<pre><code>https://m.do.co/c/694c2ae2c08b
+</code></pre>
+<ol>
+  <li>
+    <p>Once you have an account Create a new Project to use for TAP. <img src="https://i.imgur.com/506Ew2B.png" alt="do create" /></p>
+    <p>Once created, Click Create &gt; Droplet <img src="https://i.imgur.com/36rGJfQ.png" alt="do droplet create" /></p>
+    <p>Choose Docker and change the size to the $10 droplet. <img src="https://i.imgur.com/DC9xTyw.png" alt="do droplet size" /></p>
+    <p>Disable backups, and choose a datacenter that is closest to you. <img src="https://i.imgur.com/bDWPhVz.png" alt="do backups" /></p>
+    <p>Add an SSH key or use your existing one. See <a href="https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/">here for instructions</a> on this.</p>
+    <p>Finally give it a name you will recognize and choose the project you created. <img src="https://i.imgur.com/G487S6n.png" alt="do create" /></p>
+    <p>Then click create.</p>
+    <p>It may take a few minutes to setup.</p>
+  </li>
+  <li>
+    <p>There are 2 ways we can &ldquo;talk&rdquo; to our new droplet.</p>
+    <p>We can use the built in console (requires setting up a root password) Or we can use our ssh key and a client called Putty.</p>
+    <p>To connect with Putty follow <a href="https://www.digitalocean.com/docs/droplets/how-to/connect-with-ssh/putty/">this guide</a></p>
+    <p>To Set a Root Password and use the console follow <a href="https://www.digitalocean.com/docs/droplets/how-to/connect-with-console/">this guide</a></p>
+  </li>
+  <li>
+  <p>Once you are logged in on your droplet you should have a command line in front of you.</p></li>
+  <li>
+    <p>We need to add a swapfile to enable enough ram to get java running.</p>
+    <p>Run the following command to add a swap file.</p>
+    <pre><code>sudo fallocate -l 1G /swapfile
+</code></pre>
+    <p>let&rsquo;s lock down the swap file so no one else can use it</p>
+    <pre><code>sudo chmod 600 /swapfile
+</code></pre>
+    <p>verify that it&rsquo;s permissions are correct by typing</p>
+    <pre><code>ls -lh /swapfile
+</code></pre>
+    <p>You should see the following</p>
+    <p><img src="https://i.imgur.com/l5TpRWf.png" alt="swap perms" /></p>
+    <p>Great, Now mark it as swap so we can actually use it</p>
+    <pre><code>sudo mkswap /swapfile
+</code></pre>
+    <p>Now we can enable it</p>
+    <pre><code>sudo swapon /swapfile
+</code></pre>
+    <p><strong>please note this will be removed if you restart the server. If you wish to make it permanent please see the following guide <a href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-18-04">here</a></strong></p>
+  </li>
+  <li>
+    <p>Great now we can run the following command to setup your droplet.</p>
+    <p><strong>Please note you need to replace DROPLET-IP with the IP of your droplet.</strong></p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;DROPLET-IP:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>That&rsquo;s it! You should be up and running and now can access your Tap Client from the browser by typing in your Droplet IP and adding the port.</p>
+    <pre><code>DROPLET-IP:9000
+</code></pre>
+  </li>
+</ol>
 <h3><a href="#get-started-locally-without-docker" name="get-started-locally-without-docker" class="anchor"><span class="anchor-link"></span></a>Get started locally without Docker</h3>
 <p>Clone the project source code with git:</p>
 <pre class="prettyprint"><code class="language-bash">git clone https://github.com/heta-io/tap
