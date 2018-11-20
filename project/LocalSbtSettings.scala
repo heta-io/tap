@@ -12,21 +12,19 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  *
- */
-
-package io.heta.tap.data
+ */ */
 
 /**
-  * Created by andrew@andrewresearch.net on 26/10/17.
+  * Created by andrew@andrewresearch.net on 7/11/17.
   */
 
-case class TapPosStats(
-                        verbNounRatio:Double,
-                        futurePastRatio:Double,
-                        namedEntityWordRatio:Double,
-                        adjectiveWordRatio:Double,
-                        nounDistribution:Vector[Double],
-                        verbDistribution:Vector[Double],
-                        adjectiveDistribution:Vector[Double]
-                      )
+import sbt._
+import Keys._
 
+object LocalSbtSettings {
+  //For Documentation links
+  val githubBaseUrl = "https://github.com/heta-io/tap"
+  val scaladocApiBaseUrl = "https://heta.github.io/tap"
+  //For AWS docker deployment
+  val dockerRepoURI = "975443900627.dkr.ecr.ap-southeast-2.amazonaws.com"
+}

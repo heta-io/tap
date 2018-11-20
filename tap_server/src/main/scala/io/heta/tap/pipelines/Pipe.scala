@@ -43,7 +43,8 @@ object Pipe {
 
   val posStats: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_PosStats via
+        Segment.AnalyticsResult_File
 
   val syllables: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via

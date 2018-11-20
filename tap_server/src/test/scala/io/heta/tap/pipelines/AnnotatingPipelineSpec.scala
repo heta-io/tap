@@ -24,7 +24,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{Sentence, Metrics}
+import io.heta.tap.data.doc.{Metrics, Sentence, PosStats}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -203,8 +203,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val posStatFlow = annotator.tapPosStats
 
       val input = s"You're the best player on our team."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(posStatFlow).toMat(Sink.head[TapPosStats])(Keep.right)
-      val result:Future[TapPosStats] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(posStatFlow).toMat(Sink.head[PosStats])(Keep.right)
+      val result:Future[PosStats] = graph.run()
       val posStat = Await.result(result, 240 seconds)
 
       assert(posStat.verbNounRatio == 1/2.toDouble)
