@@ -48,7 +48,8 @@ object Pipe {
 
   val syllables: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_Syllables via
+        Segment.AnalyticsResult_File
 
   val spelling: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via

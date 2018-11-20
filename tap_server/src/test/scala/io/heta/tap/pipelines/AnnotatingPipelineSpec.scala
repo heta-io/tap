@@ -24,7 +24,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{Metrics, Sentence, PosStats}
+import io.heta.tap.data.doc.{Metrics, PosStats, Sentence, Syllables}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -165,8 +165,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val syllableFlow = annotator.tapSyllables
 
       val input = s"It is nice to get something for free. That is for sure."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(syllableFlow).toMat(Sink.head[Vector[TapSyllables]])(Keep.right)
-      val result:Future[Vector[TapSyllables]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(syllableFlow).toMat(Sink.head[Vector[Syllables]])(Keep.right)
+      val result:Future[Vector[Syllables]] = graph.run()
       val syllable = Await.result(result, 240 seconds)
 
       assert(syllable(0).avgSyllables == 9/9.toDouble)

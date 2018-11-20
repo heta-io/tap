@@ -14,8 +14,15 @@
  *
  */
 
-package io.heta.tap.data.results
+package io.heta.tap.data.doc
 
-import io.heta.tap.data.doc.Syllables
+import play.api.libs.json.{Json, OWrites}
 
-case class SyllablesResult(analytics: Vector[Syllables], message:String = "", querytime:Int = -1) extends Result
+/**
+  * Created by andrew@andrewresearch.net on 16/10/17.
+  */
+
+object Syllables {
+  implicit val pWrites: OWrites[Syllables] = Json.writes[Syllables]
+}
+case class Syllables(sentIdx: Int, avgSyllables: Double, counts: Vector[Int])

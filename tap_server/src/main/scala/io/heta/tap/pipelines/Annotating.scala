@@ -242,12 +242,12 @@ class Annotating(cluAnnotator:ActorRef) {
     Future.sequence(results)
   }
 
-  val tapSyllables: Flow[TapSentences,Vector[TapSyllables], NotUsed] = Flow[TapSentences]
+  val tapSyllables: Flow[TapSentences,Vector[Syllables], NotUsed] = Flow[TapSentences]
     .map { v =>
       v.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / sent.tokens.length.toDouble
-        TapSyllables(sent.idx,avg,counts)
+        Syllables(sent.idx,avg,counts)
       }
     }
 

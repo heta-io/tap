@@ -20,9 +20,10 @@ import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
+import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.analysis.reflectiveExpressions.PosTagAnalyser
-import io.heta.tap.data.doc.{Metrics, PosStats, _}
+import io.heta.tap.data.doc.{Metrics, PosStats, Syllables, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
@@ -128,6 +129,17 @@ object Segment {
       val posStats = PosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
 
       PosStatsBatchResult(res.name,posStats)
+    }
+
+  val Sentences_Syllables: Flow[SentencesBatchResult, SyllablesBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .map { res =>
+      val syllables = res.analytics.map { sent =>
+        val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
+        val avg = counts.sum / sent.tokens.length.toDouble
+        Syllables(sent.idx,avg,counts)
+      }
+      SyllablesBatchResult(res.name,syllables)
     }
 
   def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {

@@ -200,7 +200,7 @@ object Fields {
         implicit val ModalExpressionType:ObjectType[Unit,ModalExpression] = deriveObjectType[Unit,ModalExpression]()
         implicit val EpistemicExpressionType:ObjectType[Unit,EpistemicExpression] = deriveObjectType[Unit,EpistemicExpression]()
         implicit val TapExpressionsType:ObjectType[Unit,Expressions] = deriveObjectType[Unit,Expressions]()
-        implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
+        implicit val tapSyllablesType:ObjectType[Unit,Syllables] = deriveObjectType[Unit,Syllables]()
         implicit val TapSpellingType:ObjectType[Unit,Spelling] = deriveObjectType[Unit,Spelling]()
         implicit val TapSpellType:ObjectType[Unit,Spell] = deriveObjectType[Unit,Spell]()
         implicit val TapPosStatsType:ObjectType[Unit,PosStats] = deriveObjectType[Unit,PosStats]()
