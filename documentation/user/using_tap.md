@@ -1,3 +1,14 @@
+### Using TAP once it's running
+---
+
+@@toc { depth=5 }
+
+#### Using the TAP Python Client
+
+Coming soon.
+
+If you would like to help with this section see @ref:[How to edit documentation](../developer/doc_updates.md)
+
 #### TAP Queries
 
 1. visible: remove nonstandard characters in the input text.

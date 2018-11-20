@@ -14,12 +14,18 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
+
+import play.api.libs.json.{Json, OWrites}
 
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-case class TapMetrics(
+
+object Metrics {
+  implicit val tsWrites: OWrites[Metrics] = Json.writes[Metrics]
+}
+case class Metrics(
                        sentences:Int,
                        tokens:Int,
                        words:Int,

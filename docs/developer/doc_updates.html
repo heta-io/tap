@@ -114,9 +114,9 @@ Text Analytics Pipeline (TAP)
   </ul></li>
   <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/user_with_code/index.html" class="page">Building TAP with the code</a></li>
-    <li><a href="../user/user_without_code/index.html" class="page">Building TAP without the code</a></li>
-    <li><a href="../user/using_tap/index.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
   </ul></li>
   <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
   <ul>
@@ -145,6 +145,7 @@ Text Analytics Pipeline (TAP)
 <div class="md-content__searchable">
 <h2><a href="#how-to-edit-documentation" name="how-to-edit-documentation" class="anchor"><span class="anchor-link"></span></a>How to edit documentation</h2>
 <p>We use Paradox to automatically build the documentation.</p>
+<p><a href="https://developer.lightbend.com/docs/paradox/current/overview.html">Paradox documentation</a></p>
 <p>The source files for the documentation is stored under tap/documentation.</p>
 <p>There are 3 folders in the /documentation directory which include the 3 sections that you see on the left.</p>
 <pre><code>documentation/developer
@@ -158,7 +159,32 @@ documentation/user
 <p>To build your documentation run the following command inside the sbt shell</p>
 <pre><code>updateDocs
 </code></pre>
-<p>This will generate html files in the docs directory, and any modified files will be part of you pull request.</p>
+<p>If you are making a pull request please complete these steps to ensure there are no conflicts.</p>
+<ul>
+  <li>Delete all files inside the /docs directory.</li>
+  <li>Run <code>updateDocs</code> inside the sbt shell</li>
+  <li>inside the docs directory delete the following files
+    <ul>
+      <li>client-opt.js
+        <ul>
+          <li>client-opt.js.map</li>
+        </ul>
+      </li>
+      <li>client-opt-bundle.js
+        <ul>
+          <li>client-opt-bundle.js.map</li>
+        </ul>
+      </li>
+      <li>client-opt-library.js
+        <ul>
+          <li>client-opt-library.js.map</li>
+        </ul>
+      </li>
+      <li>client-opt-loader.js</li>
+    </ul>
+  </li>
+</ul>
+<p>Now you are able to make a pull request. For more information on contributing see <a href="contributing.html">Contributing</a></p>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">

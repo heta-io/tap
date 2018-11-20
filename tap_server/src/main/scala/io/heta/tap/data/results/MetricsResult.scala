@@ -16,6 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.TapMetrics
+import io.heta.tap.data.doc.Metrics
 
-case class MetricsResult(analytics: TapMetrics, message:String = "", querytime:Int = -1) extends Result
+case class MetricsResult(analytics: Metrics, message:String = "", querytime:Int = -1) extends Result

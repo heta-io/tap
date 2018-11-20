@@ -1,9 +1,9 @@
 ## I'm a User
 
-@@toc { depth=5 }
+@@toc { depth=7 }
 
 @@@ index
-  * [Using TAP with the code](user_with_code/index.md)
-  * [Using TAP without the code](user_without_code/index.md)
-  * [Using TAP on it's running](using_tap/index.md)
+  * [Building TAP from source code](user_with_code.md)
+  * [Running TAP without source code](user_without_code.md)
+  * [Using TAP once it's running](using_tap.md)
 @@@
