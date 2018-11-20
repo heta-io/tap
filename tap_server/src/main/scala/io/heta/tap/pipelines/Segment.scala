@@ -22,15 +22,14 @@ import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
+import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.analysis.reflectiveExpressions.PosTagAnalyser
-import io.heta.tap.data.doc.{Metrics, PosStats, Syllables, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
+import io.heta.tap.data.doc.{Metrics, PosStats, Syllables, _}
 import io.heta.tap.data.results._
-import io.heta.tap.pipelines.AnnotatingTypes.TapSentences
 import io.heta.tap.pipelines.materialize.FilePipeline.File
-import org.antlr.v4.runtime
 import org.clulab.processors.Document
 import play.api.libs.json.Json
 
@@ -141,6 +140,15 @@ object Segment {
       }
       SyllablesBatchResult(res.name,syllables)
     }
+
+  val Sentences_Spelling: Flow[SentencesBatchResult, SpellingBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .mapAsync[SpellingBatchResult](5) { res =>
+      import io.heta.tap.pipelines.materialize.PipelineContext.executor
+      Speller.check(res.analytics).map { sp =>
+        SpellingBatchResult(res.name,sp)
+      }
+  }
 
   def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))

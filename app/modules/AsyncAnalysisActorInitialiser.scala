@@ -31,7 +31,6 @@ class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport
       bindActor[BatchActor]("batch")
       logger.info("Binding CluAnnotatorActor")
       bindActor[CluAnnotatorActor]("cluAnnotator")
-      //bindActor[LanguageToolActor]("languagetool")
       //bindActor[AffectLexiconActor]("affectlexicon")
       //bindActor[WordVectorActor]("wordvector")
     }

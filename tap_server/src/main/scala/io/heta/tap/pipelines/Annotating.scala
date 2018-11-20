@@ -22,21 +22,21 @@ import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
 import com.typesafe.scalalogging.Logger
-import io.nlytx.expressions.ReflectiveExpressionPipeline
-import io.nlytx.nlp.api.AnnotatorPipelines
-import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
-import io.heta.tap.data._
+import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.data.doc.expression.Expressions
-import io.heta.tap.data.doc.{expression, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
+import io.heta.tap.data.doc.{expression, _}
 import io.heta.tap.pipelines
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.PipelineContext
+import io.nlytx.expressions.ReflectiveExpressionPipeline
+import io.nlytx.nlp.api.AnnotatorPipelines
+import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -251,15 +251,11 @@ class Annotating(cluAnnotator:ActorRef) {
       }
     }
 
-  //TODO Fix spelling implementation to use streams
-  val tapSpelling: Flow[TapSentences,Vector[Spelling],NotUsed] = Flow[TapSentences]
+
+  val tapSpelling: Flow[TapSentences, Vector[Spelling], NotUsed] = Flow[TapSentences]
     .mapAsync[Vector[Spelling]](2) { v =>
-    val checked = v.map { sent =>
-      //ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
-      Spelling(sent.idx,Vector())
-    }
-    //Future.sequence(checked)
-    Future(checked)
+    val sents = v.map(sent => Sentence(sent.original,sent.tokens,sent.start,sent.end,sent.length,sent.idx))
+    Speller.check(sents)
   }
 
 
