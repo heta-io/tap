@@ -18,6 +18,7 @@ package io.heta.tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import io.heta.tap.analysis.expression.ExpressionAnalyser
 import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.Document
 import org.scalatestplus.play.PlaySpec
@@ -141,8 +142,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
 
       val input = s"I believe you are the best player on our team. I would support you for sure."
 
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[Expressions]])(Keep.right)
-      val result:Future[Vector[Expressions]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[ExpressionAnalyser]])(Keep.right)
+      val result:Future[Vector[ExpressionAnalyser]] = graph.run()
       val expression = Await.result(result, 240 seconds)
 
 

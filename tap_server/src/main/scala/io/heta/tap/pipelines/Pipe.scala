@@ -58,7 +58,8 @@ object Pipe {
 
   val expressions: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_Expressions via
+        Segment.AnalyticsResult_File
 
   val affectExpressions: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via

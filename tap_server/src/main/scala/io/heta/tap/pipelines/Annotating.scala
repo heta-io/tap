@@ -24,6 +24,7 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
+import io.heta.tap.analysis.expression.ExpressionAnalyser
 import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.data.doc.expression.Expressions
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
@@ -31,7 +32,7 @@ import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
 import io.heta.tap.data.doc.{expression, _}
-import io.heta.tap.pipelines
+import io.heta.tap.{analysis, pipelines}
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.PipelineContext
 import io.nlytx.expressions.ReflectiveExpressionPipeline
@@ -50,7 +51,7 @@ import scala.util.{Failure, Success, Try}
 class Annotating(cluAnnotator:ActorRef) {
 
   //val languageTool: ActorRef = ???
-  val expressions:pipelines.Expressions = new Expressions()
+  //val expressions:analysis.expression.ExpressionAnalyser = new analysis.expression.ExpressionAnalyser()
   //val ca:CluAnnotatorActor = new CluAnnotatorActor()
 
   val logger: Logger = Logger(this.getClass)
@@ -234,9 +235,9 @@ class Annotating(cluAnnotator:ActorRef) {
     .mapAsync[Vector[expression.Expressions]](3) { v =>
     val results = v.map { sent =>
       for {
-        ae <- expressions.affect(sent.tokens)
-        ee <- expressions.epistemic(sent.tokens)
-        me <- expressions.modal(sent.tokens)
+        ae <- ExpressionAnalyser.affect(sent.tokens)
+        ee <- ExpressionAnalyser.epistemic(sent.tokens)
+        me <- ExpressionAnalyser.modal(sent.tokens)
       } yield Expressions(ae, ee, me, sent.idx)
     }
     Future.sequence(results)
@@ -328,7 +329,7 @@ class Annotating(cluAnnotator:ActorRef) {
     Flow[TapSentences].mapAsync[Vector[AffectExpressions]](3) { sents =>
       val results = sents.map { s =>
         for {
-          ae <- expressions.affective(s.tokens)
+          ae <- ExpressionAnalyser.affective(s.tokens)
         } yield AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
       Future.sequence(results)

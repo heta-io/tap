@@ -22,8 +22,10 @@ import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
+import io.heta.tap.analysis.expression.ExpressionAnalyser
 import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.analysis.reflectiveExpressions.PosTagAnalyser
+import io.heta.tap.data.doc.expression.Expressions
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
@@ -32,6 +34,8 @@ import io.heta.tap.data.results._
 import io.heta.tap.pipelines.materialize.FilePipeline.File
 import org.clulab.processors.Document
 import play.api.libs.json.Json
+
+import scala.concurrent.Future
 
 /*
 These are Flow Segments that are joined together to make Pipes
@@ -148,6 +152,20 @@ object Segment {
       Speller.check(res.analytics).map { sp =>
         SpellingBatchResult(res.name,sp)
       }
+  }
+
+  val Sentences_Expressions: Flow[SentencesBatchResult, ExpressionsBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .mapAsync[ExpressionsBatchResult](5) { res =>
+      import io.heta.tap.pipelines.materialize.PipelineContext.executor
+      val results = res.analytics.map { sent =>
+        for {
+          ae <- ExpressionAnalyser.affect(sent.tokens)
+          ee <- ExpressionAnalyser.epistemic(sent.tokens)
+          me <- ExpressionAnalyser.modal(sent.tokens)
+        } yield Expressions(ae, ee, me, sent.idx)
+      }
+      Future.sequence(results).map(r => ExpressionsBatchResult(res.name,r))
   }
 
   def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
