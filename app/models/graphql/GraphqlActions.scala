@@ -35,7 +35,7 @@ class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, extern
 
   def annotations(text: Option[String], parameters: Option[String]): Future[SentencesResult] = textAnalysisHandler.annotations(text, parameters, startTime)
 
-  def vocabulary(text: Option[String], parameters: Option[String]): Future[VocabResult] = textAnalysisHandler.vocabulary(text, parameters, startTime)
+  def vocabulary(text: Option[String], parameters: Option[String]): Future[VocabularyResult] = textAnalysisHandler.vocabulary(text, parameters, startTime)
 
   def metrics(text: Option[String], parameters: Option[String]): Future[MetricsResult] = textAnalysisHandler.metrics(text, parameters, startTime)
 

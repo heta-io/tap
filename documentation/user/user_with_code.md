@@ -1,3 +1,8 @@
+### Building TAP from source code
+---
+
+@@toc { depth=5 }
+
 #### Product Dependencies
 
 The following products are required to build and run TAP, and to potentially
@@ -90,3 +95,6 @@ this section in response to errors to see what you might be missing**.
     operating system.
 
 
+#### Building and running locally
+
+See @ref:[Quick Start](../overview/quick_start.md#get-started-locally-without-docker)

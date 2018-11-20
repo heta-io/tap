@@ -109,9 +109,9 @@ Text Analytics Pipeline (TAP)
   </ul></li>
   <li><a href="user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="user/user_with_code/index.html" class="page">Building TAP with the code</a></li>
-    <li><a href="user/user_without_code/index.html" class="page">Building TAP without the code</a></li>
-    <li><a href="user/using_tap/index.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
   </ul></li>
   <li><a href="developer/index.html" class="page">I&rsquo;m a Developer</a>
   <ul>
@@ -149,11 +149,15 @@ Text Analytics Pipeline (TAP)
     <ul>
       <li><a href="overview/quick_start.html#get-started-with-docker" class="header">Get started with Docker</a>
       <ul>
-        <li><a href="overview/quick_start.html#docker-for-windows-windows-10-hyper-v-" class="header">Docker for Windows (Windows 10/ Hyper-V)</a></li>
-        <li><a href="overview/quick_start.html#docker-toolbox-mac-linux-windows-7-and-8-" class="header">Docker ToolBox (Mac, Linux, Windows 7 and 8)</a></li>
-        <li><a href="overview/quick_start.html#run-docker-on-aws" class="header">Run Docker on AWS</a></li>
+        <li><a href="overview/quick_start.html#docker-for-windows-10" class="header">Docker for Windows 10</a></li>
+        <li><a href="overview/quick_start.html#docker-toolbox" class="header">Docker ToolBox</a></li>
+        <li><a href="overview/quick_start.html#docker-ce-for-linux" class="header">Docker CE for Linux</a></li>
+        <li><a href="overview/quick_start.html#run-docker-on-digital-ocean" class="header">Run Docker on Digital Ocean</a></li>
       </ul></li>
-      <li><a href="overview/quick_start.html#get-started-locally-without-docker" class="header">Get started locally without Docker</a></li>
+      <li><a href="overview/quick_start.html#get-started-locally-without-docker" class="header">Get started locally without Docker</a>
+      <ul>
+        <li><a href="overview/quick_start.html#faq-and-common-issues-" class="header">FAQ and common issues.</a></li>
+      </ul></li>
     </ul></li>
     <li><a href="overview/licensing.html" class="page">License</a></li>
     <li><a href="overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
@@ -161,22 +165,20 @@ Text Analytics Pipeline (TAP)
   </ul></li>
   <li><a href="user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="user/user_with_code/index.html" class="page">Building TAP with the code</a>
+    <li><a href="user/user_with_code.html" class="page">Building TAP from source code</a>
     <ul>
-      <li><a href="user/user_with_code/product_dependencies.html" class="page">Product Dependencies</a></li>
-      <li><a href="user/user_with_code/source_code.html" class="page">Getting a local copy of TAP</a></li>
-      <li><a href="user/user_with_code/build_product.html" class="page">Building TAP</a></li>
-      <li><a href="user/user_with_code/run_product.html" class="page">Running TAP</a></li>
+      <li><a href="user/user_with_code.html#product-dependencies" class="header">Product Dependencies</a></li>
+      <li><a href="user/user_with_code.html#building-and-running-locally" class="header">Building and running locally</a></li>
     </ul></li>
-    <li><a href="user/user_without_code/index.html" class="page">Building TAP without the code</a>
+    <li><a href="user/user_without_code.html" class="page">Building TAP without source code</a>
     <ul>
-      <li><a href="user/user_without_code/aws_setup.html" class="page">Get Up and Running with AWS - Coming Soon</a></li>
-      <li><a href="user/user_without_code/docker_setup.html" class="page">Get Up and running with Docker - Coming Soon</a></li>
+      <li><a href="user/user_without_code.html#get-up-and-running-with-docker" class="header">Get Up and running with Docker</a></li>
+      <li><a href="user/user_without_code.html#get-up-and-running-with-digital-ocean" class="header">Get up and running with Digital Ocean</a></li>
     </ul></li>
-    <li><a href="user/using_tap/index.html" class="page">Using TAP once it&rsquo;s running</a>
+    <li><a href="user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a>
     <ul>
-      <li><a href="user/using_tap/tap_python_client.html" class="page">Using the TAP Python Client</a></li>
-      <li><a href="user/using_tap/queries.html" class="page">TAP Queries</a></li>
+      <li><a href="user/using_tap.html#using-the-tap-python-client" class="header">Using the TAP Python Client</a></li>
+      <li><a href="user/using_tap.html#tap-queries" class="header">TAP Queries</a></li>
     </ul></li>
   </ul></li>
   <li><a href="developer/index.html" class="page">I&rsquo;m a Developer</a>
@@ -188,7 +190,13 @@ Text Analytics Pipeline (TAP)
         <li><a href="developer/ide_setup.html#working-with-windows-7-10-mac-and-linux-ubuntu-desktop-with-idea-ultimate" class="header">Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate</a></li>
       </ul></li>
     </ul></li>
-    <li><a href="developer/contributing.html" class="page">Contributing</a></li>
+    <li><a href="developer/contributing.html" class="page">Contributing</a>
+    <ul>
+      <li><a href="developer/contributing.html#working-with-the-repo" class="header">Working with the Repo</a></li>
+      <li><a href="developer/contributing.html#working-with-the-code" class="header">Working with the code</a></li>
+      <li><a href="developer/contributing.html#creating-issues" class="header">Creating Issues</a></li>
+      <li><a href="developer/contributing.html#pull-requests" class="header">Pull Requests</a></li>
+    </ul></li>
     <li><a href="developer/project_structure.html" class="page">Project Structure</a></li>
     <li><a href="developer/doc_updates.html" class="page">How to edit documentation</a></li>
   </ul></li>

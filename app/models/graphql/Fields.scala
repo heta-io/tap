@@ -26,6 +26,7 @@ import io.heta.tap.data.doc.expression.{EpistemicExpression, Expressions, ModalE
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.{Spell, Spelling}
+import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
 import io.heta.tap.data.results._
 
 import scala.concurrent.Future
@@ -71,7 +72,7 @@ object Fields {
         val name ="vocabulary"
         val description = Some("Returns vocabulary for text")
         val arguments = inputText :: parameters :: Nil
-        val deriveType = deriveObjectType[Unit,VocabResult](Interfaces[Unit,VocabResult](ResultType))
+        val deriveType = deriveObjectType[Unit,VocabularyResult](Interfaces[Unit,VocabularyResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.vocabulary(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
     }
 
@@ -192,8 +193,8 @@ object Fields {
         implicit val TokenType:ObjectType[Unit,Token] = deriveObjectType[Unit,Token]()
         implicit val SentenceType:ObjectType[Unit,Sentence] = deriveObjectType[Unit,Sentence]()
         implicit val TermCountType:ObjectType[Unit,TermCount] = deriveObjectType[Unit,TermCount]()
-        implicit val VocabType:ObjectType[Unit,TapVocab] = deriveObjectType[Unit,TapVocab]()
-        implicit val MetricsType:ObjectType[Unit,TapMetrics] = deriveObjectType[Unit,TapMetrics]()
+        implicit val VocabType:ObjectType[Unit,Vocabulary] = deriveObjectType[Unit,Vocabulary]()
+        implicit val MetricsType:ObjectType[Unit,Metrics] = deriveObjectType[Unit,Metrics]()
         //implicit val TapExpressionType:ObjectType[Unit,Expression] = deriveObjectType[Unit,Expression]()
         implicit val AffectExpressionType:ObjectType[Unit,AffectExpression] = deriveObjectType[Unit,AffectExpression]()
         implicit val ModalExpressionType:ObjectType[Unit,ModalExpression] = deriveObjectType[Unit,ModalExpression]()

@@ -114,9 +114,9 @@ Text Analytics Pipeline (TAP)
   </ul></li>
   <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/user_with_code/index.html" class="page">Building TAP with the code</a></li>
-    <li><a href="../user/user_without_code/index.html" class="page">Building TAP without the code</a></li>
-    <li><a href="../user/using_tap/index.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
   </ul></li>
   <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
   <ul>
@@ -169,26 +169,34 @@ Text Analytics Pipeline (TAP)
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h2><a href="#quick-start" name="quick-start" class="anchor"><span class="anchor-link"></span></a>Quick Start</h2>
+<hr/>
+<div class="toc ">
 <ul>
-  <li><a href="#get-started-with-docker">Get started with Docker</a>
-    <ul>
-      <li><a href="#docker-for-windows-windows-10-hyper-v">Docker for Windows (Windows 10/ Hyper-V)</a></li>
-      <li><a href="#docker-toolbox-mac-linux-windows-7-and-8">Docker ToolBox (Mac, Linux, Windows 7 and 8)</a></li>
-    </ul>
-  </li>
-  <li><a href="#get-started-locally-without-docker">Get started locally without Docker</a></li>
+  <li><a href="../overview/quick_start.html#get-started-with-docker" class="header">Get started with Docker</a>
+  <ul>
+    <li><a href="../overview/quick_start.html#docker-for-windows-10" class="header">Docker for Windows 10</a></li>
+    <li><a href="../overview/quick_start.html#docker-toolbox" class="header">Docker ToolBox</a></li>
+    <li><a href="../overview/quick_start.html#docker-ce-for-linux" class="header">Docker CE for Linux</a></li>
+    <li><a href="../overview/quick_start.html#run-docker-on-digital-ocean" class="header">Run Docker on Digital Ocean</a></li>
+  </ul></li>
+  <li><a href="../overview/quick_start.html#get-started-locally-without-docker" class="header">Get started locally without Docker</a>
+  <ul>
+    <li><a href="../overview/quick_start.html#faq-and-common-issues-" class="header">FAQ and common issues.</a></li>
+  </ul></li>
 </ul>
+</div>
 <h3><a href="#get-started-with-docker" name="get-started-with-docker" class="anchor"><span class="anchor-link"></span></a>Get started with Docker</h3>
-<h4><a href="#docker-for-windows-windows-10-hyper-v-" name="docker-for-windows-windows-10-hyper-v-" class="anchor"><span class="anchor-link"></span></a>Docker for Windows (Windows 10/ Hyper-V)</h4><div class="callout note "><div class="callout-title">Notice</div>
+<h4><a href="#docker-for-windows-10" name="docker-for-windows-10" class="anchor"><span class="anchor-link"></span></a>Docker for Windows 10</h4><div class="callout note "><div class="callout-title">Notice</div>
 <p>Docker for Windows requires:</p>
 <p>Windows 10 64bit: Pro, Enterprise or Education (1607 Anniversary Update, Build 14393 or later).</p>
 <p>Virtualization is enabled in BIOS. Typically, virtualization is enabled by default. This is different from having Hyper-V enabled. For more detail see <a href="https://docs.docker.com/docker-for-windows/troubleshoot/#virtualization-must-be-enabled">Virtualization must be enabled</a> in Troubleshooting.</p>
 <p>CPU SLAT-capable feature.</p>
 <p>At least 4GB of RAM.</p></div>
+<p><strong>If you do not have windows 10 Pro, Enterprise or Education, Please use <a href="#docker-toolbox">Docker Toolbox</a>.</strong></p>
 <p>This is the easiest way to get started with docker and TAP. Windows 10 has an app called Docker For Windows which will handle everything automatically for you. See <a href="https://docs.docker.com/docker-for-windows/install/">How To install Docker For Windows</a></p>
 <ol>
   <li>Ensure you have docker for windows installed and it is running.</li>
-  <li>First, quickly create a virtual switch for your virtual machines (VMs) to share, so they can connect to each other.
+  <li>First, quickly create a virtual switch for your virtual machine (VM) to use, so they can use your network adapter.
     <ul>
       <li>Launch Hyper-V Manager</li>
       <li>Click Virtual Switch Manager in the right-hand menu</li>
@@ -199,12 +207,11 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>Now create a VM we can use to run TAP on. (You may need to run this in admin, press windows key + x &gt; Command Prompt (Admin))</p>
-    <pre><code>docker-machine create -d hyperv --hyperv-memory 4096 --hyperv-cpu-count 2 --hyperv-virtual-switch &quot;myswitch&quot; myvm1
+    <pre><code>docker-machine create -d hyperv --hyperv-memory 2048  --hyperv-virtual-switch &quot;myswitch&quot; myvm1
 </code></pre>
     <p>Notice we are passing in some custom variables</p>
     <ul>
-      <li>We are giving it 4gb of ram</li>
-      <li>We are allocating 2 cpus</li>
+      <li>We are giving it 2gb of ram</li>
       <li>We are choosing the switch we just created &ldquo;myswitch&rdquo;</li>
       <li>We are naming it &ldquo;myvm1&rdquo;</li>
     </ul>
@@ -237,41 +244,278 @@ Text Analytics Pipeline (TAP)
       <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 10.1.1.190:9000</li>
       <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
       <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
-      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the lastest availible)</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
     </ul>
   </li>
   <li>
     <p>That&rsquo;s it! if all went well, The docker should mention <code>factorie-nlp-api - Completed in xms</code> and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 10.1.1.190:9000)</p>
-    <p><img src="https://i.imgur.com/Hb1FBSB.png" alt="docker demo" /> If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</p>
+    <p><img src="https://i.imgur.com/FG7F0EM.png" alt="docker demo" /></p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
   </li>
 </ol>
-<h4><a href="#docker-toolbox-mac-linux-windows-7-and-8-" name="docker-toolbox-mac-linux-windows-7-and-8-" class="anchor"><span class="anchor-link"></span></a>Docker ToolBox (Mac, Linux, Windows 7 and 8)</h4>
-<p>this is how u run docker on win 7 etc docker toolbox</p>
-<h4><a href="#run-docker-on-aws" name="run-docker-on-aws" class="anchor"><span class="anchor-link"></span></a>Run Docker on AWS</h4>
-<p>this is how u run docker on aws</p>
-<h3><a href="#get-started-locally-without-docker" name="get-started-locally-without-docker" class="anchor"><span class="anchor-link"></span></a>Get started locally without Docker</h3>
-<p>Clone the project source code with git:</p>
-<pre class="prettyprint"><code class="language-bash">git clone https://github.com/heta-io/tap
+<h4><a href="#docker-toolbox" name="docker-toolbox" class="anchor"><span class="anchor-link"></span></a>Docker ToolBox</h4>
+<p>Ensure you have installed Docker Toolbox</p>
+<p><a href="https://docs.docker.com/toolbox/toolbox_install_windows/">Install Docker Toolbox for Windows</a></p>
+<p><a href="https://docs.docker.com/toolbox/toolbox_install_mac/">Install Docker Toolbox for Mac</a></p>
+<p><strong>When installing Docker Toolbox, Ensure you install VirtualBox and Git, To ensure the program works correctly.</strong></p>
+<p>Once you have Docker Toolbox running and have run the Quick Setup Icon it created you should have this screen. <img src="https://i.imgur.com/UK8jLl3.png" alt="docker ready" /></p>
+<ol>
+  <li>
+    <p>Firstly let&rsquo;s remove the default docker machine, as we need to create one with 2gb memory.</p>
+    <pre><code>docker-machine rm default
 </code></pre>
-<p>Ensure you have the <a href="http://www.scala-sbt.org">latest sbt</a> installed</p>
-<p>Add a <code>LocalSbtSettings.scala</code> file in the <code>project</code> directory. This will hold your specific settings for your build:</p>
-<pre class="prettyprint"><code class="language-scala">import sbt._
+    <p><img src="https://i.imgur.com/9cbCH3f.png" alt="remove machine" /></p>
+  </li>
+  <li>
+    <p>Great, Let&rsquo;s create a new one and pass in some custom parameters</p>
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+</code></pre>
+    <p>This created a new machine called &ldquo;myvm1&rdquo; and gives it 2gb of ram instead of the default 1gb.</p>
+  </li>
+  <li>
+    <p>Great! let&rsquo;s get our docker machine IP.</p>
+    <pre><code>docker-machine ls
+</code></pre>
+    <p><img src="https://i.imgur.com/X4NdtNS.png" alt="dm ls" /> </p>
+    <p>My ip in this case would be 192.168.99.100 </p>
+  </li>
+  <li>
+    <p>Now we want to control our docker machine</p>
+    <pre><code>docker-machine env myvm1
+</code></pre>
+    <p>this will return a command we can run to set our machine as the active environment. </p>
+    <p><img src="https://i.imgur.com/AaN1ntr.png" alt="docker env" /></p>
+    <p>The last line is what we want, copy and paste it to set this machine as active.</p>
+    <pre><code>    eval $(&quot;C:\Program Files\Docker Toolbox\docker-machine.exe&quot; env myvm1)   
+</code></pre>
+  </li>
+  <li>
+    <p>Now we can start our Tap Image.</p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;192.168.99.100:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>There are a few parameters here:</p>
+    <ul>
+      <li>JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.</li>
+      <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000</li>
+      <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
+      <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
+    </ul>
+    <p>Once that runs it will automatically download everything you require and then let you know it is running with <code>[info] factorie-nlp-api - Completed in xxxxx ms</code></p>
+  </li>
+  <li>
+    <p>That&rsquo;s it! TAP is now running in a docker machine, You should be able to use TAP in the browser by navigating to you machine IP with the port 9000</p>
+    <p><strong>In my case i would navigate to 192.168.99.100:9000</strong> <img src="https://i.imgur.com/KLQIn6n.png" alt="browser" /> </p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong> </p>
+  </li>
+</ol>
+<h4><a href="#docker-ce-for-linux" name="docker-ce-for-linux" class="anchor"><span class="anchor-link"></span></a>Docker CE for Linux</h4>
+<p>Ensure you have installed Docker CE</p>
+<p>They have instructions for several versions of linux, Ensure you follow the instructions for your particular version of linux.</p>
+<p><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Installing Docker CE on Linux</a></p>
+<p>Ensure you have installed Docker Machine</p>
+<p><a href="https://docs.docker.com/machine/install-machine/#install-machine-directly">Install docker machine on linux</a></p>
+<p>Ensure you have installed Oracle VirtualBox for linux</p>
+<p><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox Instructions</a></p>
+<ol>
+  <li>
+    <p>Create a Virtual Machine to run our docker container.</p>
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+</code></pre>
+  </li>
+  <li>
+    <p>run <code>docker-machine ls</code> to get the IP of our new machine.</p>
+    <p><img src="https://i.imgur.com/02pce0v.png" alt="linux dm ls" /></p>
+    <p>In my case the IP is 192.168.99.100. Let&rsquo;s write that down for later.</p>
+  </li>
+  <li>
+    <p>We need to set our new docker machine as our active environment.</p>
+    <pre><code>docker-machine env myvm1
+</code></pre>
+    <p><img src="https://i.imgur.com/WOB0679.png" alt="linux dm env" /></p>
+    <p>This will return a command we can run which will set our environment to the active docker machine. Copy and paste the last line into your terminal.</p>
+    <pre><code>eval $(docker-machine env myvm1)
+</code></pre>
+    <p>Now any docker commands we run will run on the docker machine.</p>
+  </li>
+  <li>
+    <p>Run our TAP image.</p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;192.168.99.100:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>There are a few parameters here:</p>
+    <ul>
+      <li>JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.</li>
+      <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000</li>
+      <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
+      <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
+    </ul>
+    <p>Great once that completes you should see the message <code>[info] factorie-nlp-api - Completed in xxxxx ms</code></p>
+  </li>
+  <li>
+    <p>That&rsquo;s it! you should be good to go. You can now access the TAP instance by navigating to your machine ip in your browser with the port 9000</p>
+    <p><strong>In my case that would 192.168.99.100:9000</strong></p>
+    <p><img src="https://i.imgur.com/RUzxqch.png" alt="linux browser" /></p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
+  </li>
+</ol>
+<h4><a href="#run-docker-on-digital-ocean" name="run-docker-on-digital-ocean" class="anchor"><span class="anchor-link"></span></a>Run Docker on Digital Ocean</h4>
+<p>Digital Ocean offers a 1 click Docker Droplet that is capable of running TAP for $10 a month.</p>
+<p>use this referral code to receive $10 in free credit upon signing up and adding a payment method. </p>
+<pre><code>https://m.do.co/c/694c2ae2c08b
+</code></pre>
+<ol>
+  <li>
+    <p>Once you have an account Create a new Project to use for TAP. <img src="https://i.imgur.com/506Ew2B.png" alt="do create" /></p>
+    <p>Once created, Click Create &gt; Droplet <img src="https://i.imgur.com/36rGJfQ.png" alt="do droplet create" /></p>
+    <p>Choose Docker and change the size to the $10 droplet. <img src="https://i.imgur.com/DC9xTyw.png" alt="do droplet size" /></p>
+    <p>Disable backups, and choose a datacenter that is closest to you. <img src="https://i.imgur.com/bDWPhVz.png" alt="do backups" /></p>
+    <p>Add an SSH key or use your existing one. See <a href="https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/">here for instructions</a> on this.</p>
+    <p>Finally give it a name you will recognize and choose the project you created. <img src="https://i.imgur.com/G487S6n.png" alt="do create" /></p>
+    <p>Then click create.</p>
+    <p>It may take a few minutes to setup.</p>
+  </li>
+  <li>
+    <p>There are 2 ways we can &ldquo;talk&rdquo; to our new droplet.</p>
+    <p>We can use the built in console (requires setting up a root password) Or we can use our ssh key and a client called Putty.</p>
+    <p>To connect with Putty follow <a href="https://www.digitalocean.com/docs/droplets/how-to/connect-with-ssh/putty/">this guide</a></p>
+    <p>To Set a Root Password and use the console follow <a href="https://www.digitalocean.com/docs/droplets/how-to/connect-with-console/">this guide</a></p>
+  </li>
+  <li>
+  <p>Once you are logged in on your droplet you should have a command line in front of you.</p></li>
+  <li>
+    <p>We need to add a swapfile to enable enough ram to get java running.</p>
+    <p>Run the following command to add a swap file.</p>
+    <pre><code>sudo fallocate -l 1G /swapfile
+</code></pre>
+    <p>let&rsquo;s lock down the swap file so no one else can use it</p>
+    <pre><code>sudo chmod 600 /swapfile
+</code></pre>
+    <p>verify that it&rsquo;s permissions are correct by typing</p>
+    <pre><code>ls -lh /swapfile
+</code></pre>
+    <p>You should see the following</p>
+    <p><img src="https://i.imgur.com/l5TpRWf.png" alt="swap perms" /></p>
+    <p>Great, Now mark it as swap so we can actually use it</p>
+    <pre><code>sudo mkswap /swapfile
+</code></pre>
+    <p>Now we can enable it</p>
+    <pre><code>sudo swapon /swapfile
+</code></pre>
+    <p><strong>please note this will be removed if you restart the server. If you wish to make it permanent please see the following guide <a href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-18-04">here</a></strong></p>
+  </li>
+  <li>
+    <p>Great now we can run the following command to setup your droplet.</p>
+    <p><strong>Please note you need to replace DROPLET-IP with the IP of your droplet.</strong></p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;DROPLET-IP:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>That&rsquo;s it! You should be up and running and now can access your Tap Client from the browser by typing in your Droplet IP and adding the port.</p>
+    <pre><code>DROPLET-IP:9000
+</code></pre>
+  </li>
+</ol>
+<h3><a href="#get-started-locally-without-docker" name="get-started-locally-without-docker" class="anchor"><span class="anchor-link"></span></a>Get started locally without Docker</h3>
+<ol>
+  <li>
+    <p>First clone the project source code with git:</p>
+    <pre><code>git clone https://github.com/heta-io/tap
+</code></pre>
+  </li>
+  <li>
+  <p>Ensure you have the <a href="http://www.scala-sbt.org">latest sbt</a> installed</p></li>
+  <li>
+    <p>Create a file called <code>LocalSbtSettings.scala</code> in the /project directory. This will hold your specific settings for your build:</p>
+    <pre><code>import sbt._
 
 object LocalSbtSettings {
- val githubBaseUrl = &quot;https://github.com/uts-cic/tap&quot; //Change this to your fork
- val scaladocApiBaseUrl = &quot;https://uts-cic.github.io/tap&quot; //Change this to your fork
- val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot;
+ val githubBaseUrl = &quot;https://github.com/heta-io/tap&quot; //Change this to your fork
+ val scaladocApiBaseUrl = &quot;https://heta-io.github.io/tap/&quot; //Change this to your fork
+ val dockerRepoURI = &quot;the.url.to.publish.docker.images.to&quot; //leave as is if not using docker
 }
 </code></pre>
-<ol>
-  <li>Run TAP with enough memory to process larger models:</li>
+  </li>
+  <li>
+    <p>Now we need to setup some variables.</p>
+    <h4><a href="#windows-10" name="windows-10" class="anchor"><span class="anchor-link"></span></a>Windows 10</h4>
+    <ol>
+      <li>Open Start and type &ldquo;path&rdquo;</li>
+      <li>Click &ldquo;Edit System Environment Variables&rdquo;</li>
+      <li>Click Environment Variables</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>SBT_OPTS</code> for name and under value enter <code>-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_HOSTS</code> for name and under value enter <code>localhost:9000</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_SECRET</code> for name and under value enter <code>test</code></li>
+      <li>Click ok</li>
+      <li>Click Path under &ldquo;User Variables&rdquo; and click Edit</li>
+      <li>Ensure you have an entry that links to your java directory eg <code>C:\Program Files\Java\jdk1.8.0_181\bin</code></li>
+      <li>if it not present, add it and make sure it puts to your jdk director and the bin folder.</li>
+      <li>Click ok and exit the variables screen.</li>
+      <li>close and reopen your terminal window to refresh the variables</li>
+    </ol>
+    <h4><a href="#windows-7-vista-8" name="windows-7-vista-8" class="anchor"><span class="anchor-link"></span></a>Windows 7/Vista/8</h4>
+    <ol>
+      <li>Open Start &gt; Control Panel &gt; System &gt; Advanced system settings &gt; environment variables</li>
+      <li>Click &ldquo;Edit System Environment Variables&rdquo;</li>
+      <li>Click Environment Variables</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>SBT_OPTS</code> for name and under value enter <code>-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_HOSTS</code> for name and under value enter <code>localhost:9000</code></li>
+      <li>Click ok</li>
+      <li>Click New under &ldquo;User Variables&rdquo;</li>
+      <li>Enter <code>TAP_SECRET</code> for name and under value enter <code>test</code></li>
+      <li>Click ok</li>
+      <li>Click Path under &ldquo;User Variables&rdquo; and click Edit</li>
+      <li>Ensure you have an entry that links to your java directory eg <code>C:\Program Files\Java\jdk1.8.0_181\bin</code></li>
+      <li>if it not present, add it and make sure it puts to your jdk director and the bin folder.</li>
+      <li>Click ok and exit the variables screen.</li>
+      <li>close and reopen your terminal window to refresh the variables</li>
+    </ol>
+    <h4><a href="#macos" name="macos" class="anchor"><span class="anchor-link"></span></a>MacOS</h4>
+    <ol>
+      <li>Find your bash profile
+        <pre><code>~/.bash_profile
+</code></pre>
+      </li>
+      <li>Open your bash profile file
+        <pre><code>nano .bash_profile
+</code></pre>
+      </li>
+      <li>Add the following lines
+        <pre><code>export SBT_OPTS=&#39;-Xmx6G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=6G -Xss6G&#39;
+export TAP_HOSTS=&#39;localhost:9000&#39;
+export TAP_SECRET=&#39;test&#39;
+</code></pre>
+      </li>
+      <li>Press Ctrl+X and Y to save and exit</li>
+      <li>Open your path variables
+        <pre><code>sudo nano /etc/paths
+</code></pre>
+      </li>
+      <li>ensure that one of the lines leads to your jdk folder. See <a href="https://www.java.com/en/download/help/path.xml">this guide</a> for help</li>
+    </ol>
+  </li>
+  <li>
+  <p>Open terminal in the root directory of the tap project.</p></li>
+  <li>
+  <p>Run the following command inside the terminal  sbt run</p></li>
+  <li>
+  <p>Connect to <code>http://localhost:9000</code> with your web browser</p></li>
 </ol>
-<p><code>bash
-  sbt -J-Xmx4096M run
-</code></p>
-<ol>
-  <li>Connect to <code>http://localhost:9000</code> with your web browser</li>
-</ol>
+<h4><a href="#faq-and-common-issues-" name="faq-and-common-issues-" class="anchor"><span class="anchor-link"></span></a>FAQ and common issues.</h4>
+<pre><code>sbt is not recognised
+</code></pre>
+<p>You have not installed SBT and setup the path variable.</p>
+<p>Install SBT from <a href="https://www.scala-sbt.org/download.html">here</a> and ensure set path environment variables is selected</p>
+<pre><code>javac is not found in this directory
+</code></pre>
+<p>You have not setup your javac path variable, or it is not pointing to the correct directory.</p>
+<p>See <a href="https://stackoverflow.com/questions/32241179/setting-up-enviromental-variables-in-windows-10-to-use-java-and-javac">here</a> for help setting this up</p>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">

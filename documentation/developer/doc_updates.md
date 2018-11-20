@@ -2,6 +2,8 @@
 
 We use Paradox to automatically build the documentation.
 
+[Paradox documentation](https://developer.lightbend.com/docs/paradox/current/overview.html)
+
 The source files for the documentation is stored under tap/documentation.
 
 There are 3 folders in the /documentation directory which include the 3 sections that you see on the left.
@@ -26,5 +28,18 @@ To build your documentation run the following command inside the sbt shell
 updateDocs
 ```  
 
-This will generate html files in the docs directory, and any modified files will be 
-part of you pull request.
+If you are making a pull request please complete these steps to ensure there are no conflicts.
+
+* Delete all files inside the /docs directory.
+* Run `updateDocs` inside the sbt shell
+* inside the docs directory delete the following files
+    * client-opt.js
+        * client-opt.js.map
+    * client-opt-bundle.js
+        * client-opt-bundle.js.map
+    * client-opt-library.js
+        * client-opt-library.js.map
+    * client-opt-loader.js
+   
+Now you are able to make a pull request. For more information on contributing see @ref:[Contributing](contributing.md)
+
