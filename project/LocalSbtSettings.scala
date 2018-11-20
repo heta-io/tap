@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2016-2018 original author or authors
  *
@@ -14,8 +15,17 @@
  *
  */
 
-package io.heta.tap.data.results
+/**
+  * Created by andrew@andrewresearch.net on 7/11/17.
+  */
 
-import io.heta.tap.data.doc.PosStats
+import sbt._
+import Keys._
 
-case class PosStatsResult(analytics: PosStats, message:String = "", querytime:Int = -1) extends Result
+object LocalSbtSettings {
+  //For Documentation links
+  val githubBaseUrl = "https://github.com/heta-io/tap"
+  val scaladocApiBaseUrl = "https://heta.github.io/tap"
+  //For AWS docker deployment
+  val dockerRepoURI = "975443900627.dkr.ecr.ap-southeast-2.amazonaws.com"
+}

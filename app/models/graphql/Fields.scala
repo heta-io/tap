@@ -203,7 +203,7 @@ object Fields {
         implicit val tapSyllablesType:ObjectType[Unit,TapSyllables] = deriveObjectType[Unit,TapSyllables]()
         implicit val TapSpellingType:ObjectType[Unit,Spelling] = deriveObjectType[Unit,Spelling]()
         implicit val TapSpellType:ObjectType[Unit,Spell] = deriveObjectType[Unit,Spell]()
-        implicit val TapPosStatsType:ObjectType[Unit,TapPosStats] = deriveObjectType[Unit,TapPosStats]()
+        implicit val TapPosStatsType:ObjectType[Unit,PosStats] = deriveObjectType[Unit,PosStats]()
         implicit val TapMetaTagSummaryType:ObjectType[Unit,MetaTagSummary] = deriveObjectType[Unit,MetaTagSummary]()
         implicit val TapPhraseTagSummaryType:ObjectType[Unit,PhraseTagSummary] = deriveObjectType[Unit,PhraseTagSummary]()
         implicit val TapSummaryType:ObjectType[Unit,Summary] = deriveObjectType[Unit,Summary]()

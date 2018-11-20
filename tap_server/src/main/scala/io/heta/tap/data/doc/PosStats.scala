@@ -14,13 +14,18 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
+
+import play.api.libs.json.{Json, OWrites}
 
 /**
   * Created by andrew@andrewresearch.net on 26/10/17.
   */
 
-case class TapPosStats(
+object PosStats {
+  implicit val pWrites: OWrites[PosStats] = Json.writes[PosStats]
+}
+case class PosStats(
                         verbNounRatio:Double,
                         futurePastRatio:Double,
                         namedEntityWordRatio:Double,
@@ -29,4 +34,3 @@ case class TapPosStats(
                         verbDistribution:Vector[Double],
                         adjectiveDistribution:Vector[Double]
                       )
-

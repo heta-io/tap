@@ -263,7 +263,7 @@ class Annotating(cluAnnotator:ActorRef) {
   }
 
 
-  val tapPosStats:Flow[TapSentences, TapPosStats, NotUsed] = Flow[TapSentences]
+  val tapPosStats:Flow[TapSentences, PosStats, NotUsed] = Flow[TapSentences]
     .map { v =>
       val stats = v.map { s =>
         val ts = s.tokens
@@ -288,7 +288,7 @@ class Annotating(cluAnnotator:ActorRef) {
       val futurePastRatio = 0.0
       val nerWordRatio = ners.sum / words.sum.toDouble
       val adjWordRatio = adjs.sum / words.sum.toDouble
-      TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
+      PosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
 
   val reflectExpressions:Flow[Document,ReflectExpressions,NotUsed] = Flow[Document]
