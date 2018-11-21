@@ -29,3 +29,5 @@ Please include the following with any issues
 Please ensure you have pulled the latest changes on the Dev branch [here](https://github.com/infosci-qut/tap/tree/develop)
 
 All pull requests to be created on the develop branch [here](https://github.com/infosci-qut/tap/tree/develop)
+
+**Document Last Updated on 21/11/2018**
