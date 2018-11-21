@@ -14,17 +14,15 @@
  *
  */
 
-package io.heta.tap.data.doc
+package io.heta.tap.data.results
 
+import io.heta.tap.data.doc.{Sentence, Syllables}
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-/**
-  * Created by andrew@andrewresearch.net on 6/9/17.
-  */
-
-object Sentence {
-  implicit val tsWrites: OWrites[Sentence] = Json.writes[Sentence]
+object SyllablesBatchResult {
+  implicit val pWrites: OWrites[SyllablesBatchResult] = Json.writes[SyllablesBatchResult]
 }
-case class Sentence(original:String, tokens: Vector[Token], start: Int, end: Int, length: Int, idx: Int) {
+case class SyllablesBatchResult(name:String, analytics:Vector[Syllables]) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
+

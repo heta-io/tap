@@ -16,13 +16,13 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.{Sentence, Syllables}
+import io.heta.tap.data.doc.{Metrics, Sentence}
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object SyllablesResult {
-  implicit val pWrites: OWrites[SyllablesResult] = Json.writes[SyllablesResult]
+object MetricsBatchResult {
+  implicit val mWrites: OWrites[MetricsBatchResult] = Json.writes[MetricsBatchResult]
 }
-case class SyllablesResult(analytics:Vector[Syllables], message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
+case class MetricsBatchResult(name:String, analytics:Metrics) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 
