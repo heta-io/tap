@@ -20,23 +20,23 @@ import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Framing, Source}
 import akka.util.ByteString
 import io.heta.tap.data.CustomTypes.{DocumentStr, SectionStr}
-import io.heta.tap.data.{OldTapDocument, OldTapSection, OldTapSentence, OldTapTags}
+
 //import tap.nlp.old.{NlpBuilders, NlpDocument, OldNlpSentence}
 
 /**
   * Created by andrew@andrewresearch.net on 24/2/17.
   */
-object Parsing_OpenNLP {
-
-  object Pipeline {
-    /** A stream of document strings split into sections on newline,
-      *  which are treated as NLP Documents and then used to produce
-      *  TapSections that are folded into a OldTapDocument
-      */
-    //val default:Flow[SectionStr,OldTapDocument,NotUsed] = nlpDocs.via(nlpSentences).via(tapSentences).via(tapSection).via(tapDocument)
-
-
-  }
+//object Parsing_OpenNLP {
+//
+//  object Pipeline {
+//    /** A stream of document strings split into sections on newline,
+//      *  which are treated as NLP Documents and then used to produce
+//      *  TapSections that are folded into a OldTapDocument
+//      */
+//    //val default:Flow[SectionStr,OldTapDocument,NotUsed] = nlpDocs.via(nlpSentences).via(tapSentences).via(tapSection).via(tapDocument)
+//
+//
+//  }
 
   //import tap.nlp.old.openNlp.OpenNlpImplicits._
 
@@ -66,6 +66,6 @@ object Parsing_OpenNLP {
   )
 */
 
-}
+//}
 
 

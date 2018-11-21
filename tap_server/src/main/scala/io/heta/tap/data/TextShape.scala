@@ -16,4 +16,4 @@
 
 package io.heta.tap.data
 
-case class TextShape(numChunks:Int,numDensities:Int,densities:List[Double])
+//case class TextShape(numChunks:Int,numDensities:Int,densities:List[Double])
