@@ -20,7 +20,8 @@ import java.time.OffsetDateTime
 
 trait Result {
   val analytics: Any
-  val timestamp: String = OffsetDateTime.now().toString
-  val querytime: Int
   val message: String
+  val querytime: Int
+  val timestamp: String = OffsetDateTime.now().toString
+  val id: String = ""
 }

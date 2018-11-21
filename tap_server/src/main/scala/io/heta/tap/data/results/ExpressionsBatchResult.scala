@@ -17,13 +17,12 @@
 package io.heta.tap.data.results
 
 import io.heta.tap.data.doc.expression.Expressions
-import io.heta.tap.data.doc.AnalyticsResult
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 object ExpressionsBatchResult {
   implicit val eWrites: OWrites[ExpressionsBatchResult] = Json.writes[ExpressionsBatchResult]
 }
-case class ExpressionsBatchResult(name:String, analytics:Vector[Expressions]) extends AnalyticsResult {
+case class ExpressionsBatchResult(name:String, analytics:Vector[Expressions]) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

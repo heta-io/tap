@@ -17,13 +17,13 @@
 package io.heta.tap.data.results
 
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{AnalyticsResult, Metrics}
+import io.heta.tap.data.doc.Metrics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 object SpellingBatchResult {
   implicit val mWrites: OWrites[SpellingBatchResult] = Json.writes[SpellingBatchResult]
 }
-case class SpellingBatchResult(name:String, analytics:Vector[Spelling]) extends AnalyticsResult {
+case class SpellingBatchResult(name:String, analytics:Vector[Spelling]) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

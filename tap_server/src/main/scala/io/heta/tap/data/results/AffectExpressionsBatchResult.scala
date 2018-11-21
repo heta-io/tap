@@ -16,7 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.AnalyticsResult
 import io.heta.tap.data.doc.expression.affect.AffectExpressions
 import play.api.libs.json.{JsValue, Json, OWrites}
 
@@ -24,7 +23,7 @@ object AffectExpressionsBatchResult {
   implicit val ctsWrites: OWrites[AffectExpressionsBatchResult] = Json.writes[AffectExpressionsBatchResult]
 }
 
-case class AffectExpressionsBatchResult(name:String, analytics:Vector[AffectExpressions]) extends AnalyticsResult {
+case class AffectExpressionsBatchResult(name:String, analytics:Vector[AffectExpressions]) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

@@ -16,13 +16,13 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.{AnalyticsResult, PosStats}
+import io.heta.tap.data.doc.PosStats
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 object PosStatsBatchResult {
   implicit val pWrites: OWrites[PosStatsBatchResult] = Json.writes[PosStatsBatchResult]
 }
-case class PosStatsBatchResult(name:String, analytics:PosStats) extends AnalyticsResult {
+case class PosStatsBatchResult(name:String, analytics:PosStats) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

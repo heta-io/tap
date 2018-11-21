@@ -16,14 +16,13 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.AnalyticsResult
 import io.heta.tap.data.doc.vocabulary.Vocabulary
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 object VocabularyBatchResult {
   implicit val ctsWrites: OWrites[VocabularyBatchResult] = Json.writes[VocabularyBatchResult]
 }
-case class VocabularyBatchResult(name:String, analytics:Vocabulary) extends AnalyticsResult {
+case class VocabularyBatchResult(name:String, analytics:Vocabulary) extends Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

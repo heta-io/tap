@@ -16,14 +16,10 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.doc.{AnalyticsResult, Sentence}
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.JsValue
 
-object SentencesBatchResult {
-  implicit val ctsWrites: OWrites[SentencesBatchResult] = Json.writes[SentencesBatchResult]
+trait Batch {
+  val analytics:AnyRef
+  val name:String
+  def asJson: JsValue
 }
-
-case class SentencesBatchResult(name:String, analytics:Vector[Sentence]) extends AnalyticsResult {
-  def asJson: JsValue = Json.toJson(this)
-}
-

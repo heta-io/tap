@@ -44,22 +44,22 @@ object Segment {
 
   private val logger: Logger = Logger(this.getClass)
 
-  val Document_SentencesBatchResult: Flow[Document, SentencesBatchResult, NotUsed] = Flow[org.clulab.processors.Document]
+  val Document_SentencesBatchResult: Flow[Document, SentencesResult, NotUsed] = Flow[org.clulab.processors.Document]
     .map { doc =>
       logger.info("Extracting sentences")
       val sents = doc.sentences.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
         Sentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
-      SentencesBatchResult(doc.id.getOrElse("unknown"),sents)
+      SentencesResult(sents,name=doc.id.getOrElse("unknown"))
     }
 
-  val AnalyticsResult_File: Flow[AnalyticsResult,File,NotUsed] = Flow[AnalyticsResult]
+  val AnalyticsResult_File: Flow[Batch,File,NotUsed] = Flow[Batch]
     .map[File](ar => File(ar.name,ByteString(Json.prettyPrint(ar.asJson))))
 
 
-  val Sentences_Vocabulary: Flow[SentencesBatchResult, AnalyticsResult, NotUsed] =
-    Flow[SentencesBatchResult].map[AnalyticsResult] { res =>
+  val Sentences_Vocabulary: Flow[SentencesResult, Batch, NotUsed] =
+    Flow[SentencesResult].map[Batch] { res =>
 
       val vocab = res.analytics.flatMap(_.tokens)
         .map(_.term.toLowerCase)
@@ -73,8 +73,8 @@ object Segment {
 
 
 
-  val Sentences_Metrics: Flow[SentencesBatchResult, MetricsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Metrics: Flow[SentencesResult, MetricsBatchResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val counts = res.analytics.map { s =>
         val tokens:Int = s.tokens.length
@@ -102,8 +102,8 @@ object Segment {
     }
 
 
-  val Sentences_PosStats: Flow[SentencesBatchResult, PosStatsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_PosStats: Flow[SentencesResult, PosStatsBatchResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val stats = res.analytics.map { s =>
         val ts = s.tokens
@@ -134,8 +134,8 @@ object Segment {
       PosStatsBatchResult(res.name,posStats)
     }
 
-  val Sentences_Syllables: Flow[SentencesBatchResult, SyllablesBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Syllables: Flow[SentencesResult, SyllablesBatchResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val syllables = res.analytics.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
@@ -145,8 +145,8 @@ object Segment {
       SyllablesBatchResult(res.name,syllables)
     }
 
-  val Sentences_Spelling: Flow[SentencesBatchResult, SpellingBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Spelling: Flow[SentencesResult, SpellingBatchResult, NotUsed] =
+    Flow[SentencesResult]
     .mapAsync[SpellingBatchResult](5) { res =>
       import io.heta.tap.pipelines.materialize.PipelineContext.executor
       Speller.check(res.analytics).map { sp =>
@@ -154,8 +154,8 @@ object Segment {
       }
   }
 
-  val Sentences_Expressions: Flow[SentencesBatchResult, ExpressionsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Expressions: Flow[SentencesResult, ExpressionsBatchResult, NotUsed] =
+    Flow[SentencesResult]
     .mapAsync[ExpressionsBatchResult](5) { res =>
       import io.heta.tap.pipelines.materialize.PipelineContext.executor
       val results = res.analytics.map { sent =>
@@ -168,9 +168,9 @@ object Segment {
       Future.sequence(results).map(r => ExpressionsBatchResult(res.name,r))
   }
 
-  def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
+  def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesResult, AffectExpressionsBatchResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
-    Flow[SentencesBatchResult].map[AffectExpressionsBatchResult] { sents =>
+    Flow[SentencesResult].map[AffectExpressionsBatchResult] { sents =>
       val aes = sents.analytics.map { s =>
         val ae = AffectLexicon.getAllMatchingTerms(s.tokens)
         AffectExpressions(filterAffectThresholds(ae,th),s.idx)

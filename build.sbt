@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.3-RC2"
+lazy val projectVersion = "3.3-RC3"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
