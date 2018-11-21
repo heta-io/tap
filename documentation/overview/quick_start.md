@@ -2,6 +2,7 @@
 ---
 
 @@toc { depth=5 }
+
 ### Get started with Docker
 
 #### Docker for Windows 10
@@ -84,6 +85,77 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
    
         
 
+#### Docker for Mac
+
+@@@ note { title=Notice }
+
+Mac hardware must be a 2010 or newer model, with Intel’s hardware support for memory management unit (MMU) virtualization, including Extended Page Tables (EPT) and Unrestricted Mode. You can check to see if your machine has this support by running the following command in a terminal: sysctl kern.hv_support
+
+MacOS El Capitan 10.11 and newer macOS releases are supported. We recommend upgrading to the latest version of macOS.
+
+At least 4GB of RAM
+
+VirtualBox prior to version 4.3.30 must NOT be installed (it is incompatible with Docker for Mac). If you have a newer version of VirtualBox installed, it’s fine.
+
+@@@
+
+**If you do not have a late enough Mac model Please use [Docker Toolbox](#docker-toolbox).**
+
+This is the easiest way to get started with docker and TAP. Late models of Mac have an app called Docker For Mac which will handle everything automatically for you.
+See [How To install Docker For Mac](https://docs.docker.com/docker-for-mac/install/)
+
+1. Ensure you have docker for mac installed and it is running.
+2. Ensure you have [VirtualBox](https://www.virtualbox.org/) version 5+ installed on your system 
+3. Now create a VM we can use to run TAP on.
+
+        docker-machine create -d virtualbox --virtualbox-memory 2048  myvm1
+        
+    Notice we are passing in some custom variables
+
+    * We are giving it 2gb of ram 
+    * We are naming it "myvm1"
+
+4.  Once it is created, verify that it is running and write down it's IP. (here mine is 192.168.99.100)
+        
+        docker-machine ls
+        
+    ![docker machine ip](https://i.imgur.com/8Dz2c6e.png)
+        
+5. To control your newly created docker machine there is a simple command you can run
+
+        docker-machine env myvm1
+        
+    ![docker env](https://i.imgur.com/UfKaMT9.png)
+        
+    This will return a command you can run in order to automatically send your docker commands to your vm. (the last line minus the REM)
+
+    **Yours may be different than mine, be sure to run whatever command your terminal returns.**
+
+    run that command
+        
+        eval $(docker-machine env myvm1)
+        
+    Now any docker commands we run will run on the machine we created! Now let's get TAP running.
+
+6. run docker run and pass in a number of parameters
+
+        docker run -e JAVA_OPTS="-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M" -e TAP_HOSTS="192.168.99.100:9000" -e TAP_SECRET="test" -p 9000:9000 andrewresearch/tap:3.2.2
+        
+    There are a few parameters here:
+   
+    * JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.
+    * TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000
+    * TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include "test"
+    * -p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000
+    * lastly we include the docker image name in this case is "andrewresearch/tap:3.2.2" (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)
+
+7. That's it! if all went well, The docker should mention `factorie-nlp-api - Completed in xms` and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 192.168.99.100:9000)
+
+    ![docker demo](https://i.imgur.com/XW9uSUN.png)
+    
+    **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**
+   
+
 
 
 #### Docker ToolBox 
@@ -152,8 +224,7 @@ Once you have Docker Toolbox running and have run the Quick Setup Icon it create
     ![browser](https://i.imgur.com/KLQIn6n.png) 
     
     **If there are any issues with this documentation, or you wish to suggest changes, [open an issue](https://github.com/heta-io/tap/issues).**   
-
-
+    
 #### Docker CE for Linux
 
 Ensure you have installed Docker CE
