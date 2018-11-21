@@ -19,10 +19,10 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object ReflectExpressionsBatchResult {
-  implicit val ctsWrites: OWrites[ReflectExpressionsBatchResult] = Json.writes[ReflectExpressionsBatchResult]
+object ReflectExpressionsResult {
+  implicit val ctsWrites: OWrites[ReflectExpressionsResult] = Json.writes[ReflectExpressionsResult]
 }
-case class ReflectExpressionsBatchResult(name:String, analytics:ReflectExpressions) extends Batch {
+case class ReflectExpressionsResult(analytics:ReflectExpressions, message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

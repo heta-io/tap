@@ -20,10 +20,10 @@ import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.data.doc.Metrics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object SpellingBatchResult {
-  implicit val mWrites: OWrites[SpellingBatchResult] = Json.writes[SpellingBatchResult]
+object SpellingResult {
+  implicit val mWrites: OWrites[SpellingResult] = Json.writes[SpellingResult]
 }
-case class SpellingBatchResult(name:String, analytics:Vector[Spelling]) extends Batch {
+case class SpellingResult(analytics:Vector[Spelling], message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 

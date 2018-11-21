@@ -19,11 +19,11 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.expression.affect.AffectExpressions
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-object AffectExpressionsBatchResult {
-  implicit val ctsWrites: OWrites[AffectExpressionsBatchResult] = Json.writes[AffectExpressionsBatchResult]
+object AffectExpressionsResult {
+  implicit val ctsWrites: OWrites[AffectExpressionsResult] = Json.writes[AffectExpressionsResult]
 }
 
-case class AffectExpressionsBatchResult(name:String, analytics:Vector[AffectExpressions]) extends Batch {
+case class AffectExpressionsResult(analytics:Vector[AffectExpressions], message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
   def asJson: JsValue = Json.toJson(this)
 }
 
