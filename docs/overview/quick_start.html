@@ -175,6 +175,7 @@ Text Analytics Pipeline (TAP)
   <li><a href="../overview/quick_start.html#get-started-with-docker" class="header">Get started with Docker</a>
   <ul>
     <li><a href="../overview/quick_start.html#docker-for-windows-10" class="header">Docker for Windows 10</a></li>
+    <li><a href="../overview/quick_start.html#docker-for-mac" class="header">Docker for Mac</a></li>
     <li><a href="../overview/quick_start.html#docker-toolbox" class="header">Docker ToolBox</a></li>
     <li><a href="../overview/quick_start.html#docker-ce-for-linux" class="header">Docker CE for Linux</a></li>
     <li><a href="../overview/quick_start.html#run-docker-on-digital-ocean" class="header">Run Docker on Digital Ocean</a></li>
@@ -250,6 +251,62 @@ Text Analytics Pipeline (TAP)
   <li>
     <p>That&rsquo;s it! if all went well, The docker should mention <code>factorie-nlp-api - Completed in xms</code> and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 10.1.1.190:9000)</p>
     <p><img src="https://i.imgur.com/FG7F0EM.png" alt="docker demo" /></p>
+    <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
+  </li>
+</ol>
+<h4><a href="#docker-for-mac" name="docker-for-mac" class="anchor"><span class="anchor-link"></span></a>Docker for Mac</h4><div class="callout note "><div class="callout-title">Notice</div>
+<p>Mac hardware must be a 2010 or newer model, with Intel’s hardware support for memory management unit (MMU) virtualization, including Extended Page Tables (EPT) and Unrestricted Mode. You can check to see if your machine has this support by running the following command in a terminal: sysctl kern.hv_support</p>
+<p>MacOS El Capitan 10.11 and newer macOS releases are supported. We recommend upgrading to the latest version of macOS.</p>
+<p>At least 4GB of RAM</p>
+<p>VirtualBox prior to version 4.3.30 must NOT be installed (it is incompatible with Docker for Mac). If you have a newer version of VirtualBox installed, it’s fine.</p></div>
+<p><strong>If you do not have a late enough Mac model Please use <a href="#docker-toolbox">Docker Toolbox</a>.</strong></p>
+<p>This is the easiest way to get started with docker and TAP. Late models of Mac have an app called Docker For Mac which will handle everything automatically for you. See <a href="https://docs.docker.com/docker-for-mac/install/">How To install Docker For Mac</a></p>
+<ol>
+  <li>Ensure you have docker for mac installed and it is running.</li>
+  <li>Ensure you have <a href="https://www.virtualbox.org/">VirtualBox</a> version 5+ installed on your system</li>
+  <li>Now create a VM we can use to run TAP on.
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory 2048  myvm1
+</code></pre>
+    <p>Notice we are passing in some custom variables</p>
+    <ul>
+      <li>We are giving it 2gb of ram</li>
+      <li>We are naming it &ldquo;myvm1&rdquo;</li>
+    </ul>
+  </li>
+  <li>
+    <p>Once it is created, verify that it is running and write down it&rsquo;s IP. (here mine is 192.168.99.100)</p>
+    <pre><code>docker-machine ls
+</code></pre>
+    <p><img src="https://i.imgur.com/8Dz2c6e.png" alt="docker machine ip" /></p>
+  </li>
+  <li>
+    <p>To control your newly created docker machine there is a simple command you can run</p>
+    <pre><code>docker-machine env myvm1
+</code></pre>
+    <p><img src="https://i.imgur.com/UfKaMT9.png" alt="docker env" /></p>
+    <p>This will return a command you can run in order to automatically send your docker commands to your vm. (the last line minus the REM)</p>
+    <p><strong>Yours may be different than mine, be sure to run whatever command your terminal returns.</strong></p>
+    <p>run that command</p>
+    <pre><code>eval $(docker-machine env myvm1)
+</code></pre>
+    <p>Now any docker commands we run will run on the machine we created! Now let&rsquo;s get TAP running.</p>
+  </li>
+  <li>
+    <p>run docker run and pass in a number of parameters</p>
+    <pre><code>docker run -e JAVA_OPTS=&quot;-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M&quot; -e TAP_HOSTS=&quot;192.168.99.100:9000&quot; -e TAP_SECRET=&quot;test&quot; -p 9000:9000 andrewresearch/tap:3.2.2
+</code></pre>
+    <p>There are a few parameters here:</p>
+    <ul>
+      <li>JAVA_OPTS is passing in our custom java environment variables which allow us to increase the amount of memory the application can use.</li>
+      <li>TAP_HOSTS is telling our application which IP is authorised to use our application, In this case you need to pass in your machine IP you wrote down earlier. In my case it is 192.168.99.100:9000</li>
+      <li>TAP_SECRET is a secret variable we can pass through to our application to ensure we are allowed to run the image. in this case just include &ldquo;test&rdquo;</li>
+      <li>-p tells the docker machine which port to use, So we are mapping our Port 9000 to the machines port 9000</li>
+      <li>lastly we include the docker image name in this case is &ldquo;andrewresearch/tap:3.2.2&rdquo; (3.2.2 is the version number, which may change at a later date. be sure to use the latest available)</li>
+    </ul>
+  </li>
+  <li>
+    <p>That&rsquo;s it! if all went well, The docker should mention <code>factorie-nlp-api - Completed in xms</code> and you should be able to access your TAP instance by navigating to your Docker IP in a browser! (in my case 192.168.99.100:9000)</p>
+    <p><img src="https://i.imgur.com/XW9uSUN.png" alt="docker demo" /></p>
     <p><strong>If there are any issues with this documentation, or you wish to suggest changes, <a href="https://github.com/heta-io/tap/issues">open an issue</a>.</strong></p>
   </li>
 </ol>
@@ -516,6 +573,7 @@ export TAP_SECRET=&#39;test&#39;
 </code></pre>
 <p>You have not setup your javac path variable, or it is not pointing to the correct directory.</p>
 <p>See <a href="https://stackoverflow.com/questions/32241179/setting-up-enviromental-variables-in-windows-10-to-use-java-and-javac">here</a> for help setting this up</p>
+<p><strong>Document Last Updated on 21/11/2018</strong></p>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">

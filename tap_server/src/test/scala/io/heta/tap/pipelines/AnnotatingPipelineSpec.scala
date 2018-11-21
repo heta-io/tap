@@ -18,13 +18,14 @@ package io.heta.tap.pipelines
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import io.heta.tap.analysis.expression.ExpressionAnalyser
 import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.Document
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import io.heta.tap.data._
 import io.heta.tap.data.doc.spell.Spelling
-import io.heta.tap.data.doc.{Sentence, Metrics}
+import io.heta.tap.data.doc.{Metrics, PosStats, Sentence, Syllables}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -141,8 +142,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
 
       val input = s"I believe you are the best player on our team. I would support you for sure."
 
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[Expressions]])(Keep.right)
-      val result:Future[Vector[Expressions]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(expressionFlow).toMat(Sink.head[Vector[ExpressionAnalyser]])(Keep.right)
+      val result:Future[Vector[ExpressionAnalyser]] = graph.run()
       val expression = Await.result(result, 240 seconds)
 
 
@@ -165,8 +166,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val syllableFlow = annotator.tapSyllables
 
       val input = s"It is nice to get something for free. That is for sure."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(syllableFlow).toMat(Sink.head[Vector[TapSyllables]])(Keep.right)
-      val result:Future[Vector[TapSyllables]] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(syllableFlow).toMat(Sink.head[Vector[Syllables]])(Keep.right)
+      val result:Future[Vector[Syllables]] = graph.run()
       val syllable = Await.result(result, 240 seconds)
 
       assert(syllable(0).avgSyllables == 9/9.toDouble)
@@ -203,8 +204,8 @@ class AnnotatingPipelineSpec extends PlaySpec {
       val posStatFlow = annotator.tapPosStats
 
       val input = s"You're the best player on our team."
-      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(posStatFlow).toMat(Sink.head[TapPosStats])(Keep.right)
-      val result:Future[TapPosStats] = graph.run()
+      val graph = Source.single(input).via(docFlow).via(sentenceFlow).via(posStatFlow).toMat(Sink.head[PosStats])(Keep.right)
+      val result:Future[PosStats] = graph.run()
       val posStat = Await.result(result, 240 seconds)
 
       assert(posStat.verbNounRatio == 1/2.toDouble)

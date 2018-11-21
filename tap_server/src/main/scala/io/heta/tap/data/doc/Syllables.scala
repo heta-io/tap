@@ -14,10 +14,15 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.doc
+
+import play.api.libs.json.{Json, OWrites}
 
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
 
-case class TapSyllables(sentIdx: Int, avgSyllables: Double, counts: Vector[Int])
+object Syllables {
+  implicit val pWrites: OWrites[Syllables] = Json.writes[Syllables]
+}
+case class Syllables(sentIdx: Int, avgSyllables: Double, counts: Vector[Int])

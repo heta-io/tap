@@ -44,3 +44,6 @@ Once it has compiled and built you may find it will crash with an Out Of Memory 
 8. Great now you can right click HomePage again and select 'Run Play 2 App' and it should compile and load up the homepage. 
 
 9. You are good to go! Try visiting the graphql interface and see what it can do!
+
+
+**Document Last Updated on 21/11/2018**

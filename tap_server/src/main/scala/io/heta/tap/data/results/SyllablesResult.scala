@@ -16,6 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.TapSyllables
+import io.heta.tap.data.doc.Syllables
 
-case class SyllablesResult(analytics: Vector[TapSyllables], message:String = "", querytime:Int = -1) extends Result
+case class SyllablesResult(analytics: Vector[Syllables], message:String = "", querytime:Int = -1) extends Result

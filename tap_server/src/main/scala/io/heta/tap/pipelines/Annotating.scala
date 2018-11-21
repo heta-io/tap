@@ -22,21 +22,22 @@ import akka.pattern.ask
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
 import com.typesafe.scalalogging.Logger
-import io.nlytx.expressions.ReflectiveExpressionPipeline
-import io.nlytx.nlp.api.AnnotatorPipelines
-import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
-import io.heta.tap.data._
+import io.heta.tap.analysis.expression.ExpressionAnalyser
+import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.data.doc.expression.Expressions
-import io.heta.tap.data.doc.{expression, _}
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
-import io.heta.tap.pipelines
+import io.heta.tap.data.doc.{expression, _}
+import io.heta.tap.{analysis, pipelines}
 import io.heta.tap.pipelines.AnnotatingTypes._
 import io.heta.tap.pipelines.materialize.PipelineContext
+import io.nlytx.expressions.ReflectiveExpressionPipeline
+import io.nlytx.nlp.api.AnnotatorPipelines
+import io.nlytx.nlp.api.DocumentModel.{Document, Token}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -50,7 +51,7 @@ import scala.util.{Failure, Success, Try}
 class Annotating(cluAnnotator:ActorRef) {
 
   //val languageTool: ActorRef = ???
-  val expressions:pipelines.Expressions = new Expressions()
+  //val expressions:analysis.expression.ExpressionAnalyser = new analysis.expression.ExpressionAnalyser()
   //val ca:CluAnnotatorActor = new CluAnnotatorActor()
 
   val logger: Logger = Logger(this.getClass)
@@ -234,36 +235,32 @@ class Annotating(cluAnnotator:ActorRef) {
     .mapAsync[Vector[expression.Expressions]](3) { v =>
     val results = v.map { sent =>
       for {
-        ae <- expressions.affect(sent.tokens)
-        ee <- expressions.epistemic(sent.tokens)
-        me <- expressions.modal(sent.tokens)
+        ae <- ExpressionAnalyser.affect(sent.tokens)
+        ee <- ExpressionAnalyser.epistemic(sent.tokens)
+        me <- ExpressionAnalyser.modal(sent.tokens)
       } yield Expressions(ae, ee, me, sent.idx)
     }
     Future.sequence(results)
   }
 
-  val tapSyllables: Flow[TapSentences,Vector[TapSyllables], NotUsed] = Flow[TapSentences]
+  val tapSyllables: Flow[TapSentences,Vector[Syllables], NotUsed] = Flow[TapSentences]
     .map { v =>
       v.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / sent.tokens.length.toDouble
-        TapSyllables(sent.idx,avg,counts)
+        Syllables(sent.idx,avg,counts)
       }
     }
 
-  //TODO Fix spelling implementation to use streams
-  val tapSpelling: Flow[TapSentences,Vector[Spelling],NotUsed] = Flow[TapSentences]
+
+  val tapSpelling: Flow[TapSentences, Vector[Spelling], NotUsed] = Flow[TapSentences]
     .mapAsync[Vector[Spelling]](2) { v =>
-    val checked = v.map { sent =>
-      //ask(languageTool,CheckSpelling(sent.original)).mapTo[Vector[TapSpell]].map(sp => TapSpelling(sent.idx,sp))
-      Spelling(sent.idx,Vector())
-    }
-    //Future.sequence(checked)
-    Future(checked)
+    val sents = v.map(sent => Sentence(sent.original,sent.tokens,sent.start,sent.end,sent.length,sent.idx))
+    Speller.check(sents)
   }
 
 
-  val tapPosStats:Flow[TapSentences, TapPosStats, NotUsed] = Flow[TapSentences]
+  val tapPosStats:Flow[TapSentences, PosStats, NotUsed] = Flow[TapSentences]
     .map { v =>
       val stats = v.map { s =>
         val ts = s.tokens
@@ -288,7 +285,7 @@ class Annotating(cluAnnotator:ActorRef) {
       val futurePastRatio = 0.0
       val nerWordRatio = ners.sum / words.sum.toDouble
       val adjWordRatio = adjs.sum / words.sum.toDouble
-      TapPosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
+      PosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
     }
 
   val reflectExpressions:Flow[Document,ReflectExpressions,NotUsed] = Flow[Document]
@@ -332,7 +329,7 @@ class Annotating(cluAnnotator:ActorRef) {
     Flow[TapSentences].mapAsync[Vector[AffectExpressions]](3) { sents =>
       val results = sents.map { s =>
         for {
-          ae <- expressions.affective(s.tokens)
+          ae <- ExpressionAnalyser.affective(s.tokens)
         } yield AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
       Future.sequence(results)
