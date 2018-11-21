@@ -43,19 +43,23 @@ object Pipe {
 
   val posStats: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_PosStats via
+        Segment.AnalyticsResult_File
 
   val syllables: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_Syllables via
+        Segment.AnalyticsResult_File
 
   val spelling: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_Spelling via
+        Segment.AnalyticsResult_File
 
   val expressions: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via
-    Segment.AnalyticsResult_File
+      Segment.Sentences_Expressions via
+        Segment.AnalyticsResult_File
 
   val affectExpressions: Flow[Document, File, NotUsed] =
     Segment.Document_SentencesBatchResult via

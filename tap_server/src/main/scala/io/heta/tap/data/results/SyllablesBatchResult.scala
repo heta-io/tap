@@ -14,19 +14,15 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-/**
-  * Created by andrew@andrewresearch.net on 26/10/17.
-  */
+import io.heta.tap.data.doc.{AnalyticsResult, Sentence, Syllables}
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class TapPosStats(
-                        verbNounRatio:Double,
-                        futurePastRatio:Double,
-                        namedEntityWordRatio:Double,
-                        adjectiveWordRatio:Double,
-                        nounDistribution:Vector[Double],
-                        verbDistribution:Vector[Double],
-                        adjectiveDistribution:Vector[Double]
-                      )
+object SyllablesBatchResult {
+  implicit val pWrites: OWrites[SyllablesBatchResult] = Json.writes[SyllablesBatchResult]
+}
+case class SyllablesBatchResult(name:String, analytics:Vector[Syllables]) extends AnalyticsResult {
+  def asJson: JsValue = Json.toJson(this)
+}
 

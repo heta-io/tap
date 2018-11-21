@@ -14,27 +14,23 @@
  *
  */
 
-package io.heta.tap.pipelines
+package io.heta.tap.analysis.expression
 
-
-import io.heta.tap.data._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import com.typesafe.scalalogging.Logger
-import io.nlytx.expressions.ReflectiveExpressionPipeline
-import io.nlytx.expressions.data.ReflectiveExpressions
 import io.heta.tap.analysis.Lexicons
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.data.doc._
-import io.heta.tap.data.doc.expression.{EpistemicExpression, ModalExpression}
 import io.heta.tap.data.doc.expression.affect.AffectExpression
+import io.heta.tap.data.doc.expression.{EpistemicExpression, ModalExpression}
+import io.nlytx.expressions.ReflectiveExpressionPipeline
+import io.nlytx.expressions.data.ReflectiveExpressions
 
-import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
-class Expressions {
+object ExpressionAnalyser {
 
   val logger: Logger = Logger(this.getClass)
 

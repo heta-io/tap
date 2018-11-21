@@ -20,17 +20,22 @@ import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
+import io.heta.tap.analysis.Syllable
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
+import io.heta.tap.analysis.expression.ExpressionAnalyser
+import io.heta.tap.analysis.languagetool.Speller
 import io.heta.tap.analysis.reflectiveExpressions.PosTagAnalyser
-import io.heta.tap.data.doc.{Metrics, _}
+import io.heta.tap.data.doc.expression.Expressions
 import io.heta.tap.data.doc.expression.affect.{AffectExpression, AffectExpressions, AffectThresholds}
 import io.heta.tap.data.doc.expression.reflect._
 import io.heta.tap.data.doc.vocabulary.{TermCount, Vocabulary}
+import io.heta.tap.data.doc.{Metrics, PosStats, Syllables, _}
 import io.heta.tap.data.results._
 import io.heta.tap.pipelines.materialize.FilePipeline.File
-import org.antlr.v4.runtime
 import org.clulab.processors.Document
 import play.api.libs.json.Json
+
+import scala.concurrent.Future
 
 /*
 These are Flow Segments that are joined together to make Pipes
@@ -97,6 +102,71 @@ object Segment {
     }
 
 
+  val Sentences_PosStats: Flow[SentencesBatchResult, PosStatsBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .map { res =>
+      val stats = res.analytics.map { s =>
+        val ts = s.tokens
+        val tokens:Int = ts.length
+        val punctuation:Int = ts.count(_.isPunctuation)
+        val words: Int = tokens - punctuation
+        val verbs = ts.count(_.postag.contains("VB"))
+        val nouns = ts.count(_.postag.contains("NN"))
+        val adjectives = ts.count(_.postag.contains("JJ"))
+        val ner = ts.filterNot(_.nertag.contentEquals("O")).length
+        (words,ner,verbs,nouns,adjectives)
+      }
+      val words = stats.map(_._1)
+      val ners = stats.map(_._2)
+      val verbs = stats.map(_._3)
+      val verbDist = verbs.map(_ / verbs.sum.toDouble)
+      val nouns = stats.map(_._4)
+      val nounDist = nouns.map(_ / nouns.sum.toDouble)
+      val adjs = stats.map(_._5)
+      val adjDist = adjs.map(_ / adjs.sum.toDouble)
+      val verbNounRatio = verbs.sum / nouns.sum.toDouble
+      val futurePastRatio = 0.0
+      val nerWordRatio = ners.sum / words.sum.toDouble
+      val adjWordRatio = adjs.sum / words.sum.toDouble
+
+      val posStats = PosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
+
+      PosStatsBatchResult(res.name,posStats)
+    }
+
+  val Sentences_Syllables: Flow[SentencesBatchResult, SyllablesBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .map { res =>
+      val syllables = res.analytics.map { sent =>
+        val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
+        val avg = counts.sum / sent.tokens.length.toDouble
+        Syllables(sent.idx,avg,counts)
+      }
+      SyllablesBatchResult(res.name,syllables)
+    }
+
+  val Sentences_Spelling: Flow[SentencesBatchResult, SpellingBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .mapAsync[SpellingBatchResult](5) { res =>
+      import io.heta.tap.pipelines.materialize.PipelineContext.executor
+      Speller.check(res.analytics).map { sp =>
+        SpellingBatchResult(res.name,sp)
+      }
+  }
+
+  val Sentences_Expressions: Flow[SentencesBatchResult, ExpressionsBatchResult, NotUsed] =
+    Flow[SentencesBatchResult]
+    .mapAsync[ExpressionsBatchResult](5) { res =>
+      import io.heta.tap.pipelines.materialize.PipelineContext.executor
+      val results = res.analytics.map { sent =>
+        for {
+          ae <- ExpressionAnalyser.affect(sent.tokens)
+          ee <- ExpressionAnalyser.epistemic(sent.tokens)
+          me <- ExpressionAnalyser.modal(sent.tokens)
+        } yield Expressions(ae, ee, me, sent.idx)
+      }
+      Future.sequence(results).map(r => ExpressionsBatchResult(res.name,r))
+  }
 
   def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))

@@ -19,7 +19,7 @@ package controllers.handlers
 import com.google.inject.AbstractModule
 import io.heta.tap.analysis.affectlexicon.AffectLexicon
 import io.heta.tap.analysis.wordvector.WordVectorActor
-import io.heta.tap.nlp.factorie.LanguageToolActor
+//import io.heta.tap.nlp.factorie.LanguageToolActor
 import play.api.Logger
 import play.api.libs.concurrent.AkkaGuiceSupport
 

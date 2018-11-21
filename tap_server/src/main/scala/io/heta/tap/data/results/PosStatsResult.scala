@@ -16,6 +16,6 @@
 
 package io.heta.tap.data.results
 
-import io.heta.tap.data.TapPosStats
+import io.heta.tap.data.doc.PosStats
 
-case class PosStatsResult(analytics: TapPosStats, message:String = "", querytime:Int = -1) extends Result
+case class PosStatsResult(analytics: PosStats, message:String = "", querytime:Int = -1) extends Result
