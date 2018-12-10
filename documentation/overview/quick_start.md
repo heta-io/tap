@@ -35,11 +35,11 @@ See [How To install Docker For Windows](https://docs.docker.com/docker-for-windo
   
 3. Now create a VM we can use to run TAP on. (You may need to run this in admin, press windows key + x > Command Prompt (Admin))
 
-        docker-machine create -d hyperv --hyperv-memory 2048  --hyperv-virtual-switch "myswitch" myvm1
+        docker-machine create -d hyperv --hyperv-memory 6144  --hyperv-virtual-switch "myswitch" myvm1
         
     Notice we are passing in some custom variables
 
-    * We are giving it 2gb of ram 
+    * We are giving it 6gb of ram (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.) 
     * We are choosing the switch we just created "myswitch"
     * We are naming it "myvm1"
 
@@ -108,11 +108,11 @@ See [How To install Docker For Mac](https://docs.docker.com/docker-for-mac/insta
 2. Ensure you have [VirtualBox](https://www.virtualbox.org/) version 5+ installed on your system 
 3. Now create a VM we can use to run TAP on.
 
-        docker-machine create -d virtualbox --virtualbox-memory 2048  myvm1
+        docker-machine create -d virtualbox --virtualbox-memory 6144  myvm1
         
     Notice we are passing in some custom variables
 
-    * We are giving it 2gb of ram 
+    * We are giving it 6gb of ram (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)
     * We are naming it "myvm1"
 
 4.  Once it is created, verify that it is running and write down it's IP. (here mine is 192.168.99.100)
@@ -180,9 +180,9 @@ Once you have Docker Toolbox running and have run the Quick Setup Icon it create
     
 2. Great, Let's create a new one and pass in some custom parameters
 
-        docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+        docker-machine create -d virtualbox --virtualbox-memory=6144 myvm1
         
-    This created a new machine called "myvm1" and gives it 2gb of ram instead of the default 1gb.
+    This created a new machine called "myvm1" and gives it 6gb of ram instead of the default 1gb. (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)
     
 3. Great! let's get our docker machine IP.
 
@@ -243,7 +243,9 @@ Ensure you have installed Oracle VirtualBox for linux
 
 1. Create a Virtual Machine to run our docker container.
 
-        docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
+        docker-machine create -d virtualbox --virtualbox-memory=6144 myvm1
+        
+    (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)
         
 2. run `docker-machine ls` to get the IP of our new machine.
 
@@ -301,7 +303,7 @@ use this referral code to receive $10 in free credit upon signing up and adding 
     Once created, Click Create > Droplet
     ![do droplet create](https://i.imgur.com/36rGJfQ.png)
     
-    Choose Docker and change the size to the $10 droplet.
+    Choose Docker and change the size to the $10 droplet. (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)
     ![do droplet size](https://i.imgur.com/DC9xTyw.png)
     
     Disable backups, and choose a datacenter that is closest to you.
