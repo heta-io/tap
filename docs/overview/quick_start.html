@@ -141,7 +141,7 @@ Text Analytics Pipeline (TAP)
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 3.3-RC3
+<i class="md-icon" title="Version">label_outline</i> 3.3-RC2
 </label>
 </li>
 </ul>
@@ -208,11 +208,11 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>Now create a VM we can use to run TAP on. (You may need to run this in admin, press windows key + x &gt; Command Prompt (Admin))</p>
-    <pre><code>docker-machine create -d hyperv --hyperv-memory 6144  --hyperv-virtual-switch &quot;myswitch&quot; myvm1
+    <pre><code>docker-machine create -d hyperv --hyperv-memory 2048  --hyperv-virtual-switch &quot;myswitch&quot; myvm1
 </code></pre>
     <p>Notice we are passing in some custom variables</p>
     <ul>
-      <li>We are giving it 6gb of ram (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)</li>
+      <li>We are giving it 2gb of ram</li>
       <li>We are choosing the switch we just created &ldquo;myswitch&rdquo;</li>
       <li>We are naming it &ldquo;myvm1&rdquo;</li>
     </ul>
@@ -265,11 +265,11 @@ Text Analytics Pipeline (TAP)
   <li>Ensure you have docker for mac installed and it is running.</li>
   <li>Ensure you have <a href="https://www.virtualbox.org/">VirtualBox</a> version 5+ installed on your system</li>
   <li>Now create a VM we can use to run TAP on.
-    <pre><code>docker-machine create -d virtualbox --virtualbox-memory 6144  myvm1
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory 2048  myvm1
 </code></pre>
     <p>Notice we are passing in some custom variables</p>
     <ul>
-      <li>We are giving it 6gb of ram (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)</li>
+      <li>We are giving it 2gb of ram</li>
       <li>We are naming it &ldquo;myvm1&rdquo;</li>
     </ul>
   </li>
@@ -325,9 +325,9 @@ Text Analytics Pipeline (TAP)
   </li>
   <li>
     <p>Great, Let&rsquo;s create a new one and pass in some custom parameters</p>
-    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=6144 myvm1
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
 </code></pre>
-    <p>This created a new machine called &ldquo;myvm1&rdquo; and gives it 6gb of ram instead of the default 1gb. (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)</p>
+    <p>This created a new machine called &ldquo;myvm1&rdquo; and gives it 2gb of ram instead of the default 1gb.</p>
   </li>
   <li>
     <p>Great! let&rsquo;s get our docker machine IP.</p>
@@ -377,9 +377,8 @@ Text Analytics Pipeline (TAP)
 <ol>
   <li>
     <p>Create a Virtual Machine to run our docker container.</p>
-    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=6144 myvm1
+    <pre><code>docker-machine create -d virtualbox --virtualbox-memory=2048 myvm1
 </code></pre>
-    <p>(Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.)</p>
   </li>
   <li>
     <p>run <code>docker-machine ls</code> to get the IP of our new machine.</p>
@@ -426,7 +425,7 @@ Text Analytics Pipeline (TAP)
   <li>
     <p>Once you have an account Create a new Project to use for TAP. <img src="https://i.imgur.com/506Ew2B.png" alt="do create" /></p>
     <p>Once created, Click Create &gt; Droplet <img src="https://i.imgur.com/36rGJfQ.png" alt="do droplet create" /></p>
-    <p>Choose Docker and change the size to the $10 droplet. (Note: You can run tap with 2gb, However if you use any NLP queries, you may find it runs out of memory. It all depends on how much data you are querying. Your best bet is to start as high as you can, to ensure you have enough.) <img src="https://i.imgur.com/DC9xTyw.png" alt="do droplet size" /></p>
+    <p>Choose Docker and change the size to the $10 droplet. <img src="https://i.imgur.com/DC9xTyw.png" alt="do droplet size" /></p>
     <p>Disable backups, and choose a datacenter that is closest to you. <img src="https://i.imgur.com/bDWPhVz.png" alt="do backups" /></p>
     <p>Add an SSH key or use your existing one. See <a href="https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/">here for instructions</a> on this.</p>
     <p>Finally give it a name you will recognize and choose the project you created. <img src="https://i.imgur.com/G487S6n.png" alt="do create" /></p>
@@ -578,7 +577,7 @@ export TAP_SECRET=&#39;test&#39;
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-3.3-RC3
+3.3-RC2
 </span>
 </div>
 </article>
