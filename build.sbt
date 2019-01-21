@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.3-RC2"
+lazy val projectVersion = "3.3-RC3"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -34,14 +34,14 @@ lazy val nlytxNlpExpressionsV = "1.1.2"
 lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.4.2"
+lazy val cluLabProcessorV = "7.4.4"
 
 lazy val sangriaVersion = "1.4.2"
 lazy val sangriaJsonVersion = "1.0.5"
-lazy val playJsonVersion = "2.6.10"
+lazy val playJsonVersion = "2.7.0"
 
-lazy val akkaVersion = "2.5.17"
-lazy val alpakkaVersion = "1.0-M1"
+lazy val akkaVersion = "2.5.19"
+lazy val alpakkaVersion = "1.0-M2"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 

@@ -20,7 +20,7 @@ import java.util.UUID
 
 import akka.actor.{Actor, ActorRef}
 import akka.pattern.ask
-import akka.stream.alpakka.s3.scaladsl.MultipartUploadResult
+import akka.stream.alpakka.s3.MultipartUploadResult
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.util.{ByteString, Timeout}
 import akka.{Done, NotUsed}
@@ -145,7 +145,7 @@ class BatchActor extends Actor {
   private def sourceFileFromS3(bucket:String,key:String): Source[File, NotUsed] = {
     logger.info(s"Reading $bucket/$key")
     awsS3.sourceFileFromBucket(bucket,key)
-      .map[File](bs => File(key.split("/").last,bs))
+      .mapAsync[File](4)(bs => bs.map( b => File(key.split("/").last,b)))
   }
 
 

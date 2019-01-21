@@ -38,6 +38,7 @@ import io.heta.tap.pipelines.materialize.PipelineContext
 import io.nlytx.expressions.ReflectiveExpressionPipeline
 import io.nlytx.nlp.api.AnnotatorPipelines
 import io.nlytx.nlp.api.DocumentModel.{Document, Token}
+import org.clulab.processors
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -143,7 +144,7 @@ class Annotating(cluAnnotator:ActorRef) {
   val sections: Flow[Document,Sections,NotUsed] = Flow[Document]
     .map(_.sections.toVector)
 
-  val cluTapSentences = Flow[org.clulab.processors.Document]
+  val cluTapSentences: Flow[processors.Document, Vector[Sentence], NotUsed] = Flow[org.clulab.processors.Document]
       .map { doc =>
         logger.info("Extracting sentences")
         doc.sentences
@@ -173,7 +174,7 @@ class Annotating(cluAnnotator:ActorRef) {
     tapTokens.toVector
   }
 
-  val tapSentences = Flow[Document]
+  val tapSentences: Flow[Document, Vector[Sentence], NotUsed] = Flow[Document]
     .map { doc =>
       doc.sentences
     }
