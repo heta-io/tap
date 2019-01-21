@@ -17,5 +17,13 @@
 package io.heta.tap.data.results
 
 import io.heta.tap.data.doc.Sentence
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class SentencesResult(analytics: Vector[Sentence], message:String = "", querytime:Int = -1) extends Result
+object SentencesResult {
+  implicit val ctsWrites: OWrites[SentencesResult] = Json.writes[SentencesResult]
+}
+
+case class SentencesResult(analytics: Vector[Sentence], message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
+  def asJson: JsValue = Json.toJson(this)
+}
+

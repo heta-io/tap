@@ -17,5 +17,12 @@
 package io.heta.tap.data.results
 
 import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-case class ReflectExpressionsResult(analytics: ReflectExpressions, message:String = "", querytime:Int = -1) extends Result
+object ReflectExpressionsResult {
+  implicit val ctsWrites: OWrites[ReflectExpressionsResult] = Json.writes[ReflectExpressionsResult]
+}
+case class ReflectExpressionsResult(analytics:ReflectExpressions, message: String = "", querytime: Int = -1, name: String="") extends Result with Batch {
+  def asJson: JsValue = Json.toJson(this)
+}
+

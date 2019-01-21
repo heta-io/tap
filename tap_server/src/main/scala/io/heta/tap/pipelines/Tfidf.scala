@@ -17,13 +17,8 @@
 package io.heta.tap.pipelines
 
 import akka.NotUsed
-import akka.stream.scaladsl.{Flow, Zip}
-import io.heta.tap.analysis.textshapes.TfIdfShape
-import io.heta.tap.data.{OldTapDocument, OldTapSection}
+import akka.stream.scaladsl.Flow
 import io.nlytx.commons.ranking.TfIdf
-
-import scala.collection.immutable.ListMap
-import scala.concurrent.Future
 
 /**
   * Created by andrew@andrewresearch.net on 27/2/17.

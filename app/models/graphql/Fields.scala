@@ -48,7 +48,19 @@ object Fields {
     object CleanField {
         import Fields.FieldTypes._
         val name ="clean"
-        val description = Some("Cleans text")
+        val description = Some(
+          """
+            |Clean is a query that will clean and format the text depending on which parameters you pass.
+            |There are 5 current parameters you can pass.
+            |
+            |- visible = Replaces all white spaces with dots and new lines with line feeds.
+            |- minimal = Removes all extra white spaces and extra new lines, leaving only one of each.
+            |- simple = Removes all extra white spaces and extra new lines, leaving only one of each. It will also replace hypens and quotes with their ascii safe equivalents.
+            |- preserve = This will replace spaces with dots and preserve the length of the text.
+            |- ascii = This will replace all non ascii characters eg any char above 127
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Clean.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,StringResult](Interfaces[Unit,StringResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.clean(actions.argOpt(TEXT), actions.argOpt(PARAMETERS))
@@ -59,7 +71,30 @@ object Fields {
     object AnnotationsField {
         import Fields.FieldTypes._
         val name ="annotations"
-        val description = Some("Returns sentences for text")
+        val description = Some(
+          """
+            |Annotation is a query that will splitup the text into json data, including seperating the sentences into their own array and providing various stats on each word.
+            |
+            |The stats provided for each word:
+            |
+            |- lemma = provides the intended meaning of the word based on it's inflection You can find out more about Lemmatisation [here](https://en.wikipedia.org/wiki/Lemmatisation)
+            |- parent = returns the word this word is dependant on
+            |- pos tag = returns the part of speech tag for this word, learn more [here](https://nlp.stanford.edu/software/tagger.shtml)
+            |- child = returns the word that is dependant on this word
+            |- dep type = returns the dependency type, learn more [here](https://nlp.stanford.edu/software/dependencies_manual.pdf)
+            |- ner tag = returns the named entity recognized if any. learn more [here](https://nlp.stanford.edu/software/CRF-NER.shtml)
+            |
+            |This query can provide different outcomes based on the pipeline type passed.
+            |
+            |possible pipelines:
+            |
+            |- clu = returns the lemma, pos tag and ner tag
+            |- standard = returns the lemma, pos tag, parent, children and dep type
+            |- fast = returns the lemma and pos tag
+            |- ner = returns the lemma, pos tag, parent, children, dep type and ner tag.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Annotations.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,SentencesResult](Interfaces[Unit,SentencesResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.annotations(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -70,7 +105,12 @@ object Fields {
     object VocabularyField {
         import Fields.FieldTypes._
         val name ="vocabulary"
-        val description = Some("Returns vocabulary for text")
+        val description = Some(
+          """
+            |Vocabulary is a query that returns the stats on the vocabulary used, It groups them by unique words and how many times they were used.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Vocabulary.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,VocabularyResult](Interfaces[Unit,VocabularyResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.vocabulary(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -81,7 +121,17 @@ object Fields {
     object MetricsField {
         import Fields.FieldTypes._
         val name ="metrics"
-        val description = Some("Returns metrics for text")
+        val description = Some(
+          """
+            |Metrics is a query that will return various stats on the text that was parsed. Metrics such as:
+            |
+            |- word count
+            |- sentence count
+            |- average word counts
+            |- array of sentences and word counts per sentence
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Metrics.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,MetricsResult](Interfaces[Unit,MetricsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.metrics(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -92,7 +142,12 @@ object Fields {
     object PosStatsField {
         import Fields.FieldTypes._
         val name ="posStats"
-        val description = Some("Returns posStats for text")
+        val description = Some(
+          """
+            |Part of speech stats is a query that will return the verb, noun and adjective distribution ratios of the sentences.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/PosStats.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,PosStatsResult](Interfaces[Unit,PosStatsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.posStats(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -103,7 +158,12 @@ object Fields {
     object SyllablesField {
         import Fields.FieldTypes._
         val name ="syllables"
-        val description = Some("Counts syllables in words and calculates averages for sentences")
+        val description = Some(
+          """
+            |Syllables is a query that will return the syllable count for each word in a sentence and group each sentence into it's own array.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Syllables.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,SyllablesResult](Interfaces[Unit,SyllablesResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.syllables(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -114,7 +174,12 @@ object Fields {
     object SpellingField {
         import Fields.FieldTypes._
         val name ="spelling"
-        val description = Some("Returns spelling errors and suggestions for each sentence")
+        val description = Some(
+          """
+            |Spelling is a query that will return the spelling mistakes and possible suggestions for what the intended word was.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Spelling.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,SpellingResult](Interfaces[Unit,SpellingResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.spelling(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -125,7 +190,12 @@ object Fields {
     object ExpressionsField {
         import Fields.FieldTypes._
         val name ="expressions"
-        val description = Some("Returns expressions for text")
+        val description = Some(
+          """
+            |Expressions ia a query that will extract the epistemic expressions of a sentence and list each sentence in it's own array.
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Expressions.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,ExpressionsResult](Interfaces[Unit,ExpressionsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.expressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -136,7 +206,19 @@ object Fields {
     object ReflectExpressionsField {
         import Fields.FieldTypes._
         val name ="reflectExpressions"
-        val description = Some("Returns reflection expressions for text")
+        val description = Some(
+          """
+            |Reflect Expressions is a query that will return various stats about the text such as:
+            |
+            |- word counts
+            |- average word length
+            |- sentence counts
+            |- average sentence lengths
+            |- meta tags used such as knowledge, experience or regulation
+            |- phrase tags used such as outcome, temporal, pertains, consider, anticipate ..etc
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Reflect%20Expressions.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,ReflectExpressionsResult](Interfaces[Unit,ReflectExpressionsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.reflectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
@@ -147,7 +229,22 @@ object Fields {
     object AffectExpressionsField {
         import Fields.FieldTypes._
         val name = "affectExpressions"
-        val description = Some("Returns affect expressions for text given optional parameters")
+        val description = Some(
+          """
+            |Affect Expressions is a query that will return stats about the valence, arousal and dominance language used.
+            |
+            |You are able to pass in the thresholds at which each of them will trigger.
+            |
+            |params = '''
+            |{
+            |    "valence":4,
+            |    "arousal":4,
+            |    "dominance":4
+            |}
+            |'''
+            |
+            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Affect%20Expressions.ipynb) for examples and descriptions.
+          """.stripMargin)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,AffectExpressionsResult](Interfaces[Unit, AffectExpressionsResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.affectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))

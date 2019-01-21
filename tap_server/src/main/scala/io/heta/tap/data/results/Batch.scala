@@ -14,16 +14,12 @@
  *
  */
 
-package io.heta.tap.data
+package io.heta.tap.data.results
 
-/**
-  * Created by andrew@andrewresearch.net on 27/2/17.
-  */
+import play.api.libs.json.JsValue
 
-case class OldTapDocument(sections:List[OldTapSection])
-
-
-
-
-
- //,nerTags:List[String] = List())
+trait Batch {
+  val analytics:AnyRef
+  val name:String
+  def asJson: JsValue
+}

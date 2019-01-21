@@ -44,22 +44,22 @@ object Segment {
 
   private val logger: Logger = Logger(this.getClass)
 
-  val Document_SentencesBatchResult: Flow[Document, SentencesBatchResult, NotUsed] = Flow[org.clulab.processors.Document]
+  val Document_SentencesBatchResult: Flow[Document, SentencesResult, NotUsed] = Flow[org.clulab.processors.Document]
     .map { doc =>
       logger.info("Extracting sentences")
       val sents = doc.sentences.toList.zipWithIndex.map { case (s, idx) =>
         val tokens = getTokens(s.startOffsets,s.words,s.lemmas,s.tags,s.entities)
         Sentence(s.getSentenceText,tokens,-1,-1,s.words.length,idx)
       }.toVector
-      SentencesBatchResult(doc.id.getOrElse("unknown"),sents)
+      SentencesResult(sents,name=doc.id.getOrElse("unknown"))
     }
 
-  val AnalyticsResult_File: Flow[AnalyticsResult,File,NotUsed] = Flow[AnalyticsResult]
+  val AnalyticsResult_File: Flow[Batch,File,NotUsed] = Flow[Batch]
     .map[File](ar => File(ar.name,ByteString(Json.prettyPrint(ar.asJson))))
 
 
-  val Sentences_Vocabulary: Flow[SentencesBatchResult, AnalyticsResult, NotUsed] =
-    Flow[SentencesBatchResult].map[AnalyticsResult] { res =>
+  val Sentences_Vocabulary: Flow[SentencesResult, Batch, NotUsed] =
+    Flow[SentencesResult].map[Batch] { res =>
 
       val vocab = res.analytics.flatMap(_.tokens)
         .map(_.term.toLowerCase)
@@ -68,13 +68,13 @@ object Segment {
         .map {case (k,v) => TermCount(k, v)}
         .toVector
 
-      VocabularyBatchResult(res.name,Vocabulary(vocab.size, vocab))
+      VocabularyResult(Vocabulary(vocab.size, vocab),name=res.name)
     }
 
 
 
-  val Sentences_Metrics: Flow[SentencesBatchResult, MetricsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Metrics: Flow[SentencesResult, MetricsResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val counts = res.analytics.map { s =>
         val tokens:Int = s.tokens.length
@@ -98,12 +98,12 @@ object Segment {
       val metrics = Metrics(counts.length, counts.map(_._1).sum, wordCount,counts.map(_._3).sum, counts.map(_._4).sum, counts.map(_._5).sum,
         sentWordCounts, averageSentWordCount, wordLengths ,averageWordLength,averageSentWordLength)
 
-      MetricsBatchResult(res.name,metrics)
+      MetricsResult(metrics,name=res.name)
     }
 
 
-  val Sentences_PosStats: Flow[SentencesBatchResult, PosStatsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_PosStats: Flow[SentencesResult, PosStatsResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val stats = res.analytics.map { s =>
         val ts = s.tokens
@@ -131,32 +131,32 @@ object Segment {
 
       val posStats = PosStats(verbNounRatio,futurePastRatio,nerWordRatio,adjWordRatio,nounDist,verbDist,adjDist)
 
-      PosStatsBatchResult(res.name,posStats)
+      PosStatsResult(posStats,name=res.name)
     }
 
-  val Sentences_Syllables: Flow[SentencesBatchResult, SyllablesBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
+  val Sentences_Syllables: Flow[SentencesResult, SyllablesResult, NotUsed] =
+    Flow[SentencesResult]
     .map { res =>
       val syllables = res.analytics.map { sent =>
         val counts = sent.tokens.map( t => Syllable.count(t.term.toLowerCase)).filterNot(_ == 0)
         val avg = counts.sum / sent.tokens.length.toDouble
         Syllables(sent.idx,avg,counts)
       }
-      SyllablesBatchResult(res.name,syllables)
+      SyllablesResult(syllables,name=res.name)
     }
 
-  val Sentences_Spelling: Flow[SentencesBatchResult, SpellingBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
-    .mapAsync[SpellingBatchResult](5) { res =>
+  val Sentences_Spelling: Flow[SentencesResult, SpellingResult, NotUsed] =
+    Flow[SentencesResult]
+    .mapAsync[SpellingResult](5) { res =>
       import io.heta.tap.pipelines.materialize.PipelineContext.executor
       Speller.check(res.analytics).map { sp =>
-        SpellingBatchResult(res.name,sp)
+        SpellingResult(sp,name=res.name)
       }
   }
 
-  val Sentences_Expressions: Flow[SentencesBatchResult, ExpressionsBatchResult, NotUsed] =
-    Flow[SentencesBatchResult]
-    .mapAsync[ExpressionsBatchResult](5) { res =>
+  val Sentences_Expressions: Flow[SentencesResult, ExpressionsResult, NotUsed] =
+    Flow[SentencesResult]
+    .mapAsync[ExpressionsResult](5) { res =>
       import io.heta.tap.pipelines.materialize.PipelineContext.executor
       val results = res.analytics.map { sent =>
         for {
@@ -165,24 +165,24 @@ object Segment {
           me <- ExpressionAnalyser.modal(sent.tokens)
         } yield Expressions(ae, ee, me, sent.idx)
       }
-      Future.sequence(results).map(r => ExpressionsBatchResult(res.name,r))
+      Future.sequence(results).map(r => ExpressionsResult(r,name=res.name))
   }
 
-  def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesBatchResult, AffectExpressionsBatchResult, NotUsed] = {
+  def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesResult, AffectExpressionsResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
-    Flow[SentencesBatchResult].map[AffectExpressionsBatchResult] { sents =>
+    Flow[SentencesResult].map[AffectExpressionsResult] { sents =>
       val aes = sents.analytics.map { s =>
         val ae = AffectLexicon.getAllMatchingTerms(s.tokens)
         AffectExpressions(filterAffectThresholds(ae,th),s.idx)
       }
-      AffectExpressionsBatchResult(sents.name,aes)
+      AffectExpressionsResult(aes,name=sents.name)
     }
   }
 
-  val Document_ReflectiveExpressionsBatchResult: Flow[Document, ReflectExpressionsBatchResult, NotUsed] = Flow[Document].map { doc =>
+  val Document_ReflectiveExpressionsBatchResult: Flow[Document, ReflectExpressionsResult, NotUsed] = Flow[Document].map { doc =>
     val codedSents = getCodedSents(doc)
     val reflectExpressions = ReflectExpressions(getReflect(doc), getSummary(codedSents), getCoded(codedSents))
-    ReflectExpressionsBatchResult(doc.id.getOrElse(""),reflectExpressions)
+    ReflectExpressionsResult(reflectExpressions,name=doc.id.getOrElse(""))
   }
 
   private def getReflect(doc: Document): WordSentenceCounts = {
