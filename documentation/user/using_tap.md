@@ -5,7 +5,12 @@
 
 #### Using the TAP Python Client
 
-Coming soon.
+Grab the TAP Client from [GitHub](https://github.com/heta-io/tapclipy).
+
+Check out the [Getting Started Docs](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Get%20Started.ipynb) for instructions on how to get setup and how to read text from a variety of file types.
+
+For help on the list of queries available check out the [Queries documents](https://github.com/infosci-qut/tapclipy/tree/master/NoteBooks/Queries)
+
 
 If you would like to help with this section see @ref:[How to edit documentation](../developer/doc_updates.md)
 
