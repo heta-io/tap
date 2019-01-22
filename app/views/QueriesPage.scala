@@ -16,14 +16,16 @@
 
 package views
 
+import com.sun.javadoc.FieldDoc
 import controllers.routes
-import scalatags.Text.all._
+import models.graphql.FieldDocs
+import scalatags.Text.all.{name, _}
 import scalatags.Text.{TypedTag, tags, tags2}
 
 /**
   * Created by andrew@andrewresearch.net on 20/11/17.
   */
-object HomePage extends GenericPage {
+object QueriesPage extends GenericPage {
 
   override def page(titleStr:String):TypedTag[String] = tags.html(
     head(
@@ -34,41 +36,28 @@ object HomePage extends GenericPage {
       div(`class`:="container-fluid",
         div(`class`:="row",
           div(`class`:="col",
-            h3("Text Analytics Pipeline (TAP)")
+            h3("TAP Example Queries")
           )
         ),
         div(`class`:="row",
           div(`class`:="col-1"),
-          div(`class`:="col-5",
-            div(`class`:="card card-default",
-              div(`class`:="card-header", b("Learn more")),
-              div(`class`:="card-body",
-                p(
-                  "Read the ",a(href:="https://heta-io.github.io/tap/",target:="docs")("docs")
-                ),
-                p(
-                  "Get the ",a(href:="https://github.com/heta-io/tap",target:="source")("source code")
-                ),
-                p(
-                  "Get ",a(href:="/queries",target:="queries")("example queries")
-                )
-              )
-            )
-          ),
-          div(`class`:="col-5",
-            div(`class`:="card card-default",
-              div(`class`:="card-header", b("Try TAP")),
-              div(`class`:="card-body",
-                p(
-                  "Use the ",a(href:=routes.GraphQlController.graphiql().url)("graphiql interface")," to connect to TAP."
-                )
-              )
-            )
+          div(`class`:="col-10",
+            for((name,doc) <- FieldDocs.fields.toList) yield queryCard(name,doc.description,doc.parameters,doc.exampleQuery)
           )
         )
       ),
       script(src:=bundleUrl)
     )
   )
+
+  def queryCard(title:String,description:String,parameters:Map[String,String],query:String): TypedTag[String] = div(`class`:="card card-light",
+    div(`class`:="card-header", b(title)),
+    div(`class`:="card-body",
+      p(description),
+      hr,
+      pre(code(query))
+    )
+  )
+
 
 }
