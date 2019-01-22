@@ -33,34 +33,13 @@ import scala.concurrent.Future
 
 object Fields {
 
-//    abstract class TapField {
-//        val name:String
-//        val description: Option[String]
-//        val arguments: List[Argument[Option[String]]]
-//        val deriveType: ObjectType[Unit,_<:Result]
-//        def resolver(actions: Context[GraphqlActions,Unit]):Future[_<:Result]
-//    }
-
-
 
 
 
     object CleanField {
         import Fields.FieldTypes._
         val name ="clean"
-        val description = Some(
-          """
-            |Clean is a query that will clean and format the text depending on which parameters you pass.
-            |There are 5 current parameters you can pass.
-            |
-            |- visible = Replaces all white spaces with dots and new lines with line feeds.
-            |- minimal = Removes all extra white spaces and extra new lines, leaving only one of each.
-            |- simple = Removes all extra white spaces and extra new lines, leaving only one of each. It will also replace hypens and quotes with their ascii safe equivalents.
-            |- preserve = This will replace spaces with dots and preserve the length of the text.
-            |- ascii = This will replace all non ascii characters eg any char above 127
-            |
-            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Clean.ipynb) for examples and descriptions.
-          """.stripMargin)
+        val description = Some(FieldDocs.fields(name).description)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,StringResult](Interfaces[Unit,StringResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.clean(actions.argOpt(TEXT), actions.argOpt(PARAMETERS))
