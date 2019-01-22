@@ -1,9 +1,0 @@
-{
-  "query": "query Clean($input: String,$parameters:String) { clean(text:$input,parameters:$parameters) { analytics querytime message timestamp }}",
-  "variables": {
-    "parameters": "{ \"cleanType\" : \"visible\" }",
-    "text": "This is my example text."
-  }
-}
-
-
