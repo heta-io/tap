@@ -1,9 +1,10 @@
-## User
+## I'm a User
+
+@@toc { depth=7 }
 
 @@@ index
-* [Product Dependencies](product_dependencies.md)
-* [Getting the Source Code](source_code.md)
-* [Building TAP](build_product.md)
-* [Running TAP](run_product.md)
-
+  * [Building TAP from source code](user_with_code.md)
+  * [Running TAP without source code](user_without_code.md)
+  * [Using TAP once it's running](using_tap.md)
+  * [Using the GraphQL Interface](graphql.md)
 @@@

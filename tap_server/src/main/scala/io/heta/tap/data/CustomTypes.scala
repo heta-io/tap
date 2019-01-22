@@ -16,6 +16,8 @@
 
 package io.heta.tap.data
 
+import io.heta.tap.data.doc.expression.Expression
+
 /**
   * Created by andrew@andrewresearch.net on 30/6/17.
   */
@@ -25,9 +27,5 @@ object CustomTypes {
   type DocumentStr = String
   type SectionStr = String
   type SentenceStr = String
-
-  type AffectExpression = TapExpression
-  type EpistemicExpression = TapExpression
-  type ModalExpression = TapExpression
 
 }

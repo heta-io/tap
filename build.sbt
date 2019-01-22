@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.2.9"
+lazy val projectVersion = "3.3-RC3"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -34,14 +34,14 @@ lazy val nlytxNlpExpressionsV = "1.1.2"
 lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.4.2"
+lazy val cluLabProcessorV = "7.4.4"
 
 lazy val sangriaVersion = "1.4.2"
 lazy val sangriaJsonVersion = "1.0.5"
-lazy val playJsonVersion = "2.6.10"
+lazy val playJsonVersion = "2.7.0"
 
-lazy val akkaStreamVersion = "2.5.17"
-lazy val alpakkaVersion = "1.0-M1"
+lazy val akkaVersion = "2.5.19"
+lazy val alpakkaVersion = "1.0-M2"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
@@ -58,8 +58,10 @@ lazy val deepLearning4jVersion = "0.9.1"
 lazy val vScalaJsDom = "0.9.6"
 lazy val vWebpack = "4.10.2"
 lazy val vWebpackDevServer = "3.1.4"
+lazy val vSlinky = "0.5.1"
 
-lazy val vBootstrap = "4.1.1"
+lazy val vBootstrap = "4.1.3"
+lazy val vSjsBootstrap = "2.3.4"
 lazy val vJquery = "3.2.1"
 lazy val vPopper = "1.14.3"
 lazy val vD3 = "5.4.0"
@@ -92,7 +94,8 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-main" % cluLabProcessorV,
   "org.clulab" %% "processors-odin" % cluLabProcessorV,
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
-  "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.lightbend.akka" %% "akka-stream-alpakka-s3" % alpakkaVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion,
@@ -107,14 +110,15 @@ val dl4jDependencies = Seq(
 
 val loggingDependencies = Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
 )
 
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlayVersion % "test",
-  "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 )
 
 
@@ -175,21 +179,22 @@ lazy val client = project.in(file(clientName))
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
       //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
-      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % "2.3.3",
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % vSjsBootstrap,
       "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
       //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
-      "me.shadaj" %%% "slinky-core" % "0.5.0", // core React functionality, no React DOM
-      "me.shadaj" %%% "slinky-web" % "0.5.0" // React DOM, HTML and SVG tags
+      "me.shadaj" %%% "slinky-core" % vSlinky, // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % vSlinky // React DOM, HTML and SVG tags
     ),
     npmDependencies in Compile ++= Seq(
       "bootstrap" -> vBootstrap,
       //"jquery" -> vJquery, //used by bootstrap
       "popper.js" -> vPopper, //used by bootstrap
       //"d3" -> vD3,
-      "react" -> "16.4.1",
-      "react-dom" -> "16.4.1",
-      "graphiql" -> "0.11.11",
-      "graphql" -> "0.13.2"
+      "react" -> "16.6.1",
+      "react-dom" -> "16.6.1",
+      "graphiql" -> "0.12.0",
+      "graphql" -> "14.0.2",
+      "isomorphic-fetch" -> "2.2.1"
     )
   ).enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)

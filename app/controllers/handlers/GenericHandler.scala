@@ -17,7 +17,7 @@
 package controllers.handlers
 
 
-import models.graphql.Fields.StringResult
+import io.heta.tap.data.results.StringResult
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 

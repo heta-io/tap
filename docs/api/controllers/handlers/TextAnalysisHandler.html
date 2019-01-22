@@ -119,6 +119,10 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="controllers">controllers</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
+                        <a class="class" href="BatchAnalysisHandler.html" title=""></a>
+                        <a href="BatchAnalysisHandler.html" title="">BatchAnalysisHandler</a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
                         <a class="object" href="CorpusAnalysisHandler$.html" title="Created by andrew@andrewresearch.net on 20/2/17."></a>
                         <a href="CorpusAnalysisHandler$.html" title="Created by andrew@andrewresearch.net on 20/2/17.">CorpusAnalysisHandler</a>
                       </li><li class="current-entities indented2">
@@ -213,9 +217,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="controllers.handlers.TextAnalysisHandler#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(clean:io.heta.tap.pipelines.Cleaning,annotate:io.heta.tap.pipelines.Annotating):controllers.handlers.TextAnalysisHandler"></a><a id="&lt;init&gt;:TextAnalysisHandler"></a>
+      <a id="&lt;init&gt;(clean:io.heta.tap.pipelines.Cleaning,cluAnnotator:akka.actor.ActorRef):controllers.handlers.TextAnalysisHandler"></a><a id="&lt;init&gt;:TextAnalysisHandler"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#&lt;init&gt;(clean:io.heta.tap.pipelines.Cleaning,annotate:io.heta.tap.pipelines.Annotating):controllers.handlers.TextAnalysisHandler" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#&lt;init&gt;(clean:io.heta.tap.pipelines.Cleaning,cluAnnotator:akka.actor.ActorRef):controllers.handlers.TextAnalysisHandler" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -224,7 +228,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">TextAnalysisHandler</span><span class="params">(<span name="clean">clean: <a href="../../io/heta/tap/pipelines/Cleaning.html" class="extype" name="io.heta.tap.pipelines.Cleaning">Cleaning</a></span>, <span name="annotate">annotate: <a href="../../io/heta/tap/pipelines/Annotating.html" class="extype" name="io.heta.tap.pipelines.Annotating">Annotating</a></span>)</span>
+        <span class="name">TextAnalysisHandler</span><span class="params">(<span name="clean">clean: <a href="../../io/heta/tap/pipelines/Cleaning.html" class="extype" name="io.heta.tap.pipelines.Cleaning">Cleaning</a></span>, <span name="cluAnnotator">cluAnnotator: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -290,9 +294,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#affectExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="affectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.AffectExpressionsResult]"></a><a id="affectExpressions(Option[String],Option[String],Long):Future[AffectExpressionsResult]"></a>
+      <a id="affectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.AffectExpressionsResult]"></a><a id="affectExpressions(Option[String],Option[String],Long):Future[AffectExpressionsResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#affectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.AffectExpressionsResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#affectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.AffectExpressionsResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -301,14 +305,30 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">affectExpressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$AffectExpressionsResult.html" class="extype" name="models.graphql.Fields.AffectExpressionsResult">AffectExpressionsResult</a>]</span>
+        <span class="name">affectExpressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/AffectExpressionsResult.html" class="extype" name="io.heta.tap.data.results.AffectExpressionsResult">AffectExpressionsResult</a>]</span>
+      </span>
+      
+      
+    </li><li name="controllers.handlers.TextAnalysisHandler#annotate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="annotate:io.heta.tap.pipelines.Annotating"></a><a id="annotate:Annotating"></a>
+      <span class="permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#annotate:io.heta.tap.pipelines.Annotating" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">annotate</span><span class="result">: <a href="../../io/heta/tap/pipelines/Annotating.html" class="extype" name="io.heta.tap.pipelines.Annotating">Annotating</a></span>
       </span>
       
       
     </li><li name="controllers.handlers.TextAnalysisHandler#annotations" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="annotations(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SentencesResult]"></a><a id="annotations(Option[String],Option[String],Long):Future[SentencesResult]"></a>
+      <a id="annotations(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SentencesResult]"></a><a id="annotations(Option[String],Option[String],Long):Future[SentencesResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#annotations(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SentencesResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#annotations(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SentencesResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -317,7 +337,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">annotations</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$SentencesResult.html" class="extype" name="models.graphql.Fields.SentencesResult">SentencesResult</a>]</span>
+        <span class="name">annotations</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/SentencesResult.html" class="extype" name="io.heta.tap.data.results.SentencesResult">SentencesResult</a>]</span>
       </span>
       
       
@@ -338,9 +358,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#clean" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="clean(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.StringResult]"></a><a id="clean(Option[String],Option[String],Long):Future[StringResult]"></a>
+      <a id="clean(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.StringResult]"></a><a id="clean(Option[String],Option[String],Long):Future[StringResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#clean(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.StringResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#clean(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.StringResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -349,7 +369,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clean</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$StringResult.html" class="extype" name="models.graphql.Fields.StringResult">StringResult</a>]</span>
+        <span class="name">clean</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/StringResult.html" class="extype" name="io.heta.tap.data.results.StringResult">StringResult</a>]</span>
       </span>
       
       
@@ -380,9 +400,9 @@
               
         </dd></dl></div>
     </li><li name="controllers.handlers.GenericHandler#dummyResult" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dummyResult(text:String):scala.concurrent.Future[models.graphql.Fields.StringResult]"></a><a id="dummyResult(String):Future[StringResult]"></a>
+      <a id="dummyResult(text:String):scala.concurrent.Future[io.heta.tap.data.results.StringResult]"></a><a id="dummyResult(String):Future[StringResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#dummyResult(text:String):scala.concurrent.Future[models.graphql.Fields.StringResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#dummyResult(text:String):scala.concurrent.Future[io.heta.tap.data.results.StringResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -391,7 +411,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dummyResult</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$StringResult.html" class="extype" name="models.graphql.Fields.StringResult">StringResult</a>]</span>
+        <span class="name">dummyResult</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/StringResult.html" class="extype" name="io.heta.tap.data.results.StringResult">StringResult</a>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GenericHandler.html" class="extype" name="controllers.handlers.GenericHandler">GenericHandler</a></dd></dl></div>
@@ -428,9 +448,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#expressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="expressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.ExpressionsResult]"></a><a id="expressions(Option[String],Option[String],Long):Future[ExpressionsResult]"></a>
+      <a id="expressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.ExpressionsResult]"></a><a id="expressions(Option[String],Option[String],Long):Future[ExpressionsResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#expressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.ExpressionsResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#expressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.ExpressionsResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -439,7 +459,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">expressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$ExpressionsResult.html" class="extype" name="models.graphql.Fields.ExpressionsResult">ExpressionsResult</a>]</span>
+        <span class="name">expressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/ExpressionsResult.html" class="extype" name="io.heta.tap.data.results.ExpressionsResult">ExpressionsResult</a>]</span>
       </span>
       
       
@@ -517,10 +537,26 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="controllers.handlers.TextAnalysisHandler#metrics" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="metrics(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.MetricsResult]"></a><a id="metrics(Option[String],Option[String],Long):Future[MetricsResult]"></a>
+    </li><li name="controllers.handlers.TextAnalysisHandler#logger" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="logger:play.api.Logger"></a><a id="logger:Logger"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#metrics(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.MetricsResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#logger:play.api.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">logger</span><span class="result">: <span class="extype" name="play.api.Logger">Logger</span></span>
+      </span>
+      
+      
+    </li><li name="controllers.handlers.TextAnalysisHandler#metrics" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="metrics(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.MetricsResult]"></a><a id="metrics(Option[String],Option[String],Long):Future[MetricsResult]"></a>
+      <span class="permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#metrics(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.MetricsResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -529,7 +565,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">metrics</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$MetricsResult.html" class="extype" name="models.graphql.Fields.MetricsResult">MetricsResult</a>]</span>
+        <span class="name">metrics</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/MetricsResult.html" class="extype" name="io.heta.tap.data.results.MetricsResult">MetricsResult</a>]</span>
       </span>
       
       
@@ -592,9 +628,9 @@
               
         </dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#posStats" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="posStats(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.PosStatsResult]"></a><a id="posStats(Option[String],Option[String],Long):Future[PosStatsResult]"></a>
+      <a id="posStats(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.PosStatsResult]"></a><a id="posStats(Option[String],Option[String],Long):Future[PosStatsResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#posStats(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.PosStatsResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#posStats(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.PosStatsResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -603,7 +639,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">posStats</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$PosStatsResult.html" class="extype" name="models.graphql.Fields.PosStatsResult">PosStatsResult</a>]</span>
+        <span class="name">posStats</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/PosStatsResult.html" class="extype" name="io.heta.tap.data.results.PosStatsResult">PosStatsResult</a>]</span>
       </span>
       
       
@@ -624,9 +660,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GenericHandler.html" class="extype" name="controllers.handlers.GenericHandler">GenericHandler</a></dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#reflectExpressions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="reflectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.ReflectExpressionsResult]"></a><a id="reflectExpressions(Option[String],Option[String],Long):Future[ReflectExpressionsResult]"></a>
+      <a id="reflectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.ReflectExpressionsResult]"></a><a id="reflectExpressions(Option[String],Option[String],Long):Future[ReflectExpressionsResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#reflectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.ReflectExpressionsResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#reflectExpressions(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.ReflectExpressionsResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -635,14 +671,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">reflectExpressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$ReflectExpressionsResult.html" class="extype" name="models.graphql.Fields.ReflectExpressionsResult">ReflectExpressionsResult</a>]</span>
+        <span class="name">reflectExpressions</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/ReflectExpressionsResult.html" class="extype" name="io.heta.tap.data.results.ReflectExpressionsResult">ReflectExpressionsResult</a>]</span>
       </span>
       
       
     </li><li name="controllers.handlers.TextAnalysisHandler#shape" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="shape(text:String):scala.concurrent.Future[models.graphql.Fields.StringResult]"></a><a id="shape(String):Future[StringResult]"></a>
+      <a id="shape(text:String):scala.concurrent.Future[io.heta.tap.data.results.StringResult]"></a><a id="shape(String):Future[StringResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#shape(text:String):scala.concurrent.Future[models.graphql.Fields.StringResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#shape(text:String):scala.concurrent.Future[io.heta.tap.data.results.StringResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -651,14 +687,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">shape</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$StringResult.html" class="extype" name="models.graphql.Fields.StringResult">StringResult</a>]</span>
+        <span class="name">shape</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/StringResult.html" class="extype" name="io.heta.tap.data.results.StringResult">StringResult</a>]</span>
       </span>
       
       
     </li><li name="controllers.handlers.TextAnalysisHandler#spelling" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="spelling(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SpellingResult]"></a><a id="spelling(Option[String],Option[String],Long):Future[SpellingResult]"></a>
+      <a id="spelling(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SpellingResult]"></a><a id="spelling(Option[String],Option[String],Long):Future[SpellingResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#spelling(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SpellingResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#spelling(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SpellingResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -667,14 +703,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">spelling</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$SpellingResult.html" class="extype" name="models.graphql.Fields.SpellingResult">SpellingResult</a>]</span>
+        <span class="name">spelling</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/SpellingResult.html" class="extype" name="io.heta.tap.data.results.SpellingResult">SpellingResult</a>]</span>
       </span>
       
       
     </li><li name="controllers.handlers.TextAnalysisHandler#syllables" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="syllables(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SyllablesResult]"></a><a id="syllables(Option[String],Option[String],Long):Future[SyllablesResult]"></a>
+      <a id="syllables(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SyllablesResult]"></a><a id="syllables(Option[String],Option[String],Long):Future[SyllablesResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#syllables(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.SyllablesResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#syllables(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.SyllablesResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -683,7 +719,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">syllables</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$SyllablesResult.html" class="extype" name="models.graphql.Fields.SyllablesResult">SyllablesResult</a>]</span>
+        <span class="name">syllables</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/SyllablesResult.html" class="extype" name="io.heta.tap.data.results.SyllablesResult">SyllablesResult</a>]</span>
       </span>
       
       
@@ -736,9 +772,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GenericHandler.html" class="extype" name="controllers.handlers.GenericHandler">GenericHandler</a></dd></dl></div>
     </li><li name="controllers.handlers.TextAnalysisHandler#vocabulary" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="vocabulary(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.VocabResult]"></a><a id="vocabulary(Option[String],Option[String],Long):Future[VocabResult]"></a>
+      <a id="vocabulary(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.VocabularyResult]"></a><a id="vocabulary(Option[String],Option[String],Long):Future[VocabularyResult]"></a>
       <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#vocabulary(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[models.graphql.Fields.VocabResult]" title="Permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#vocabulary(text:Option[String],parameters:Option[String],start:Long):scala.concurrent.Future[io.heta.tap.data.results.VocabularyResult]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -747,32 +783,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">vocabulary</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/graphql/Fields$$VocabResult.html" class="extype" name="models.graphql.Fields.VocabResult">VocabResult</a>]</span>
+        <span class="name">vocabulary</span><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="parameters">parameters: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="start">start: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../io/heta/tap/data/results/VocabularyResult.html" class="extype" name="io.heta.tap.data.results.VocabularyResult">VocabularyResult</a>]</span>
       </span>
       
       
-    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="wait():Unit"></a>
-      <span class="permalink">
-      <a href="../../controllers/handlers/TextAnalysisHandler.html#wait():Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
-    </span>)</span>
-              
-        </dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
@@ -813,6 +827,28 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@native</span><span class="args">()</span>
               
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <span class="permalink">
+      <a href="../../controllers/handlers/TextAnalysisHandler.html#wait():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>

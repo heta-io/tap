@@ -44,13 +44,13 @@ object HomePage extends GenericPage {
               div(`class`:="card-header", b("Learn more")),
               div(`class`:="card-body",
                 p(
-                  "Read the ",a(href:="#")("docs")
+                  "Read the ",a(href:="https://heta-io.github.io/tap/",target:="docs")("docs")
                 ),
                 p(
-                  "Get the ",a(href:="#")("source code")
+                  "Get the ",a(href:="https://github.com/heta-io/tap",target:="source")("source code")
                 ),
                 p(
-                  "Get ",a(href:="#")("example queries")
+                  "Get ",a(href:="/queries",target:="queries")("example queries")
                 )
               )
             )

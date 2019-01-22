@@ -21,7 +21,10 @@ import akka.stream.scaladsl.Flow
 import io.nlytx.expressions.data.ReflectiveExpressions
 import io.nlytx.nlp.api.DocumentModel.{Document, Section}
 import org.clulab.processors
-import io.heta.tap.data._ // scalastyle:ignore
+import io.heta.tap.data._
+import io.heta.tap.data.doc.expression.reflect.ReflectExpressions
+import io.heta.tap.data.doc.spell.Spelling
+import io.heta.tap.data.doc.{Metrics, PosStats, Sentence, Syllables} // scalastyle:ignore
 
 /**
   * Created by andrew@andrewresearch.net on 6/11/17.
@@ -37,21 +40,21 @@ object AnnotatingTypes {
 
 
   /* Some convenience types */
-  type TapSentences = Vector[TapSentence]
+  type TapSentences = Vector[Sentence]
   type Sections = Vector[Section]
 
-  type CluDocumentFlow = Flow[String,processors.Document, NotUsed]
-  type CluSentencesFlow = Flow[processors.Document, TapSentences, NotUsed]
+  //type CluDocumentFlow = Flow[String,processors.Document, NotUsed]
+  //type CluSentencesFlow = Flow[processors.Document, TapSentences, NotUsed]
   type DocumentFlow = Flow[String, Document, NotUsed]
-  type SentencesFlow = Flow[Document, TapSentences, NotUsed]
-  type VocabFlow = Flow[Document, TapVocab, NotUsed]
-  type MetricsFlow = Flow[Document, TapMetrics, NotUsed]
-  type ExpressionsFlow = Flow[Document, Vector[TapExpressions], NotUsed]
-  type SyllablesFlow = Flow[Document, Vector[TapSyllables],NotUsed]
-  type SpellingFlow = Flow[Document, Vector[TapSpelling],NotUsed]
-  type PosStatsFlow = Flow[Document, TapPosStats, NotUsed]
-  type ReflectExpressionFlow = Flow[Document, TapReflectExpressions, NotUsed]
-  type AffectExpressionFlow = Flow[processors.Document, Vector[TapAffectExpressions], NotUsed]
+  //type SentencesFlow = Flow[Document, TapSentences, NotUsed]
+  //type VocabFlow = Flow[Document, TapVocab, NotUsed]
+  type MetricsFlow = Flow[Document, Metrics, NotUsed]
+  //type ExpressionsFlow = Flow[Document, Vector[Expressions], NotUsed]
+  type SyllablesFlow = Flow[Document, Vector[Syllables],NotUsed]
+  type SpellingFlow = Flow[Document, Vector[Spelling],NotUsed]
+  type PosStatsFlow = Flow[Document, PosStats, NotUsed]
+  type ReflectExpressionFlow = Flow[Document, ReflectExpressions, NotUsed]
+  //type AffectExpressionFlow = Flow[processors.Document, Vector[AffectExpressions], NotUsed]
 
 
 }

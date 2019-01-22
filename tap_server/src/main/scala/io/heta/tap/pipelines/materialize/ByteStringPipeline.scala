@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 case class ByteStringPipeline(source:Source[ByteString,NotUsed], sink:Sink[ByteString,Future[Any]]) extends Pipeline {
   private val pipeline =  source.toMat(sink)(Keep.right)
-  def run = pipeline.run()
+  def run: Future[Any] = pipeline.run()
 }
 
 

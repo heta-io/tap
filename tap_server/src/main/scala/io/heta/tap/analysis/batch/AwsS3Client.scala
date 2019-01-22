@@ -17,48 +17,52 @@
 package io.heta.tap.analysis.batch
 
 import akka.NotUsed
-import akka.stream.alpakka.s3.impl.ListBucketVersion2
-import akka.stream.alpakka.s3.scaladsl.{ListBucketResultContents, MultipartUploadResult, S3Client}
-import akka.stream.alpakka.s3.{MemoryBufferType, S3Settings}
+import akka.stream.alpakka.s3.scaladsl.S3
+import akka.stream.alpakka.s3._
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
-import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
-import com.amazonaws.regions.AwsRegionProvider
-import io.heta.tap.pipelines.materialize.PipelineContext
-import io.heta.tap.util.AppConfig
+
+import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
 import scala.concurrent.Future
 
 
 class AwsS3Client { //@Inject() (config:AppConfig) {
 
-  val config = new AppConfig()
+  //val config = new AppConfig()
 
-  lazy val client: S3Client = this.instance.get
+  //lazy val client: S3Client = this.instance.get
 
-  def getContentsForBucket(bucket:String): Source[ListBucketResultContents, NotUsed] = client.listBucket(bucket,None)
+  def getContentsForBucket(bucket:String,prefix:Option[String]=None): Source[ListBucketResultContents, NotUsed] = S3.listBucket(bucket,prefix)
 
-  def sourceFileFromBucket(bucket:String,fileName:String): Source[ByteString, NotUsed] = client.download(bucket,fileName)._1
-
-  def sinkfileToBucket(bucket:String,fileName:String): Sink[ByteString, Future[MultipartUploadResult]] = client.multipartUpload(bucket,fileName)
-
-  private def credentialsProvider(key:String,secret:String) = new AWSStaticCredentialsProvider(new BasicAWSCredentials(key, secret))
-  private def regionProvider(region:String) = new AwsRegionProvider {
-    def getRegion: String = region
+  def sourceFileFromBucket(bucket:String,fileName:String): Source[Future[ByteString], NotUsed] = {
+    S3.download(bucket,fileName)
+      .map[Future[ByteString]](f => f.getOrElse((Source.empty[ByteString],0))._1.runWith(Sink.head[ByteString]))
   }
 
-  private lazy val settings = for {
-    key <- config.getAwsAccessKey
-    secret <- config.getAwsAccessPassword
-    region <- config.getAwsRegion
-  } yield new S3Settings(
-    MemoryBufferType, None,
-    credentialsProvider(key,secret), regionProvider(region),
-    false, None,ListBucketVersion2
-  )
+  def sinkfileToBucket(bucket:String,fileName:String): Sink[ByteString, Future[MultipartUploadResult]] = {
 
-  private def instance: Option[S3Client] = for {
-    s <- settings
-  } yield new S3Client(s)(PipelineContext.system, PipelineContext.materializer)
+    S3.multipartUpload(bucket,fileName)
+      .mapMaterializedValue[Future[MultipartUploadResult]](f => f.runWith(Sink.head[MultipartUploadResult]))
+  }
+
+  //private def credentialsProvider(key:String,secret:String) = new AWSStaticCredentialsProvider(new BasicAWSCredentials(key, secret))
+//  private def regionProvider(region:String) = new AwsRegionProvider {
+//    def getRegion: String = region
+//  }
+
+//  private lazy val settings = for {
+//    key <- config.getAwsAccessKey
+//    secret <- config.getAwsAccessPassword
+//    region <- config.getAwsRegion
+//  } yield new S3Settings(
+//    MemoryBufferType, None,
+//    credentialsProvider(key,secret), regionProvider(region),
+//    false, None,ListBucketVersion2
+//  )
+//
+//  private def instance: Option[S3Client] = for {
+//    s <- settings
+//  } yield new S3Client(s)(PipelineContext.system, PipelineContext.materializer)
 
 }

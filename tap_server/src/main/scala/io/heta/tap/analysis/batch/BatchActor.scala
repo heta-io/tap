@@ -18,25 +18,33 @@ package io.heta.tap.analysis.batch
 
 import java.util.UUID
 
-import akka.actor.Actor
-import akka.stream.alpakka.s3.scaladsl.{MultipartUploadResult, S3Client}
+import akka.actor.{Actor, ActorRef}
+import akka.pattern.ask
+import akka.stream.alpakka.s3.MultipartUploadResult
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.util.ByteString
+import akka.util.{ByteString, Timeout}
 import akka.{Done, NotUsed}
 import com.typesafe.scalalogging.Logger
 import io.heta.tap.analysis.batch.BatchActor.{AnalyseSource, CheckProgress, INIT, ResultMessage}
-import io.heta.tap.pipelines.DocumentAnnotating
+import io.heta.tap.analysis.clu.CluAnnotatorActor.AnnotateRequest
+import io.heta.tap.pipelines.Pipe
 import io.heta.tap.pipelines.materialize.FilePipeline.{File, FileInfo}
-import io.heta.tap.pipelines.materialize.{ByteStringPipeline, FilePipeline}
 import io.heta.tap.pipelines.materialize.PipelineContext.executor
+import io.heta.tap.pipelines.materialize.{ByteStringPipeline, FilePipeline}
+import org.clulab.processors.Document
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
+/*
+This actor controls the reading of files from S3, the selection of a pipeline to run, and the writing of the
+resultant analytics back to S3.
+It is designed to include basic monitoring to facilitate queries on progress of batch jobs.
+ */
 object BatchActor {
   object INIT
   sealed trait AnalysisRequest
-  case class AnalyseSource(bucket:String,analysisType:String) extends AnalysisRequest
-  case class StartAnalysis(bucket:String,batchId:String, analysisFunction:(String,S3Client,String) => Future[Done]) extends AnalysisRequest
+  case class AnalyseSource(bucket:String,analysisType:String,annotator:ActorRef) extends AnalysisRequest
   case class CheckProgress(bucket:String,batchId:String) extends AnalysisRequest
   case class ResultMessage(result:String,message:String)
 }
@@ -46,70 +54,110 @@ class BatchActor extends Actor {
   val logger: Logger = Logger(this.getClass)
 
   val awsS3 = new AwsS3Client()
-  val da = new DocumentAnnotating()
+  //val da = new DocumentAnnotating()
 
   val parallelism = 5
 
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
-    case as: AnalyseSource => sender ! analyse(as.bucket,as.analysisType)
+    case as: AnalyseSource => sender ! analyse(as.bucket,as.analysisType,as.annotator)
     case cp: CheckProgress => sender ! progress(cp.bucket,cp.batchId)
-    case msg:Any => logger.error(s"BatchActor received unkown msg: $msg")
+    case msg:Any => logger.error(s"BatchActor received unkown msg: ${msg.toString}") // scalastyle:ignore
   }
 
   def init: Boolean = {
-    //Any startup code for the batch process
     //TODO Check that can connect to S3
     true //for now just return true to allow process to continue
   }
 
-  def analyse(bucket:String,analysisType:String): Future[ResultMessage] = {
-    logger.warn(s"Started batch $analysisType for bucket: $bucket")
+  def analyse(bucket:String,analysisType:String,annotator:ActorRef): Future[ResultMessage] = {
+    logger.info(s"Started batch $analysisType for bucket: $bucket")
     val batchId = UUID.randomUUID().toString
-    //Create the output folder with batchId as name
-
-    //Create the __metadata file and write the batchId, analysisType, and start time in the file
-
-    //Start the process of analysis - on complete need to write the end time in metadata file (and number of files processed?)
-    /*  Reflection for batchmode with https://github.com/portable-scala/portable-scala-reflect */
-    analysisType match {
-      case "affectExpressions" => processFiles(bucket,batchId,da.Pipeline.cluDoc)
-      case _ => logger.error(s"No such analysisType: $analysisType")
+    createBatchFolder(bucket,batchId)
+    val result = getPipeline(analysisType,annotator)
+    result match {
+      case Right(pipeline) => {
+        processFiles(bucket,batchId, pipeline)
+      }
+      case Left(error) => logger.error(error.getMessage)
     }
-    //Return immediately the batchId
-    Future.successful(ResultMessage(batchId,s"Started $analysisType analysis for bucket $bucket"))
+    if(result.isRight) {
+      Future.successful(ResultMessage(batchId,s"Started $analysisType analysis for bucket $bucket"))
+    } else {
+      Future.successful(ResultMessage("",result.left.get.getMessage))
+    }
   }
 
   def progress(bucket:String,batchId:String): Future[ResultMessage] = {
-    logger.warn(s"Checking batch progress for: $bucket/$batchId")
+    logger.info(s"Checking batch progress for: $bucket/$batchId")
     Future.successful(ResultMessage("",s"Progress checked for $bucket/$batchId"))
   }
 
+  private def createBatchFolder(bucket:String,folderName:String) = Future {
+    val key = s"$folderName/__metadata"
+    logger.debug(s"Creating destination: $key")
+    ByteStringPipeline(Source.empty[ByteString],awsS3.sinkfileToBucket(bucket,key)).run
+  }
+
+  private def getPipeline(analysisType:String,annotator:ActorRef):Either[Throwable,Flow[File, File, NotUsed]] = {
+    val fields = Pipe.getClass.getDeclaredFields.map(_.getName).toVector
+    if (fields.contains(analysisType)) {
+      val field = Pipe.getClass.getDeclaredField(analysisType)
+      field.setAccessible(true)
+      try {
+        val segment = field.get(Pipe).asInstanceOf[Flow[Document,File,NotUsed]]
+        Right(annotatedDocFromFile(annotator) via segment)
+      } catch {
+        case error:Exception => Left(error)
+      }
+    } else {
+      Left(new Exception(s"No such analysisType: $analysisType"))
+    }
+  }
+
+  private def annotatedDocFromFile(annotator:ActorRef): Flow[File, Document, NotUsed] = Flow[File]
+    .mapAsync[org.clulab.processors.Document](parallelism) { file =>
+    logger.debug(s"|${annotator.path.toString}|")
+    implicit val timeout: Timeout = 60.seconds
+    (annotator ? AnnotateRequest(file.contents.utf8String)).mapTo[Document]
+      .map{ doc =>
+        doc.id = Some(file.name)
+        logger.debug("DOC text:"+doc.text)
+        doc.sentences.foreach(s => logger.debug("SENTENCE: "+s.tags.getOrElse(Array()).mkString("|")))
+        doc
+      }
+  }
+
   private def processFiles(bucket:String,batchId:String,pipeline: Flow[File, File, NotUsed]): Future[Future[Done]] = Future {
-    logger.info(s"Processing files for $batchId in $bucket")
+    val inputFolder = "source_files"
+    logger.info(s"Processing files for $batchId in $bucket/$inputFolder")
     val fileSourcer = (fi:FileInfo) => sourceFileFromS3(bucket,fi.name)
-    val fileSource = sourceFileInfoFromS3(bucket).flatMapMerge(parallelism, fileSourcer)
+    val fileSource = sourceFileInfoFromS3(bucket,inputFolder).flatMapMerge(parallelism, fileSourcer)
     val fileSink = sinkFileToS3(bucket,batchId)
     FilePipeline(fileSource,pipeline,fileSink).run
   }
 
-  private def sourceFileInfoFromS3(bucket:String): Source[FileInfo, NotUsed] = awsS3.getContentsForBucket(bucket)
+  private def sourceFileInfoFromS3(bucket:String,prefix:String): Source[FileInfo, NotUsed] = awsS3.getContentsForBucket(bucket,Some(prefix))
+    .filterNot(_.key.endsWith("/"))
     .map(c => FileInfo(c.key,c.size,c.lastModified))
 
 
-  private def sourceFileFromS3(bucket:String,fileName:String): Source[File, NotUsed] = awsS3.sourceFileFromBucket(bucket,fileName)
-    .map[File](bs => File(fileName,bs))
-
-
-  private def sinkFileToS3(bucket:String,batchId:String): Sink[File, Future[Done]] = Sink.foreachAsync[File](parallelism){ f =>
-    val fileName = newFileName(f.name,batchId)
-    val sink: Sink[ByteString, Future[MultipartUploadResult]] = awsS3.sinkfileToBucket(bucket,fileName)
-    Future(ByteStringPipeline(Source.single[ByteString](f.contents),sink).run)
+  private def sourceFileFromS3(bucket:String,key:String): Source[File, NotUsed] = {
+    logger.info(s"Reading $bucket/$key")
+    awsS3.sourceFileFromBucket(bucket,key)
+      .mapAsync[File](4)(bs => bs.map( b => File(key.split("/").last,b)))
   }
 
 
-  private def newFileName(current:String,batchId:String): String = current.dropRight(4).concat(s"-$batchId.txt")
 
+  private def sinkFileToS3(bucket:String,batchId:String): Sink[File, Future[Done]] = Sink.foreachAsync[File](parallelism){ f =>
+    val key = newFileName(s"$batchId/${f.name}","result")
+    logger.info(s"Writing: $bucket/$key")
+    val sink: Sink[ByteString, Future[MultipartUploadResult]] = awsS3.sinkfileToBucket(bucket,key)
+    Future(ByteStringPipeline(Source.single[ByteString](f.contents),sink).run)
+  }
 
+  private def newFileName(current:String,tag:String,inExt:String=".txt",outExt:String=".json"): String =
+    current.dropRight(inExt.length).concat(s"-$tag$outExt")
 
 }
