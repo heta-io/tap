@@ -243,7 +243,7 @@ object Fields {
     object BatchField {
         import Fields.FieldTypes._
         val name = "batch"
-        val description = Some("Use specified pipelines to analyse a batch of files from a given URL and save the analytics to a subdirectory of the source directory.")
+        val description = Some("")
         val arguments = parameters :: Nil
         val deriveType = deriveObjectType[Unit,BatchResult](Interfaces[Unit,BatchResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.batch(actions.argOpt(PARAMETERS))

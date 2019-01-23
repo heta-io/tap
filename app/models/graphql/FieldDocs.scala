@@ -24,7 +24,7 @@ object FieldDocs {
     exampleQuery:String
   )
 
-  val fields: Map[String, FieldDoc] = Map{
+  val fields: Map[String, FieldDoc] = Map(
     "clean" -> FieldDoc(
       """
         |Clean is a query that will clean and format the text depending on which parameters you pass.
@@ -48,8 +48,28 @@ object FieldDocs {
         |          timestamp
         |        }
         |      }
-      """.stripMargin)
-  }
+      """.stripMargin
+    ),
+    "batch" -> FieldDoc(
+      """
+        |Use specified pipelines to analyse a batch of files from a given URL and save the analytics to a subdirectory of the source directory.
+      """.stripMargin,
+      Map("analysisType"->"The name of an existing TAP analysis pipeline (e.g. clean, posStats, reflectExpressions",
+          "s3bucket" -> "The name of an AWS S3 bucket that has permissions set for TAP to access"
+      ),
+      """
+        |query Batch {
+        |  batch(parameters:"{\"analysisType\":\"reflectExpressions\",
+        |  \"s3bucket\":\"myBucket\"}") {
+        |    message
+        |    timestamp
+        |    querytime
+        |    analytics
+        |  }
+        |}
+      """.stripMargin
+    )
+  )
 
 
 
