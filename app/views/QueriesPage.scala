@@ -51,11 +51,20 @@ object QueriesPage extends GenericPage {
   )
 
   def queryCard(title:String,description:String,parameters:Map[String,String],query:String): TypedTag[String] = div(`class`:="card card-light",
-    div(`class`:="card-header", b(title)),
+    div(`class`:="card-header", h4(title)),
     div(`class`:="card-body",
-      p(description),
-      hr,
-      pre(code(query))
+      table(tr(
+        td(width:="50%",
+          h5("Description"),
+          p(description),
+          h5("Parameters"),
+          for((parameter,paramDescription) <- parameters.toList) yield div(s"$parameter: $paramDescription")),
+        td(width:="5%"),
+        td(width:="45%",
+          h5("Example query"),
+          pre(code(query))
+        )
+      ))
     )
   )
 
