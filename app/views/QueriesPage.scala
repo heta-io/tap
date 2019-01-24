@@ -16,7 +16,7 @@
 
 package views
 
-import com.sun.javadoc.FieldDoc
+
 import controllers.routes
 import models.graphql.FieldDocs
 import scalatags.Text.all.{name, _}
