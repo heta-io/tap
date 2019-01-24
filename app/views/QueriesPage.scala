@@ -42,7 +42,7 @@ object QueriesPage extends GenericPage {
         div(`class`:="row",
           div(`class`:="col-1"),
           div(`class`:="col-10",
-            for((name,doc) <- FieldDocs.fields.toList) yield queryCard(name,doc.description,doc.parameters,doc.exampleQuery)
+            for((name,doc) <- FieldDocs.fields.toList) yield queryCard(name,doc.description,doc.parameters,doc.exampleQuery, doc.notebook)
           )
         )
       ),
@@ -50,13 +50,15 @@ object QueriesPage extends GenericPage {
     )
   )
 
-  def queryCard(title:String,description:String,parameters:Map[String,String],query:String): TypedTag[String] = div(`class`:="card card-light",
+  def queryCard(title:String,description:String,parameters:Map[String,String],query:String, notebook:String): TypedTag[String] = div(`class`:="card card-light",
     div(`class`:="card-header", h4(title)),
     div(`class`:="card-body",
       table(tr(
-        td(width:="50%",
+        td(width:="45%",
           h5("Description"),
-          p(description),
+          pre(description),
+          h5("Notebook"),
+          pre(notebook),
           h5("Parameters"),
           for((parameter,paramDescription) <- parameters.toList) yield div(s"$parameter: $paramDescription")),
         td(width:="5%"),
