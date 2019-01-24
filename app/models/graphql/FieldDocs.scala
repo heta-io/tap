@@ -20,6 +20,7 @@ object FieldDocs {
 
   case class FieldDoc(
     description:String,
+    notebook: String,
     parameters:Map[String,String],
     exampleQuery:String
   )
@@ -32,16 +33,17 @@ object FieldDocs {
         |
         |- visible = Replaces all white spaces with dots and new lines with line feeds.
         |- minimal = Removes all extra white spaces and extra new lines, leaving only one of each.
-        |- simple = Removes all extra white spaces and extra new lines, leaving only one of each. It will also replace hypens and quotes with their ascii safe equivalents.
+        |- simple = Removes all extra white spaces and extra new lines, leaving only one of each.
+        |It will also replace hypens and quotes with their ascii safe equivalents.
         |- preserve = This will replace spaces with dots and preserve the length of the text.
         |- ascii = This will replace all non ascii characters eg any char above 127
         |
-        |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Clean.ipynb) for examples and descriptions.
       """.stripMargin,
-      Map("none"->"This query doesn't take parameters"),
+      "https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Clean.ipynb",
+      Map("cleanType"->"Determines which type of clean you wish to perform, Pass in one of the above types."),
       """
-        |query Clean($input: String,$parameters:String) {
-        |        clean(text:$input,parameters:$parameters) {
+        |query Clean($input: String) {
+        |        clean(text:$input,parameters:"{\"cleanType\":\"visible\" }") {
         |          analytics
         |          querytime
         |          message
@@ -52,8 +54,10 @@ object FieldDocs {
     ),
     "batch" -> FieldDoc(
       """
-        |Use specified pipelines to analyse a batch of files from a given URL and save the analytics to a subdirectory of the source directory.
+        |Use specified pipelines to analyse a batch of files from a given bucket name and save the analytics to a
+        |subdirectory of the source directory.
       """.stripMargin,
+      "https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Batch.ipynb",
       Map("analysisType"->"The name of an existing TAP analysis pipeline (e.g. clean, posStats, reflectExpressions",
           "s3bucket" -> "The name of an AWS S3 bucket that has permissions set for TAP to access"
       ),
