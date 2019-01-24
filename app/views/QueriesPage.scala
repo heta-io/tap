@@ -54,7 +54,7 @@ object QueriesPage extends GenericPage {
     div(`class`:="card-header", h4(title)),
     div(`class`:="card-body",
       table(tr(
-        td(width:="45%",
+        td(width:="50%",
           h5("Description"),
           pre(description),
           h5("Notebook"),

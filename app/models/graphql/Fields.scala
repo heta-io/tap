@@ -50,30 +50,7 @@ object Fields {
     object AnnotationsField {
         import Fields.FieldTypes._
         val name ="annotations"
-        val description = Some(
-          """
-            |Annotation is a query that will splitup the text into json data, including seperating the sentences into their own array and providing various stats on each word.
-            |
-            |The stats provided for each word:
-            |
-            |- lemma = provides the intended meaning of the word based on it's inflection You can find out more about Lemmatisation [here](https://en.wikipedia.org/wiki/Lemmatisation)
-            |- parent = returns the word this word is dependant on
-            |- pos tag = returns the part of speech tag for this word, learn more [here](https://nlp.stanford.edu/software/tagger.shtml)
-            |- child = returns the word that is dependant on this word
-            |- dep type = returns the dependency type, learn more [here](https://nlp.stanford.edu/software/dependencies_manual.pdf)
-            |- ner tag = returns the named entity recognized if any. learn more [here](https://nlp.stanford.edu/software/CRF-NER.shtml)
-            |
-            |This query can provide different outcomes based on the pipeline type passed.
-            |
-            |possible pipelines:
-            |
-            |- clu = returns the lemma, pos tag and ner tag
-            |- standard = returns the lemma, pos tag, parent, children and dep type
-            |- fast = returns the lemma and pos tag
-            |- ner = returns the lemma, pos tag, parent, children, dep type and ner tag.
-            |
-            |See [github](https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Queries/Annotations.ipynb) for examples and descriptions.
-          """.stripMargin)
+        val description = Some(FieldDocs.fields(name).description)
         val arguments = inputText :: parameters :: Nil
         val deriveType = deriveObjectType[Unit,SentencesResult](Interfaces[Unit,SentencesResult](ResultType))
         def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.annotations(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
