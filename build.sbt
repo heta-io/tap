@@ -35,6 +35,7 @@ lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
 lazy val cluLabProcessorV = "7.4.4"
+lazy val tensorFlowV = "0.4.0"
 
 lazy val sangriaVersion = "1.4.2"
 lazy val sangriaJsonVersion = "1.0.5"
@@ -100,6 +101,8 @@ val analyticsDependencies = Seq(
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
   "org.languagetool" % "language-en" % langToolVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
+  //"org.platanios" % "tensorflow" % tensorFlowV,  // http://platanios.org/tensorflow_scala/installation.html
+  //"org.platanios" % "tensorflow" % tensorFlowV classifier "darwin-cpu-x86_64" //"linux-cpu-x86_64"
 )
 
 val dl4jDependencies = Seq(
