@@ -19,14 +19,14 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.3-RC3"
+lazy val projectVersion = "3.3.0"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
 lazy val sharedName = s"${projectName}_shared"
 
 //Versions
-scalaVersion in ThisBuild := "2.12.7"
+scalaVersion in ThisBuild := "2.12.8"
 
 //Scala library versions
 lazy val nlytxNlpApiV = "1.1.2"
@@ -52,7 +52,7 @@ lazy val vUpickle = "0.6.6"
 
 //Java library versions
 lazy val openNlpVersion = "1.9.0"
-lazy val langToolVersion = "4.2"
+lazy val langToolVersion = "4.4"
 lazy val deepLearning4jVersion = "0.9.1"
 
 //ScalaJS
@@ -141,7 +141,7 @@ lazy val tap = project.in(file("."))
     dockerRepository := Some(s"$dockerRepoURI"),
     defaultLinuxInstallLocation in Docker := "/opt/docker",
     dockerExposedVolumes := Seq("/opt/docker/logs"),
-    dockerBaseImage := "openjdk:9-jdk",
+    dockerBaseImage := "openjdk:11-jdk",
 
     // sbt-site needs to know where to find the paradox site
     sourceDirectory in Paradox := baseDirectory.value / "documentation",
@@ -165,7 +165,9 @@ lazy val server = (project in file(serverName))
   .settings(
     sharedSettings,
     resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
+    resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= analyticsDependencies ++ dl4jDependencies ++ loggingDependencies ++ testDependencies,
+    libraryDependencies +=  "org.projectlombok" % "lombok" % "1.18.4", //Used by langtool old vers problem with JDK 10 and 11
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := projectOrg,
     buildInfoOptions += BuildInfoOption.BuildTime,
