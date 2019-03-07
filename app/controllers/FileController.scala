@@ -56,7 +56,7 @@ class FileController extends InjectedController {
     Logger.trace("Got upload request from:" + request.remoteAddress)
     val fileId = request.body.file("name").map {
 
-      case FilePart(key, filename, contentType, file)  =>
+      case FilePart(key, filename, contentType, file, fileSize, dispositionType)  =>
         Logger.info("key=" + key + ",filename=" + filename + ",contentType=" + contentType + ",file= " + file)
         val data = getFileId(file, filename)
         data
@@ -89,7 +89,7 @@ class FileController extends InjectedController {
   //
   private def handleFilePartAsFile: FilePartHandler[File] = {
 
-    case FileInfo(partName, filename, contentType)      =>
+    case FileInfo(partName, filename, contentType, dispositionType)      =>
 
       Logger.trace("-->handleFilePartAsFile, uploading file")
 

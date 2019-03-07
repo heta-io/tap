@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.3.0"
+lazy val projectVersion = "3.3.0c"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -95,6 +95,7 @@ val analyticsDependencies = Seq(
   "org.clulab" %% "processors-main" % cluLabProcessorV,
   "org.clulab" %% "processors-odin" % cluLabProcessorV,
   "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
+  "com.typesafe.akka" %% "akka-remote" % akkaVersion, //Used by cluLabProcessor
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.lightbend.akka" %% "akka-stream-alpakka-s3" % alpakkaVersion,
@@ -216,12 +217,8 @@ updateDocsTask := {
   IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
 }
 
-
-
-/*
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
-  "-J-Xmx4g",
+  "-J-Xmx6g",
   "-J-Xms2g"
 )
-*/
