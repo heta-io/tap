@@ -24,4 +24,5 @@ trait Result {
   val querytime: Int
   val timestamp: String = OffsetDateTime.now().toString
   val id: String = ""
+  val authority: String = "No Authority Recorded"
 }
