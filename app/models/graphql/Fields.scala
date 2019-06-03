@@ -177,7 +177,8 @@ object Fields {
             "Result", fields[Unit, Result](
                 Field("timestamp", StringType, resolve = _.value.timestamp),
                 Field("querytime", IntType, resolve = _.value.querytime),
-                Field("message", StringType, resolve = _.value.message)
+                Field("message", StringType, resolve = _.value.message),
+                Field("authority", StringType, resolve = _.value.authority)
             )
         )
 
