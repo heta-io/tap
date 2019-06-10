@@ -19,7 +19,7 @@ import LocalSbtSettings._
 //Project details
 lazy val projectName = "tap"
 lazy val projectOrg = "io.heta"
-lazy val projectVersion = "3.3.0c"
+lazy val projectVersion = "3.3.0e"
 
 lazy val serverName = s"${projectName}_server"
 lazy val clientName = s"${projectName}_client"
@@ -34,19 +34,19 @@ lazy val nlytxNlpExpressionsV = "1.1.2"
 lazy val nlytxNlpCommonsV = "1.1.2"
 lazy val factorieNlpV = "1.0.4"
 lazy val factorieNlpModelsV = "1.0.3"
-lazy val cluLabProcessorV = "7.4.4"
+lazy val cluLabProcessorV = "7.5.2"
 lazy val tensorFlowV = "0.4.0"
 
 lazy val sangriaVersion = "1.4.2"
 lazy val sangriaJsonVersion = "1.0.5"
-lazy val playJsonVersion = "2.7.0"
+lazy val playJsonVersion = "2.7.3"
 
-lazy val akkaVersion = "2.5.19"
-lazy val alpakkaVersion = "1.0-M2"
+lazy val akkaVersion = "2.5.23"
+lazy val alpakkaVersion = "1.0.2"
 lazy val scalatestVersion = "3.0.5"
 lazy val scalatestPlayVersion = "3.1.2"
 
-lazy val vScalaTags = "0.6.7"
+lazy val vScalaTags = "0.6.8"
 lazy val vXmlBind = "2.3.0"
 lazy val vUpickle = "0.6.6"
 
@@ -56,13 +56,13 @@ lazy val langToolVersion = "4.4"
 lazy val deepLearning4jVersion = "0.9.1"
 
 //ScalaJS
-lazy val vScalaJsDom = "0.9.6"
+lazy val vScalaJsDom = "0.9.7"
 lazy val vWebpack = "4.10.2"
 lazy val vWebpackDevServer = "3.1.4"
-lazy val vSlinky = "0.5.1"
+lazy val vSlinky = "0.6.1"
 
 lazy val vBootstrap = "4.1.3"
-lazy val vSjsBootstrap = "2.3.4"
+lazy val vSjsBootstrap = "2.3.5"
 lazy val vJquery = "3.2.1"
 lazy val vPopper = "1.14.3"
 lazy val vD3 = "5.4.0"
@@ -126,7 +126,6 @@ val testDependencies = Seq(
 )
 
 
-
 lazy val tap = project.in(file("."))
   .dependsOn(server,client)
   .aggregate(server,client)
@@ -136,7 +135,7 @@ lazy val tap = project.in(file("."))
     libraryDependencies ++= apiDependencies,
 
     scalaJSProjects := Seq(client),
-    pipelineStages in Assets := Seq(scalaJSPipeline),
+    pipelineStages in Assets := Seq(scalaJSPipeline), //Needed for WebScalaJsBundler
 
     dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
     dockerRepository := Some(s"$dockerRepoURI"),
@@ -144,23 +143,29 @@ lazy val tap = project.in(file("."))
     dockerExposedVolumes := Seq("/opt/docker/logs"),
     dockerBaseImage := "openjdk:11-jdk",
 
-    // sbt-site needs to know where to find the paradox site
-    sourceDirectory in Paradox := baseDirectory.value / "documentation",
-    // paradox needs a theme
-    ParadoxMaterialThemePlugin.paradoxMaterialThemeSettings(Paradox),
-    paradoxProperties in Compile ++= Map(
-      "github.base_url" -> s"$githubBaseUrl",
-      "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
-    ),
     // Puts unified scaladocs into target/api
     siteSubdirName in ScalaUnidoc := "api",
     addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), siteSubdirName in ScalaUnidoc)
 
+    
+    
+
   ).enablePlugins(PlayScala)
   .enablePlugins(WebScalaJSBundlerPlugin)
-  .enablePlugins(SbtWeb)
-  .enablePlugins(ParadoxSitePlugin, ParadoxMaterialThemePlugin,SiteScaladocPlugin,ScalaUnidocPlugin) // Documentation plugins
+  .enablePlugins(SiteScaladocPlugin,ScalaUnidocPlugin)
 
+
+
+lazy val docs = (project in file("project_docs"))
+  .settings(
+    sharedSettings,
+    // sbt-site needs to know where to find the paradox site
+    paradoxTheme := Some(builtinParadoxTheme("generic")),
+    paradoxProperties ++= Map(
+      "github.base_url" -> s"$githubBaseUrl",
+      "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
+    ),
+  ).enablePlugins(ParadoxSitePlugin)
 
 lazy val server = (project in file(serverName))
   .settings(
@@ -196,25 +201,28 @@ lazy val client = project.in(file(clientName))
       //"jquery" -> vJquery, //used by bootstrap
       "popper.js" -> vPopper, //used by bootstrap
       //"d3" -> vD3,
-      "react" -> "16.6.1",
-      "react-dom" -> "16.6.1",
-      "graphiql" -> "0.12.0",
-      "graphql" -> "14.0.2",
+      "react" -> "16.8.6",
+      "react-dom" -> "16.8.6",
+      "graphiql" -> "0.13.0",
+      "graphql" -> "14.3.1",
       "isomorphic-fetch" -> "2.2.1"
     )
   ).enablePlugins(ScalaJSPlugin)
-  .enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb)
+  .enablePlugins(ScalaJSBundlerPlugin) // Use fastOptJS::webpack to download NPM libraries and build
+
 
 
 //Documentation
 //Task for building docs and copying to root level docs folder (for GitHub pages)
 val updateDocsTask = TaskKey[Unit]("updateDocs","copies paradox docs to /docs directory")
-
+//
 updateDocsTask := {
   val siteResult = makeSite.value
-  val docSource = new File("target/site")
+  val apiSource = new File("target/site")
+  val paradoxSource = new File("project_docs/target/site")
   val docDest = new File("docs")
-  IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
+  IO.copyDirectory(apiSource,docDest,overwrite=true,preserveLastModified=true)
+  IO.copyDirectory(paradoxSource,docDest,overwrite=true,preserveLastModified=true)
 }
 
 javaOptions in Universal ++= Seq(

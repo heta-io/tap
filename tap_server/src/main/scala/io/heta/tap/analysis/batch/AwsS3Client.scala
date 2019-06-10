@@ -41,9 +41,9 @@ class AwsS3Client { //@Inject() (config:AppConfig) {
   }
 
   def sinkfileToBucket(bucket:String,fileName:String): Sink[ByteString, Future[MultipartUploadResult]] = {
-
     S3.multipartUpload(bucket,fileName)
-      .mapMaterializedValue[Future[MultipartUploadResult]](f => f.runWith(Sink.head[MultipartUploadResult]))
+    //S3.multipartUpload(bucket,fileName)
+    //  .mapMaterializedValue[Future[MultipartUploadResult]](f => f.runWith(Sink.head[MultipartUploadResult]))
   }
 
   //private def credentialsProvider(key:String,secret:String) = new AWSStaticCredentialsProvider(new BasicAWSCredentials(key, secret))
