@@ -18,13 +18,39 @@ package io.heta.tap.client
 
 object GraphiQLQueries {
 
-  lazy val allQueries:String = affectExpressions + rhetoricalMoves
+  lazy val allQueries:String = empty //affectExpressions + rhetoricalMoves
+  lazy val allParams:String = emptyParams
+
+  val empty =
+    """
+      |# See the TAP Queries page for queries that can be tested here
+      |# This GUI is for experimentation only. For production, use the API
+      |# through the TapCliPy python client, or directly from your language
+      |# of choice.
+      |#
+      |# Queries take the following form:
+      |
+      |query QueryName($text:String,$parameters:String) {
+      |   queryName(text:$text,parameters:$parameters) {
+      |       message
+      |       timestamp
+      |       querytime
+      |       analytics
+      |   }
+      |}
+    """.stripMargin
+
+  val emptyParams =
+    """{
+      |  "text": "",
+      |  "parameters": "{}"
+      |}
+    """.stripMargin
 
   val aeDemoVariables =
     """{
       |  "text": "I have found this process extremely challenging. I hope that the future is more enjoyable and relaxing.",
       |  "parameters": "{\"arousal\":0,\"valence\":0,\"dominance\":0}",
-      |  "moveParams": "{\"grammar\":\"reflective\"}"
       |}
     """.stripMargin
 
