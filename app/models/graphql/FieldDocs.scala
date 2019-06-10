@@ -19,6 +19,7 @@ package models.graphql
 object FieldDocs {
 
   case class FieldDoc(
+    name: String,
     description:String,
     notebook: String,
     parameters:Map[String,String],
@@ -28,6 +29,7 @@ object FieldDocs {
   val fields: Map[String, FieldDoc] = Map(
 
     "affectExpressions" -> FieldDoc(
+      "affectExpressions",
       """
         |Affect Expressions is a query that will return stats about the valence, arousal and dominance language used.
         |
@@ -65,6 +67,7 @@ object FieldDocs {
       """.stripMargin
     ),
     "annotations" -> FieldDoc(
+      "annotations",
       """
         |Annotation is a query that will splitup the text into json data,
         |including seperating the sentences into their own array and providing various stats on each word.
@@ -121,6 +124,7 @@ object FieldDocs {
       """.stripMargin
     ),
     "batch" -> FieldDoc(
+      "batch",
       """
         |Use specified pipelines to analyse a batch of files from a given bucket name and save the analytics to a
         |subdirectory of the source directory.
@@ -141,6 +145,7 @@ object FieldDocs {
       """.stripMargin
     ),
     "clean" -> FieldDoc(
+      "clean",
       """
         |Clean is a query that will clean and format the text depending on which parameters you pass.
         |There are 5 current parameters you can pass.
@@ -168,6 +173,7 @@ object FieldDocs {
     ),
 
     "expressions" -> FieldDoc(
+      "expressions",
       """
         |Expressions ia a query that will extract the epistemic expressions of a sentence and list each sentence in it's own array.
       """.stripMargin,
@@ -196,6 +202,7 @@ object FieldDocs {
     ),
 
     "metrics" -> FieldDoc(
+      "metrics",
       """
         |Metrics is a query that will return various stats on the text that was parsed. Metrics such as:
         |
@@ -224,6 +231,7 @@ object FieldDocs {
     ),
 
     "posStats" -> FieldDoc(
+      "posStats",
       """
         |Part of speech stats is a query that will return the verb, noun and adjective distribution ratios of the sentences.
       """.stripMargin,
@@ -247,6 +255,7 @@ object FieldDocs {
     ),
 
     "reflectExpressions" -> FieldDoc(
+      "reflectExpressions",
       """
         |Reflect Expressions is a query that will return various stats about the text such as:
         |
@@ -306,6 +315,7 @@ object FieldDocs {
     ),
 
     "spelling" -> FieldDoc(
+      "spelling",
       """
         |Spelling is a query that will return the spelling mistakes and possible suggestions for what the intended word was.
       """.stripMargin,
@@ -332,6 +342,7 @@ object FieldDocs {
     ),
 
     "syllables" -> FieldDoc(
+      "syllables",
       """
         |Syllables is a query that will return the syllable count for each word in a sentence and group each sentence into it's own array.
       """.stripMargin,
@@ -352,6 +363,7 @@ object FieldDocs {
     ),
 
     "vocabulary" -> FieldDoc(
+      "vocabulary",
       """
         |Vocabulary is a query that returns the stats on the vocabulary used, It groups them by unique words and how many times they were used.
       """.stripMargin,

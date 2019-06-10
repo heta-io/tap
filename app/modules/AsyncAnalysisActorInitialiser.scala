@@ -26,7 +26,7 @@ class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport
 
   val logger: Logger = Logger(this.getClass)
 
-    def configure():Unit = {
+    override def configure():Unit = {
       logger.info("Binding BatchActor")
       bindActor[BatchActor]("batch")
       logger.info("Binding CluAnnotatorActor")
