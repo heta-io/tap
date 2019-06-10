@@ -27,5 +27,5 @@ object LocalSbtSettings {
   val githubBaseUrl = "https://github.com/heta-io/tap"
   val scaladocApiBaseUrl = "https://heta.github.io/tap"
   //For AWS docker deployment
-  val dockerRepoURI = "975443900627.dkr.ecr.ap-southeast-2.amazonaws.com"
+  val dockerRepoURI = "523990814326.dkr.ecr.ap-southeast-2.amazonaws.com/infosci"
 }

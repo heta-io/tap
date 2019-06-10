@@ -4,6 +4,7 @@ GET   /queries  controllers.DefaultController.queries()
 GET   /graphiql  controllers.GraphQlController.graphiql()
 #GET   /AWAgraphiql  controllers.AWAGraphQlController.graphiql
 
++anyhost
 GET   /health  controllers.HealthController.health()
 
 +nocsrf # This should be removed once graphiql is passing tokens

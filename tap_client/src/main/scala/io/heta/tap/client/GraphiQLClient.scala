@@ -27,7 +27,7 @@ object GraphiQLClient {
     println("Loading GraphiQLClient...")
 
     val graphiqlDiv = dom.document.getElementById("graphiql")
-    val result  = GraphiqlSetup.load(GraphiQLQueries.allQueries, GraphiQLQueries.aeDemoVariables)
+    val result  = GraphiqlSetup.load(GraphiQLQueries.allQueries, GraphiQLQueries.allParams)
     println(s"Load result: $result")
   }
 
