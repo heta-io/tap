@@ -43,15 +43,15 @@ lazy val playJsonVersion = "2.7.3"
 
 lazy val akkaVersion = "2.5.23"
 lazy val alpakkaVersion = "1.0.2"
-lazy val scalatestVersion = "3.0.5"
-lazy val scalatestPlayVersion = "3.1.2"
+lazy val scalatestVersion = "3.0.7"
+lazy val scalatestPlayVersion = "4.0.2"
 
 lazy val vScalaTags = "0.6.8"
 lazy val vXmlBind = "2.3.0"
 lazy val vUpickle = "0.6.6"
 
 //Java library versions
-lazy val openNlpVersion = "1.9.0"
+lazy val openNlpVersion = "1.9.1"
 lazy val langToolVersion = "4.4"
 lazy val deepLearning4jVersion = "0.9.1"
 
@@ -114,7 +114,7 @@ val dl4jDependencies = Seq(
 
 val loggingDependencies = Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
 )
 
@@ -209,7 +209,6 @@ lazy val client = project.in(file(clientName))
     )
   ).enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalaJSBundlerPlugin) // Use fastOptJS::webpack to download NPM libraries and build
-
 
 
 //Documentation
