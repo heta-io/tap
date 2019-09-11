@@ -36,6 +36,14 @@ import scala.util.{Failure, Success}
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
 
+/**
+  * GraphQLController handles all GraphQL requests.
+
+  * @param assets
+  * @param gqlSchema
+  * @param actions
+  */
+
 class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchema, actions: GraphqlActions) extends InjectedController {
 
   val schema:Schema[GraphqlActions,Unit] = gqlSchema.create
