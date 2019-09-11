@@ -39,7 +39,7 @@ import scala.util.{Failure, Success}
 /**
   * GraphQLController handles all GraphQL requests.
 
-  * @param
+  * @param assets
   * @param gqlSchema
   * @param actions
   */
