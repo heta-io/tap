@@ -21,6 +21,10 @@ import scalatags.Text
 import scalatags.Text.all._ // scalastyle:ignore
 import scalatags.Text.{tags, tags2}
 
+/**
+  * Provides render and page functions for other HTML pages.
+  */
+
 trait GenericPage {
 
   def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)

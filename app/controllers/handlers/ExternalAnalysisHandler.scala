@@ -25,6 +25,12 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 19/9/17.
   */
+
+/**
+  * Handle client's text analysising requests with Athanor Server.
+  *
+  * @param athanorClient is a controller for client and Athanor Server.
+  */
 class ExternalAnalysisHandler @Inject() (athanorClient: AthanorClient) extends GenericHandler {
 
   val logger: Logger = Logger(this.getClass)

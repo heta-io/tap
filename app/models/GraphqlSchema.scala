@@ -20,6 +20,9 @@ import models.graphql.Fields._
 import models.graphql.GraphqlActions
 import sangria.schema.{Field, ObjectType, Schema, fields}
 
+/**
+  * Describes the tables and corresponding fields contained in the Graphql
+  */
 
 class GraphqlSchema {
 

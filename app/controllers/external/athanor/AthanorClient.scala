@@ -30,6 +30,17 @@ import scala.concurrent.duration._ // scalastyle:ignore
   * Created by andrew@andrewresearch.net on 6/11/17.
   */
 
+/**
+  * Controller for client and Athanor Server.
+  *
+  * An `ExecutionContext` can execute program logic asynchronously,
+  * typically but not necessarily on a thread pool.
+  *
+  * @param wsClient a Play specific WS client that can use Play specific classes in the request and response building.
+  * WS (“WebService”) library, which provides a way to make asynchronous HTTP calls through a WSClient instance.
+  * @param config runs the Athanor related configurations
+  */
+
 class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec: ExecutionContext) {
 
   val logger: Logger = Logger(this.getClass)

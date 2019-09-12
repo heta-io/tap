@@ -16,6 +16,10 @@
 
 package models.graphql
 
+/**
+  * Provides the documentation information for the QueriesPage.
+  */
+
 object FieldDocs {
 
   case class FieldDoc(
