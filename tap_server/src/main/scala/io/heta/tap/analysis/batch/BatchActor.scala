@@ -36,11 +36,11 @@ import org.clulab.processors.Document
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/*
-This actor controls the reading of files from S3, the selection of a pipeline to run, and the writing of the
-resultant analytics back to S3.
-It is designed to include basic monitoring to facilitate queries on progress of batch jobs.
- */
+/**
+  * This actor controls the reading of files from S3, the selection of a pipeline to run, and the writing of the
+  * resultant analytics back to S3.
+  * It is designed to include basic monitoring to facilitate queries on progress of batch jobs.
+  */
 object BatchActor {
   object INIT
   sealed trait AnalysisRequest
@@ -58,6 +58,10 @@ class BatchActor extends Actor {
 
   val parallelism = 5
 
+  /**
+    *
+    * @return A [[scala.PartialFunction PartialFunction]]
+    */
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
     case as: AnalyseSource => sender ! analyse(as.bucket,as.analysisType,as.annotator)
@@ -65,11 +69,24 @@ class BatchActor extends Actor {
     case msg:Any => logger.error(s"BatchActor received unkown msg: ${msg.toString}") // scalastyle:ignore
   }
 
+  /**
+    * Initialise to connect to S3
+    *
+    * @return true to allow process to continue
+    */
   def init: Boolean = {
     //TODO Check that can connect to S3
     true //for now just return true to allow process to continue
   }
 
+  /**
+    *
+    *
+    * @param bucket the s3 bucket name
+    * @param analysisType
+    * @param annotator
+    * @return A [[scala.concurrent.Future Future]] of type [[ResultMessage]]
+    */
   def analyse(bucket:String,analysisType:String,annotator:ActorRef): Future[ResultMessage] = {
     logger.info(s"Started batch $analysisType for bucket: $bucket")
     val batchId = UUID.randomUUID().toString
@@ -88,16 +105,31 @@ class BatchActor extends Actor {
     }
   }
 
+  /**
+    * Checking for batch progress for bucket
+    *
+    * @param bucket the s3 bucket name
+    * @param batchId the s3 bucket Id
+    * @return A [[scala.concurrent.Future Future]] of type [[ResultMessage]]
+    */
   def progress(bucket:String,batchId:String): Future[ResultMessage] = {
     logger.info(s"Checking batch progress for: $bucket/$batchId")
     Future.successful(ResultMessage("",s"Progress checked for $bucket/$batchId"))
   }
 
+  /**
+    * Create Batch Folder for batch progress for bucket
+    *
+    * @param bucket the s3 bucket name
+    * @param folderName Name of the Batch Folder
+    * @return A [[scala.concurrent.Future Future]]
+    */
   private def createBatchFolder(bucket:String,folderName:String) = Future {
     val key = s"$folderName/__metadata"
     logger.debug(s"Creating destination: $key")
     ByteStringPipeline(Source.empty[ByteString],awsS3.sinkfileToBucket(bucket,key)).run
   }
+
 
   private def getPipeline(analysisType:String,annotator:ActorRef):Either[Throwable,Flow[File, File, NotUsed]] = {
     val fields = Pipe.getClass.getDeclaredFields.map(_.getName).toVector

@@ -25,6 +25,9 @@ import org.languagetool.rules.RuleMatch
 import scala.concurrent.Future
 import scala.collection.JavaConverters._
 
+/**
+  * This performs the spelling check in BritishEnglish
+  */
 
 object Speller {
 

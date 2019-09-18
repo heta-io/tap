@@ -22,6 +22,10 @@ import io.heta.tap.analysis.clu.CluAnnotatorActor.{AnnotateRequest, INIT}
 import org.clulab.processors.Document
 import org.clulab.processors.clu.CluProcessor
 
+/**
+  * This is an Annotator Actor, but what is annotator???
+  */
+
 object CluAnnotatorActor {
   object INIT
   sealed trait Request

@@ -24,6 +24,10 @@ import com.typesafe.scalalogging.Logger
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
+
+/**
+  * Checks with a collection of input strings, if True go to epistemicVerbLemmas, else epistemicVerbTerms
+  */
 object Lexicons {
 
   val logger: Logger = Logger(this.getClass)
