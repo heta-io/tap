@@ -38,10 +38,10 @@ import scala.util.Success
   */
 
 /**
-  * TextAnalysisHandler handles all text analysis requests.
+  * TextAnalysisHandler handles all text analysis requests
   *
-  * @param clean The pipelines for clean text.
-  * @param cluAnnotator support sending messages to the actor it represents.
+  * @param clean The pipelines for clean text
+  * @param cluAnnotator support sending messages to the actor it represents
   */
 
 class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {

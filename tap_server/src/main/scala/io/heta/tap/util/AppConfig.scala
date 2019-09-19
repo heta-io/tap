@@ -18,6 +18,9 @@ package io.heta.tap.util
 import scala.util.Try
 import com.typesafe.config.ConfigFactory
 
+/**
+  * Appconfig holds Aws configuration information
+  */
 class AppConfig{
 
   def getAthanorURL: Option[String] = AppConfig.parseConfig("external.servers","athanor")
