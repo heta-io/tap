@@ -27,7 +27,7 @@ import scala.concurrent.Future
   */
 
 /**
-  * Handles all client's text analysising requests with Athanor Server
+  * Handles all client's text analysing requests with Athanor Server
   *
   * @param athanorClient is a controller for client and Athanor Server
   */

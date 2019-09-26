@@ -41,6 +41,11 @@ class GraphqlSchema {
     Field(BatchField.name,BatchField.deriveType,BatchField.description,BatchField.arguments,BatchField.resolver)
   )
 
+  /**
+    * Creates schema from the tapFields
+    *
+    * @return A [[sangria.schema.Schema Schema]]
+    */
   def create:Schema[GraphqlActions,Unit] = Schema(ObjectType("Query",tapFields))
 
 }

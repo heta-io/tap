@@ -95,7 +95,7 @@ class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchem
     * @param query Documents to return
     * @param name Optional version name of the object
     * @param vars Json objects
-    * @return
+    * @return A [[scala.concurrent.Future Future]] of [[Result]] type
     */
   def executeGraphQLQuery(query: Document, name: Option[String], vars: JsObject):Future[Result] = {
      Executor.execute(schema, query, actions, operationName = name, variables = vars)

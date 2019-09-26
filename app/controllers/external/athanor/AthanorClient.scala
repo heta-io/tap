@@ -92,7 +92,7 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
   case class AthanorMsg(message: String, results: Vector[Vector[String]])
 
   /**
-    * Handles the reponse operation of Athanor.
+    * Handles the response operation of Athanor.
     *
     * @param response Response
     * @return

@@ -30,9 +30,9 @@ import scala.concurrent.Future
 /**
   * Represents Graphql specific data and business logic.
   *
-  * @param textAnalysisHandler
-  * @param externalAnalysisHandler
-  * @param batchAnalysisHandler
+  * @param textAnalysisHandler [[controllers.handlers.TextAnalysisHandler]]
+  * @param externalAnalysisHandler [[controllers.handlers.ExternalAnalysisHandler]]
+  * @param batchAnalysisHandler [[controllers.handlers.BatchAnalysisHandler]]
   */
 
 class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler, batchAnalysisHandler: BatchAnalysisHandler) {

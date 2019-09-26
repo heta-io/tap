@@ -27,10 +27,11 @@ import scalatags.Text.{tags, tags2}
 
 trait GenericPage {
 
+  /** Renders HTML page data */
   def render(title:String):Html = Html("<!DOCTYPE html>" + page(title).render)
-
+  /** Renders HTML page data */
   def page(titleStr:String):Text.TypedTag[String] = tags.html(head(tags2.title(titleStr)))
-
+  /** Bundles URL */
   def bundleUrl: String = Seq("client-opt-bundle.js", "client-fastopt-bundle.js")
       .find(name => getClass.getResource(s"/public/$name") != null)
       .map(name => controllers.routes.Assets.versioned(s"$name").url).getOrElse("BUNDLE_NOT_FOUND")

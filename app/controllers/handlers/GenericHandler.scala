@@ -50,8 +50,9 @@ trait GenericHandler {
 
   /**
     *
-    * @param paramName
-    * @param parameters
+    *
+    * @param paramName name of the input parameter
+    * @param parameters Optional version parameters
     * @tparam A
     * @return A [[scala.Option Option]] of [[Any]]
     */
@@ -69,6 +70,12 @@ trait GenericHandler {
     }
   }
 
+  /**
+    * Informal test result
+    *
+    * @param text Input string for the dummy result
+    * @return A [[scala.concurrent.Future Future]] of with type [[StringResult]]
+    */
   def dummyResult(text:String):Future[StringResult] = Future {
     StringResult("This features is not implemented yet")
   }
