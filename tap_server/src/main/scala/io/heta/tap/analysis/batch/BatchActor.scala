@@ -59,8 +59,9 @@ class BatchActor extends Actor {
   val parallelism = 5
 
   /**
+    * Receive messages that the actor can handle: Such as INIT, as, and cp
     *
-    * @return A [[scala.PartialFunction PartialFunction]]
+    * @return A [[scala.PartialFunction PartialFunction]] of type [[scala.Any Any]] and Unit[[scala.Unit Unit]]
     */
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
@@ -80,10 +81,10 @@ class BatchActor extends Actor {
   }
 
   /**
-    *
+    * Use specified pipelines to analyse a batch of files from a given bucket name
     *
     * @param bucket the s3 bucket name
-    * @param analysisType analysis type
+    * @param analysisType The name of an existing TAP analysis pipeline
     * @param annotator
     * @return A [[scala.concurrent.Future Future]] of type [[ResultMessage]]
     */
@@ -131,6 +132,13 @@ class BatchActor extends Actor {
   }
 
 
+  /**
+    * Get the desire pipeline type use for analysis
+    *
+    * @param analysisType The name of an existing TAP analysis pipeline
+    * @param annotator
+    * @returns the desire analysis type, else return Exception message
+    */
   private def getPipeline(analysisType:String,annotator:ActorRef):Either[Throwable,Flow[File, File, NotUsed]] = {
     val fields = Pipe.getClass.getDeclaredFields.map(_.getName).toVector
     if (fields.contains(analysisType)) {
@@ -147,6 +155,12 @@ class BatchActor extends Actor {
     }
   }
 
+  /**
+    *
+    *
+    * @param annotator
+    * @return A `Flow` is a set of stream processing steps that has one open input and one open output.
+    */
   private def annotatedDocFromFile(annotator:ActorRef): Flow[File, Document, NotUsed] = Flow[File]
     .mapAsync[org.clulab.processors.Document](parallelism) { file =>
     logger.debug(s"|${annotator.path.toString}|")
@@ -160,6 +174,14 @@ class BatchActor extends Actor {
       }
   }
 
+  /**
+    *
+    *
+    * @param bucket
+    * @param batchId the s3 bucket Id
+    * @param pipeline
+    * @return
+    */
   private def processFiles(bucket:String,batchId:String,pipeline: Flow[File, File, NotUsed]): Future[Future[Done]] = Future {
     val inputFolder = "source_files"
     logger.info(s"Processing files for $batchId in $bucket/$inputFolder")
@@ -181,7 +203,12 @@ class BatchActor extends Actor {
   }
 
 
-
+  /**
+    *
+    * @param bucket the s3 bucket name
+    * @param batchId the s3 bucket Id
+    * @return
+    */
   private def sinkFileToS3(bucket:String,batchId:String): Sink[File, Future[Done]] = Sink.foreachAsync[File](parallelism){ f =>
     val key = newFileName(s"$batchId/${f.name}","result")
     logger.info(s"Writing: $bucket/$key")
@@ -189,6 +216,15 @@ class BatchActor extends Actor {
     Future(ByteStringPipeline(Source.single[ByteString](f.contents),sink).run)
   }
 
+  /**
+    * Create a new file name
+    *
+    * @param current
+    * @param tag
+    * @param inExt input extension
+    * @param outExt output extension
+    * @return
+    */
   private def newFileName(current:String,tag:String,inExt:String=".txt",outExt:String=".json"): String =
     current.dropRight(inExt.length).concat(s"-$tag$outExt")
 

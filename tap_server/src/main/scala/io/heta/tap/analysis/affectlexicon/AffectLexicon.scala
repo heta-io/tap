@@ -39,7 +39,7 @@ import io.heta.tap.data.doc.Token
 //}
 
 /**
-  * Performs the analysis of affection which shows if an input is positive or negative
+  * Performs the analysis which shows if an input terms are positive or negative
   */
 
 object AffectLexicon {
@@ -141,13 +141,19 @@ object AffectLexicon {
     Json.fromJson[List[Affect]](jsonString).getOrElse(List()).toVector
   }
 
+  /**
+    * TODO
+    *
+    * @param threshold the magnitude that must be exceeded for a certain result
+    * @return
+    */
   def mostEmotional(threshold:Double=3.5):Vector[Affect] = allAffectTerms.filter(_.arousal> threshold).sortBy(_.valence)
 
   /**
     * TODO
     *
     * @param ratio
-    * @param threshold
+    * @param threshold the magnitude that must be exceeded for a certain result
     * @return
     */
   def getSubSets(ratio:Double = 0.25, threshold:Double = 3.0):(AffectLexicon,AffectLexicon,Double,Double) = {

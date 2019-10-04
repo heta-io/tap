@@ -26,7 +26,7 @@ import scala.concurrent.Future
 import scala.collection.JavaConverters._
 
 /**
-  * This performs the spelling check in BritishEnglish
+  * Performs the spelling check in BritishEnglish
   */
 
 object Speller {
@@ -39,6 +39,11 @@ object Speller {
 
   langTool.getLanguage.isInstanceOf[BritishEnglish]
 
+  /**
+    * Checks the spelling
+    * @param sentences input sentence
+    * @return spelling mistakes and possible suggestions for what the intended word was
+    */
   def check(sentences:Vector[Sentence]): Future[Vector[Spelling]] = Future {
     sentences.map { sent =>
       val matches:Vector[RuleMatch] = langTool.check(sent.original).asScala.toVector

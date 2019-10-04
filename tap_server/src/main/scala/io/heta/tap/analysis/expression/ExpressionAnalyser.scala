@@ -30,6 +30,10 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
+
+/**
+  *
+  */
 object ExpressionAnalyser {
 
   val logger: Logger = Logger(this.getClass)
@@ -42,19 +46,21 @@ object ExpressionAnalyser {
 //    case Failure(e) => logger.error("AffectLexicon encountered an error on startup: " + e.toString)
 //  }
 
+
   def reflective(text:String):Future[ReflectiveExpressions] = ReflectiveExpressionPipeline.process(text)
 
+  /** Get all matching terms */
   def affective(tokens:Vector[Token]):Future[Vector[AffectExpression]] = Future {
     AffectLexicon.getAllMatchingTerms(tokens) //Multi-dimensional affect
   }
 
-
+  /** Get affect terms, if positive or negative */
   def affect(tokens:Vector[Token]):Future[Vector[AffectExpression]] = Future {
     AffectLexicon.getAffectTerms(tokens)
   }
 
 
-
+  /** Epistemic Expression */
   def epistemic(tokens:Vector[Token]):Future[Vector[EpistemicExpression]] = Future {
     //Get the indexes of any epistemic verbs
     val epIdx = tokens.filter( t => Lexicons.epistemicVerbLemmas.contains(t.lemma)).map(_.idx)
@@ -66,7 +72,7 @@ object ExpressionAnalyser {
   }
 
 
-
+  /** Modal Expression */
   def modal(tokens:Vector[Token]):Future[Vector[ModalExpression]] = Future {
     //Get the indexes of any modals
     val modIdx = tokens.filter( t => t.postag.contains("MD")).map(_.idx)

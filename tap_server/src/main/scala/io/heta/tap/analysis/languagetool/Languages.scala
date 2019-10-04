@@ -23,7 +23,7 @@ import org.languagetool.language.BritishEnglish
   */
 
 /**
-  * This specifies the acceptable input language
+  * Specifies the acceptable input language which is BritishEnglish
   */
 
 class Languages {
