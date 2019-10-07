@@ -22,6 +22,10 @@ import scalatags.Text.tags2
 import scalatags.Text.tags
 import scalatags.Text.TypedTag
 
+/**
+  * Provide the graphiQL interface for TAP.
+  */
+
 object GraphiqlPage extends GenericPage {
 
   override def page(titleStr:String):TypedTag[String] = tags.html(

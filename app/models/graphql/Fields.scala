@@ -31,6 +31,11 @@ import io.heta.tap.data.results._
 
 import scala.concurrent.Future
 
+
+/**
+  * Provides all different field types.
+  */
+
 object Fields {
 
 

@@ -36,6 +36,14 @@ import scala.util.{Failure, Success}
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
 
+/**
+  * Handles all GraphQL requests.
+  *
+  * @param assets used to find assets according to configured base path and URL base.
+  * @param gqlSchema describes the tables and corresponding fields contained in the Graphql.
+  * @param actions handles requests.
+  */
+
 class GraphQlController @Inject() (assets: AssetsFinder, gqlSchema: GraphqlSchema, actions: GraphqlActions) extends InjectedController {
 
   val schema:Schema[GraphqlActions,Unit] = gqlSchema.create

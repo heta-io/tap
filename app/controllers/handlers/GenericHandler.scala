@@ -26,6 +26,10 @@ import scala.concurrent.Future
 import scala.reflect.runtime.universe._
 import scala.util.Try
 
+/**
+  * GenericHandler performs queryTime, validJson and extractParameter.
+  */
+
 trait GenericHandler {
 
   def queryTime(start:Long):Int = (System.currentTimeMillis() - start).toInt

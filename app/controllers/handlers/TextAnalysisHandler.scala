@@ -36,6 +36,14 @@ import scala.util.Success
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
+
+/**
+  * TextAnalysisHandler handles all text analysis requests.
+  *
+  * @param clean The pipelines for clean text.
+  * @param cluAnnotator support sending messages to the actor it represents.
+  */
+
 class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
 
   import io.heta.tap.pipelines.materialize.PipelineContext.executor

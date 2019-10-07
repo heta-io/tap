@@ -27,6 +27,14 @@ import scala.concurrent.Future
   * Created by andrew@andrewresearch.net on 20/10/17.
   */
 
+/**
+  * Represents Graphql specific data and business logic.
+  *
+  * @param textAnalysisHandler
+  * @param externalAnalysisHandler
+  * @param batchAnalysisHandler
+  */
+
 class GraphqlActions @Inject() (textAnalysisHandler: TextAnalysisHandler, externalAnalysisHandler: ExternalAnalysisHandler, batchAnalysisHandler: BatchAnalysisHandler) {
 
   def startTime = System.currentTimeMillis

@@ -25,6 +25,10 @@ import scalatags.Text.{TypedTag, tags, tags2}
 /**
   * Created by andrew@andrewresearch.net on 20/11/17.
   */
+
+/**
+  * Provides TAP Example Queries HTML. [models.graphql.FieldDocs]
+  */
 object QueriesPage extends GenericPage {
 
   override def page(titleStr:String):TypedTag[String] = tags.html(

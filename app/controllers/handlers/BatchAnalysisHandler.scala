@@ -38,6 +38,13 @@ s3bucket: any valid s3 bucket name which TAP has been given access to
 progressCheck: batchId [UUID]
  */
 
+/**
+  * BatchAnalysisHandler: unsure
+  *
+  * @param awsS3Client
+  * @param batch
+  * @param cluAnnotator
+  */
 
 class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")batch:ActorRef, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
 
