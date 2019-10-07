@@ -22,6 +22,10 @@ import org.languagetool.language.BritishEnglish
   * Created by andrew@andrewresearch.net on 21/10/17.
   */
 
+/**
+  * This specifies the acceptable input language
+  */
+
 class Languages {
   val brittishEnglish = new BritishEnglish
 }

@@ -38,6 +38,10 @@ import io.heta.tap.data.doc.Token
 //  case class getModalVerbs(tokens:Vector[TapToken])
 //}
 
+/**
+  * Performs the analysis of affection which shows if an input is positive or negative
+  */
+
 object AffectLexicon {
   val logger: Logger = Logger(this.getClass)
 
@@ -61,10 +65,21 @@ object AffectLexicon {
 //    }
 //  }
 
+  /**
+    * Initialize
+    *
+    * @return with Boolean expression
+    */
   def init:Boolean = {
     allAffectTerms.size > 0
   }
 
+  /**
+    * A GET request operation using a bucket URI lists information about the objects in the bucket.
+    *
+    * @param tokens
+    * @return A vector containing [AffectExpression]
+    */
   def getAllMatchingTerms(tokens:Vector[Token]):Vector[AffectExpression] = {
     val terms = tokens.map(_.lemma)
     val affectTerms = allAffectTerms.filter(a => terms.contains(a.word)).map(aff => aff.word -> aff).toMap
@@ -74,16 +89,33 @@ object AffectLexicon {
     }
   }
 
+  /**
+    * Checks if the terms are positive.
+    *
+    * @param terms Word or expression
+    * @return A vector containing [AffectExpression]
+    */
   private def getPositive(terms: Vector[String]): Vector[AffectExpression] = {
     val pos = terms.filter(l => mostPositiveTerms.contains(l))
     pos.map(w => AffectExpression(w,-1,-1))
   }
 
+  /**
+    * Checks if the terms are negative.
+    *
+    * @param terms Word or expression
+    * @return A vector containing [AffectExpression]
+    */
   private def getNegative(terms: Vector[String]): Vector[AffectExpression] = {
     val neg = terms.filter(l => mostNegativeTerms.contains(l))
     neg.map(w => AffectExpression(w,-1,-1))
   }
 
+  /**
+    * Check if the terms are positive or negative.
+    * @param tokens
+    * @return
+    */
   def getAffectTerms(tokens:Vector[Token]):Vector[AffectExpression] = {
     val terms = tokens.filterNot(_.isPunctuation).map(_.term.toLowerCase)
 
@@ -93,6 +125,12 @@ object AffectLexicon {
     posWords ++ negWords
   }
 
+  /**
+    * Load a file
+    *
+    * @param filename
+    * @return
+    */
   def load(filename:String):Vector[Affect] = {
     import play.api.libs.json._
     lazy val stream : InputStream = getClass.getResourceAsStream(filename)
@@ -104,6 +142,12 @@ object AffectLexicon {
 
   def mostEmotional(threshold:Double=3.5):Vector[Affect] = allAffectTerms.filter(_.arousal> threshold).sortBy(_.valence)
 
+  /**
+    *
+    * @param ratio
+    * @param threshold
+    * @return
+    */
   def getSubSets(ratio:Double = 0.25, threshold:Double = 3.0):(AffectLexicon,AffectLexicon,Double,Double) = {
     val me = mostEmotional(threshold)
     val valence = me.map(_.valence)
