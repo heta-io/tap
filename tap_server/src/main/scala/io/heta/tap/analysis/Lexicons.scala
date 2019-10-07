@@ -32,6 +32,7 @@ object Lexicons {
 
   val logger: Logger = Logger(this.getClass)
 
+  /** Checks if a term match with EpistemicVerb if True epistemicVerbLemmas, else epistemicVerbTerms*/
   def matchEpistemicVerbs(terms:Vector[String],useLemmas:Boolean = false):Vector[String] = terms
     .intersect(if (useLemmas) epistemicVerbLemmas else epistemicVerbTerms)
 

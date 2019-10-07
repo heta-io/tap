@@ -23,7 +23,7 @@ import org.clulab.processors.Document
 import org.clulab.processors.clu.CluProcessor
 
 /**
-  * This is an Annotator Actor, but what is annotator???
+  * CluAnnotatorActor annotates sentences with parts of speech, lemmas and dependencies
   */
 
 object CluAnnotatorActor {
@@ -38,12 +38,22 @@ class CluAnnotatorActor extends Actor {
 
   val processor = new CluProcessor()
 
+  /**
+    * Receive messages that the actor can handle: Such as INIT, and annotate
+    *
+    * @return A [[scala.PartialFunction PartialFunction]] of type [[scala.Any Any]] and Unit[[scala.Unit Unit]]
+    */
   def receive: PartialFunction[Any,Unit] = {
     case INIT => sender ! init
     case annotate: AnnotateRequest => sender ! createAnnotatedDoc(annotate)
     case msg:Any => logger.error(s"CluAnnotator received unkown msg: ${msg.toString}") // scalastyle:ignore
   }
 
+  /**
+    * Initialise CluProcessor
+    *
+    * @return Initialisation result message
+    */
   def init: Boolean = {
     logger.warn("Initialising CluProcessor")
     val text = """CluProcessor is starting up!"""
@@ -58,6 +68,11 @@ class CluAnnotatorActor extends Actor {
     result
   }
 
+  /**
+    * Create an annotated Document
+    * @param annotate
+    * @return Stores all annotations for one document
+    */
   def createAnnotatedDoc(annotate:AnnotateRequest):Document = {
     logger.warn("In the annotator, creating the document")
     val doc = processor.mkDocument(annotate.text)

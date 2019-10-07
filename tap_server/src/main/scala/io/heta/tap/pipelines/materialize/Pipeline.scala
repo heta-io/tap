@@ -25,6 +25,9 @@ import scala.collection.immutable
   * Created by andrew@andrewresearch.net on 27/2/17.
   */
 
+/**
+  *
+  */
 trait Pipeline {
   def sourceFrom[A,B](input:immutable.Iterable[A]):Source[A,NotUsed] = Source[A](input)
 }
