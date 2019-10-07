@@ -30,6 +30,7 @@ import scalatags.Text.{TypedTag, tags, tags2}
   */
 object HomePage extends GenericPage {
 
+  /** Renders HTML page data */
   override def page(titleStr:String):TypedTag[String] = tags.html(
     head(
       tags2.title(titleStr),

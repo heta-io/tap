@@ -113,6 +113,7 @@ object AffectLexicon {
 
   /**
     * Check if the terms are positive or negative.
+    *
     * @param tokens
     * @return
     */
@@ -143,6 +144,7 @@ object AffectLexicon {
   def mostEmotional(threshold:Double=3.5):Vector[Affect] = allAffectTerms.filter(_.arousal> threshold).sortBy(_.valence)
 
   /**
+    * TODO
     *
     * @param ratio
     * @param threshold

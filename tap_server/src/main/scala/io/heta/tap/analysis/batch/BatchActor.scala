@@ -83,7 +83,7 @@ class BatchActor extends Actor {
     *
     *
     * @param bucket the s3 bucket name
-    * @param analysisType
+    * @param analysisType analysis type
     * @param annotator
     * @return A [[scala.concurrent.Future Future]] of type [[ResultMessage]]
     */

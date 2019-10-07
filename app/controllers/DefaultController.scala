@@ -32,12 +32,22 @@ import views.{HomePage, QueriesPage}
 
 class DefaultController @Inject() (assets: AssetsFinder) extends InjectedController {
 
-  //Provide or GET HomePage to client
+
+  /**
+    * Provide or GET HomePage to client
+    *
+    * @return [[play.api.mvc.Action Action]] of type [[AnyContent]]
+    */
   def index:Action[AnyContent] = Action {
     //Ok(views.html.index())
     Ok(HomePage.render("TAP - Text Analytics Pipeline"))
   }
-  //Provide or GET QueriesPage to client
+
+  /**
+    * Provide or GET QueriesPage to client
+    *
+    * @return [[play.api.mvc.Action Action]] of type [[AnyContent]]
+    */
   def queries:Action[AnyContent] = Action {
     Ok(QueriesPage.render("TAP - Example Queries"))
   }

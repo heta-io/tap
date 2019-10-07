@@ -49,7 +49,7 @@ class AwsS3Client { //@Inject() (config:AppConfig) {
   /**
     * Downloads a S3 Object
     * @param bucket the s3 bucket name
-    * @param fileName the file name
+    * @param fileName the s3 file name
     * @return A [[akka.stream.scaladsl.Source Source]] which upon materializes will
     *         return a [[scala.concurrent.Future Future]] containing [[ByteString]]
     */
@@ -61,7 +61,7 @@ class AwsS3Client { //@Inject() (config:AppConfig) {
   /**
     * Uploads a S3 Object by making multiple requests
     * @param bucket the s3 bucket name
-    * @param fileName the file name
+    * @param fileName the s3 file name
     * @return A [[akka.stream.scaladsl.Sink Sink]] that accepts [[ByteString]]'s and materializes to a [[scala.concurrent.Future Future]] of [[MultipartUploadResult]]
     */
   def sinkfileToBucket(bucket:String,fileName:String): Sink[ByteString, Future[MultipartUploadResult]] = {

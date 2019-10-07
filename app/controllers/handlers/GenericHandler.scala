@@ -32,10 +32,30 @@ import scala.util.Try
 
 trait GenericHandler {
 
+  /**
+    * Calculates the query time
+    *
+    * @param start "Long" Type
+    * @return query time in integer type
+    */
   def queryTime(start:Long):Int = (System.currentTimeMillis() - start).toInt
 
+  /**
+    * Checks if Json Value is valid or null
+    *
+    * @param parameters optional version of parameters
+    * @return A [[scala.Option Option]] of [[JsValue]]
+    */
   def validJson(parameters:Option[String]):Option[JsValue] = parameters.flatMap(p => Try(Json.parse(p)).toOption).map(_.result.get)
 
+  /**
+    *
+    *
+    * @param paramName name of the input parameter
+    * @param parameters Optional version parameters
+    * @tparam A
+    * @return A [[scala.Option Option]] of [[Any]]
+    */
   def extractParameter[A:TypeTag](paramName:String,parameters:Option[String]):Option[Any] = {
     val jsParams = validJson(parameters)
     Logger.debug(s"JSON: $jsParams")
@@ -50,6 +70,12 @@ trait GenericHandler {
     }
   }
 
+  /**
+    * Informal test result
+    *
+    * @param text Input string for the dummy result
+    * @return A [[scala.concurrent.Future Future]] of with type [[StringResult]]
+    */
   def dummyResult(text:String):Future[StringResult] = Future {
     StringResult("This features is not implemented yet")
   }

@@ -28,6 +28,7 @@ import scalatags.Text.TypedTag
 
 object GraphiqlPage extends GenericPage {
 
+  /** Renders GraphiqlPage page data */
   override def page(titleStr:String):TypedTag[String] = tags.html(
     head(
       tags2.title(titleStr),
