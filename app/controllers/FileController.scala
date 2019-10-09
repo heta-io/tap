@@ -36,6 +36,11 @@ import scala.concurrent.Future
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
 
+/**
+  * Handles all requests for uploading and managing file.
+  * Currently supports extensions txt, jar, zip and no extension.
+  */
+
 class FileController extends InjectedController {
 
   // Sepearates the suffix, random number and prefix, and is

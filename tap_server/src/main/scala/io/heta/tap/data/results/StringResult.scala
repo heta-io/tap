@@ -16,4 +16,12 @@
 
 package io.heta.tap.data.results
 
+/**
+  *
+  *
+  * @param analytics
+  * @param message Contains string of message
+  * @param querytime Time takes to retrieve information
+  */
+
 case class StringResult(analytics: String, message:String = "", querytime:Int = -1) extends Result

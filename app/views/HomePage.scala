@@ -23,8 +23,14 @@ import scalatags.Text.{TypedTag, tags, tags2}
 /**
   * Created by andrew@andrewresearch.net on 20/11/17.
   */
+
+/**
+  * HomePage shows the introductory page of TAP which contains TAP docs, source code,
+  * example queries and the graphiQL interface for TAP.
+  */
 object HomePage extends GenericPage {
 
+  /** Renders HTML page data */
   override def page(titleStr:String):TypedTag[String] = tags.html(
     head(
       tags2.title(titleStr),

@@ -18,6 +18,13 @@ package views
 
 import controllers.Assets
 
+/**
+  *
+  * "Includes", include many UI functions such as bootstrapJS, fontAwesomeJS, reactJS, reactDomJS, graphiqlJS,
+  * also provides sources to all the functions in relation to JavaScript.
+  *
+  */
+
 object Includes {
 
   import scalatags.Text.all._
