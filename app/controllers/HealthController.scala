@@ -27,6 +27,7 @@ import play.api.mvc.{Action, AnyContent, InjectedController}
 
 /**
   * REST API for performing DBI Health related tasks.
+  * Render the health page.
   *
   * @param assets used to find assets according to configured base path and URL base.
   */

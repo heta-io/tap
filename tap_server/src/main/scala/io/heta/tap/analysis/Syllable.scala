@@ -21,7 +21,7 @@ package io.heta.tap.analysis
   */
 
 /**
-  * English Syllables
+  * English Syllables (Vowels)
   */
 object Syllable {
 

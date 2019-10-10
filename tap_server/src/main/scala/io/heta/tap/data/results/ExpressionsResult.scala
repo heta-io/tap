@@ -19,6 +19,7 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.expression.Expressions
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of ExpressionsResult */
 object ExpressionsResult {
   implicit val eWrites: OWrites[ExpressionsResult] = Json.writes[ExpressionsResult]
 }

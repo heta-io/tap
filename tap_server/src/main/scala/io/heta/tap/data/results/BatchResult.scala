@@ -34,7 +34,7 @@ package io.heta.tap.data.results
 
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-
+/** Data object of BatchResult */
 object BatchResult {
   implicit val bWrites: OWrites[BatchResult] = Json.writes[BatchResult]
 }

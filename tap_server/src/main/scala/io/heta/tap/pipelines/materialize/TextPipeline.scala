@@ -23,7 +23,7 @@ package io.heta.tap.pipelines.materialize
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import io.heta.tap.pipelines.materialize.PipelineContext.materializer
-
+/** Text Pipeline */
 case class TextPipeline[T](inputStr: String, flow: Flow[String,T,NotUsed]) {
 
   val source = Source.single(inputStr)

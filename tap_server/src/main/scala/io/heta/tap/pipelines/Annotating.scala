@@ -49,6 +49,11 @@ import scala.util.{Failure, Success, Try}
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
 
+/**
+  * Annotating text analysis
+  *
+  * @param cluAnnotator annotates sentences with parts of speech, lemmas and dependencies
+  */
 class Annotating(cluAnnotator:ActorRef) {
 
   //val languageTool: ActorRef = ???
@@ -75,6 +80,7 @@ class Annotating(cluAnnotator:ActorRef) {
     def affectExpress(thresholds:Option[AffectThresholds] = None) = cluTapSentences via affectExpressions(thresholds)
   }
 
+  /* make documents according to pipetype */
   def build[A,B](pipetype:String,pipeline: Flow[A,B,NotUsed]):Flow[String,B,NotUsed] = {
     val makeDoc:Flow[String,A,NotUsed] = pipetype match {
       case STANDARD => makeDocument.asInstanceOf[Flow[String,A,NotUsed]]
@@ -156,6 +162,7 @@ class Annotating(cluAnnotator:ActorRef) {
       }.toVector
     }
 
+  /* Get tokens containing words, lemmas, postTags, nerTags */
   private def getTokens(start:Array[Int],words:Array[String],
                        lemmas:Option[Array[String]],posTags:Option[Array[String]],nerTags:Option[Array[String]]) = {
     val numTokens = words.length
@@ -190,6 +197,7 @@ class Annotating(cluAnnotator:ActorRef) {
       }.toVector
     }
 
+  /* get Parse Data */
   private def getParseData(t:Token):Try[(Vector[Int],Int,String)] = Try {
     (t.parseChildren.toVector.map(_.positionInSentence),t.parseParentIndex,t.parseLabel.value.toString)
   }
@@ -325,6 +333,7 @@ class Annotating(cluAnnotator:ActorRef) {
        tags.map(c => SentencePhrasesTags(c.sentence,c.phrases,c.subTags,c.metaTags)))
     }
 
+  /* Get affect expression */
   def affectExpressions(thresholds:Option[AffectThresholds] = None):Flow[TapSentences,Vector[AffectExpressions],NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
     Flow[TapSentences].mapAsync[Vector[AffectExpressions]](3) { sents =>
@@ -337,6 +346,7 @@ class Annotating(cluAnnotator:ActorRef) {
     }
   }
 
+  /* Filter affect thresholds */
   private def filterAffectThresholds(affectExpressions:Vector[AffectExpression], thresholds:AffectThresholds) = {
     affectExpressions.filter{ ae =>
       ae.valence >= thresholds.valence &&

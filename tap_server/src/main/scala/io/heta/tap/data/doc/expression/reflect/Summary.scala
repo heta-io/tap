@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of Summary that gets returned to the browser */
 object Summary {
   implicit val tsWrites: OWrites[Summary] = Json.writes[Summary]
 }

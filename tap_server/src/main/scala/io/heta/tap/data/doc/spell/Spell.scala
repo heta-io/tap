@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.spell
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of Spell that gets returned to the browser */
 object Spell {
   implicit val tsWrites: OWrites[Spell] = Json.writes[Spell]
 }

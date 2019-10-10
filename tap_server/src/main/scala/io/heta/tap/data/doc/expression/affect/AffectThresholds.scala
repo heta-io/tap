@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.affect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of AffectThresholds that gets returned to the browser */
 object AffectThresholds {
   implicit val ttWrites: OWrites[AffectThresholds] = Json.writes[AffectThresholds]
 }

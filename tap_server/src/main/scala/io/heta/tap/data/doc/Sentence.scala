@@ -21,7 +21,7 @@ import play.api.libs.json.{JsValue, Json, OWrites}
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-
+/** Data object of Sentence */
 object Sentence {
   implicit val tsWrites: OWrites[Sentence] = Json.writes[Sentence]
 }

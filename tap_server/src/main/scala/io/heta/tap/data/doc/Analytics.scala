@@ -21,6 +21,7 @@ import play.api.libs.json.JsValue
 /**
   * Created by andrew@andrewresearch.net on 17/10/17.
   */
+/** Analytics in json value */
 trait Analytics {
   def asJson: JsValue
 }

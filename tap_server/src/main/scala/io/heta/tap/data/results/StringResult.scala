@@ -17,9 +17,9 @@
 package io.heta.tap.data.results
 
 /**
+  * Result of the analysed strings
   *
-  *
-  * @param analytics
+  * @param analytics analysed string
   * @param message Contains string of message
   * @param querytime Time takes to retrieve information
   */

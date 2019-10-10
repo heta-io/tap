@@ -24,6 +24,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+/** Testing external analysis handler if it connects to Athanor Server */
 class ExternalAnalysisHandlerSpec extends PlaySpec {
   //dependency injection
   private val app = new GuiceApplicationBuilder().build

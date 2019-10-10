@@ -30,7 +30,7 @@ import io.heta.tap.data.doc.{Metrics, PosStats, Sentence, Syllables}
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-
+/** Annotating the pipeline specifications */
 class AnnotatingPipelineSpec extends PlaySpec {
 
   val ap = AnnotatorPipelines

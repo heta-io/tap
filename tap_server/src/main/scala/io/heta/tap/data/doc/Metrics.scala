@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, OWrites}
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-
+/** Data object of Metrics that gets returned to the browser */
 object Metrics {
   implicit val tsWrites: OWrites[Metrics] = Json.writes[Metrics]
 }

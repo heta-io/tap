@@ -39,7 +39,7 @@ progressCheck: batchId [UUID]
  */
 
 /**
-  * Handles all requests of BatchAnalysis
+  * Handles batch queries where input files are drawn from an S3 bucket rather than sent via the query.
   *
   * @param awsS3Client provides access to amazon-specific S3 features
   * @param batch supports sending messages to the actor it represents in batch

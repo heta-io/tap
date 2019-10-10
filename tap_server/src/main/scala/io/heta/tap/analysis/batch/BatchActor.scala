@@ -84,8 +84,8 @@ class BatchActor extends Actor {
     * Use specified pipelines to analyse a batch of files from a given bucket name
     *
     * @param bucket the s3 bucket name
-    * @param analysisType The name of an existing TAP analysis pipeline
-    * @param annotator
+    * @param analysisType any valid pipeline query name
+    * @param annotator Annotating actor
     * @return A [[scala.concurrent.Future Future]] of type [[ResultMessage]]
     */
   def analyse(bucket:String,analysisType:String,annotator:ActorRef): Future[ResultMessage] = {
@@ -135,8 +135,8 @@ class BatchActor extends Actor {
   /**
     * Get the desire pipeline type use for analysis
     *
-    * @param analysisType The name of an existing TAP analysis pipeline
-    * @param annotator
+    * @param analysisType any valid pipeline query name
+    * @param annotator Annotating actor
     * @returns the desire analysis type, else return Exception message
     */
   private def getPipeline(analysisType:String,annotator:ActorRef):Either[Throwable,Flow[File, File, NotUsed]] = {
@@ -156,9 +156,9 @@ class BatchActor extends Actor {
   }
 
   /**
+    * Annotated document from file
     *
-    *
-    * @param annotator
+    * @param annotator Annotating actor
     * @return A `Flow` is a set of stream processing steps that has one open input and one open output.
     */
   private def annotatedDocFromFile(annotator:ActorRef): Flow[File, Document, NotUsed] = Flow[File]
@@ -175,12 +175,12 @@ class BatchActor extends Actor {
   }
 
   /**
+    * Processing files for batchId in bucket
     *
-    *
-    * @param bucket
+    * @param bucket the s3 bucket
     * @param batchId the s3 bucket Id
-    * @param pipeline
-    * @return
+    * @param pipeline TAP analysis pipeline
+    * @return Run FilePipeline
     */
   private def processFiles(bucket:String,batchId:String,pipeline: Flow[File, File, NotUsed]): Future[Future[Done]] = Future {
     val inputFolder = "source_files"
@@ -191,11 +191,24 @@ class BatchActor extends Actor {
     FilePipeline(fileSource,pipeline,fileSink).run
   }
 
+  /**
+    * Source file information from s3
+    *
+    * @param bucket the s3 bucket
+    * @param prefix Prefix of the keys you want to list under passed bucket
+    * @return A [[akka.stream.scaladsl.Source Source]] of [[FileInfo]]
+    */
   private def sourceFileInfoFromS3(bucket:String,prefix:String): Source[FileInfo, NotUsed] = awsS3.getContentsForBucket(bucket,Some(prefix))
     .filterNot(_.key.endsWith("/"))
     .map(c => FileInfo(c.key,c.size,c.lastModified))
 
-
+  /**
+    * Source file from s3
+    *
+    * @param bucket the s3 bucket
+    * @param key string
+    * @return A [[akka.stream.scaladsl.Source Source]] of [[File]]
+    */
   private def sourceFileFromS3(bucket:String,key:String): Source[File, NotUsed] = {
     logger.info(s"Reading $bucket/$key")
     awsS3.sourceFileFromBucket(bucket,key)
@@ -204,10 +217,11 @@ class BatchActor extends Actor {
 
 
   /**
+    * Sink file to s3
     *
     * @param bucket the s3 bucket name
     * @param batchId the s3 bucket Id
-    * @return
+    * @return A [[akka.stream.scaladsl.Sink Sink]] of [[File]] and [[Future[Done]]]
     */
   private def sinkFileToS3(bucket:String,batchId:String): Sink[File, Future[Done]] = Sink.foreachAsync[File](parallelism){ f =>
     val key = newFileName(s"$batchId/${f.name}","result")
@@ -219,11 +233,11 @@ class BatchActor extends Actor {
   /**
     * Create a new file name
     *
-    * @param current
-    * @param tag
+    * @param current current
+    * @param tag tag
     * @param inExt input extension
     * @param outExt output extension
-    * @return
+    * @return Create new file name
     */
   private def newFileName(current:String,tag:String,inExt:String=".txt",outExt:String=".json"): String =
     current.dropRight(inExt.length).concat(s"-$tag$outExt")

@@ -19,7 +19,7 @@ import scala.util.Try
 import com.typesafe.config.ConfigFactory
 
 /**
-  * Appconfig holds Aws configuration information
+  * Appconfig holds aws configuration information
   */
 class AppConfig{
 
