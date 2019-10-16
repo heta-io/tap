@@ -34,10 +34,18 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
 
   val logger: Logger = Logger(this.getClass)
 
-  val athanorURL= config.getAthanorURL
+  val athanorURL = config.getAthanorURL match {
+    case Some(url) => url.trim
+    case None => ""
+  }
 
   def process(text:String,parameter:String,start:Long):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
+    if (athanorURL.isEmpty) {
+      val msg = s"Athanor URL has not been provided."
+      logger.error(msg)
+      StringListResult(Vector(),msg)
+    }
 
     val url = athanorURL + parameter
     logger.info(s"Analysing with athanor at this url: $url")
