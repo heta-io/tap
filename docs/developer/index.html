@@ -1,14 +1,31 @@
+<!--
+  ~ Copyright (c) 2016-2018 original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under
+  ~ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  ~ CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  ~
+  -->
+
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
 <head>
-<title>Developer · Text Analytics Pipeline (TAP)</title>
+<title>Im a Developer · Text Analytics Pipeline (TAP)</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content='tap'/>
+<meta name="description" content='docs'/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../lib/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../js/page.js"></script>
+<script type="text/javascript" src="../js/warnOldVersion.js"></script>
 <script type="text/javascript" src="../js/groups.js"></script>
 <link rel="stylesheet" type="text/css" href="../lib/normalize.css/normalize.css"/>
 <link rel="stylesheet" type="text/css" href="../lib/foundation/dist/foundation.min.css"/>
@@ -30,7 +47,7 @@
 <span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.1.0-RC3
+3.3.0e
 </div>
 </div>
 <div class="nav-toc">
@@ -40,20 +57,21 @@
     <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
     <li><a href="../overview/licensing.html" class="page">License</a></li>
     <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
   </ul></li>
-  <li><a href="../user/index.html" class="page">User</a>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/product_dependencies.html" class="page">Product Dependencies</a></li>
-    <li><a href="../user/source_code.html" class="page">Getting a local copy of TAP</a></li>
-    <li><a href="../user/build_product.html" class="page">Building TAP</a></li>
-    <li><a href="../user/run_product.html" class="page">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
   </ul></li>
-  <li><a href="../developer/index.html" class="active page">Developer</a>
+  <li><a href="../developer/index.html" class="active page">I&rsquo;m a Developer</a>
   <ul>
+    <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a></li>
     <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
     <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
-    <li><a href="../developer/ide_setup.html" class="page">IDE Set-up</a></li>
-    <li><a href="../developer/doc_updates.html" class="page">Documentation Updates</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
   </ul></li>
 </ul>
 </div>
@@ -86,7 +104,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.1.0-RC3
+3.3.0e
 </div>
 </div>
 <div class="nav-toc">
@@ -96,20 +114,21 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
     <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
     <li><a href="../overview/licensing.html" class="page">License</a></li>
     <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
   </ul></li>
-  <li><a href="../user/index.html" class="page">User</a>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/product_dependencies.html" class="page">Product Dependencies</a></li>
-    <li><a href="../user/source_code.html" class="page">Getting a local copy of TAP</a></li>
-    <li><a href="../user/build_product.html" class="page">Building TAP</a></li>
-    <li><a href="../user/run_product.html" class="page">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
   </ul></li>
-  <li><a href="../developer/index.html" class="active page">Developer</a>
+  <li><a href="../developer/index.html" class="active page">I&rsquo;m a Developer</a>
   <ul>
+    <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a></li>
     <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
     <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
-    <li><a href="../developer/ide_setup.html" class="page">IDE Set-up</a></li>
-    <li><a href="../developer/doc_updates.html" class="page">Documentation Updates</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
   </ul></li>
 </ul>
 </div>
@@ -120,12 +139,14 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="small-12 medium-9 large-10 column">
 <section class="site-content">
 
+<span id="version-warning"></span>
+
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
 <div class="nav-breadcrumbs">
 <ul>
   <li><a href="../index.html">Text Analytics Pipeline (TAP)</a></li>
-  <li>Developer</li>
+  <li>I&rsquo;m a Developer</li>
 </ul>
 </div>
 </div>
@@ -133,14 +154,34 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#developer" name="developer" class="anchor"><span class="anchor-link"></span></a>Developer</h1>
+<h2><a href="#im-a-developer" name="im-a-developer" class="anchor"><span class="anchor-link"></span></a>I&rsquo;m a Developer</h2>
 <hr/>
+<div class="toc ">
+<ul>
+  <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a>
+  <ul>
+    <li><a href="../developer/ide_setup.html#clone-the-repo" class="header">Clone the repo</a>
+    <ul>
+      <li><a href="../developer/ide_setup.html#working-with-windows-7-10-mac-and-linux-ubuntu-desktop-with-idea-ultimate" class="header">Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate</a></li>
+    </ul></li>
+  </ul></li>
+  <li><a href="../developer/contributing.html" class="page">Contributing</a>
+  <ul>
+    <li><a href="../developer/contributing.html#working-with-the-repo" class="header">Working with the Repo</a></li>
+    <li><a href="../developer/contributing.html#working-with-the-code" class="header">Working with the code</a></li>
+    <li><a href="../developer/contributing.html#creating-issues" class="header">Creating Issues</a></li>
+    <li><a href="../developer/contributing.html#pull-requests" class="header">Pull Requests</a></li>
+  </ul></li>
+  <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
+  <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
+</ul>
+</div>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/uts-cic/tap/tree/master/src/main/paradox/developer/index.md">here</a>.
+The source code for this page can be found <a href="https://github.com/heta-io/tap/tree/master/project_docs/src/main/paradox/developer/index.md">here</a>.
 </div>
 
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="../developer/contributing.html">Contributing</a></p>
+<p><strong>Next:</strong> <a href="../developer/ide_setup.html">Getting setup with an IDE</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
@@ -181,7 +222,7 @@ The source code for this page can be found <a href="https://github.com/uts-cic/t
 
 <!--
 <div class="copyright">
-<span class="text">&copy; 2017</span>
+<span class="text">&copy; 2019</span>
 <a href="https://www.example.com" class="logo">logo</a>
 </div>
 -->
@@ -206,5 +247,7 @@ The source code for this page can be found <a href="https://github.com/uts-cic/t
 <script type="text/javascript" src="../lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '3.3.0e', '')});</script>
+
 
 </html>

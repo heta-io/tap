@@ -1,0 +1,424 @@
+<!--
+  ~ Copyright (c) 2016-2018 original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under
+  ~ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  ~ CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  ~
+  -->
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<title>Using TAP once its running · Text Analytics Pipeline (TAP)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content='docs'/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../js/page.js"></script>
+<script type="text/javascript" src="../js/warnOldVersion.js"></script>
+<script type="text/javascript" src="../js/groups.js"></script>
+<link rel="stylesheet" type="text/css" href="../lib/normalize.css/normalize.css"/>
+<link rel="stylesheet" type="text/css" href="../lib/foundation/dist/foundation.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/page.css"/>
+
+<!--
+<link rel="shortcut icon" href="../images/favicon.ico" />
+-->
+</head>
+
+<body>
+<div class="off-canvas-wrapper">
+<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+<div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
+<nav class="off-canvas-nav">
+<div class="nav-home">
+<a href="../index.html" >
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
+</a>
+<div class="version-number">
+3.3.0e
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../overview/index.html" class="page">Overview</a>
+  <ul>
+    <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
+    <li><a href="../overview/licensing.html" class="page">License</a></li>
+    <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
+  </ul></li>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
+  <ul>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="active page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
+  </ul></li>
+  <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
+  <ul>
+    <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a></li>
+    <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
+    <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="off-canvas-content" data-off-canvas-content>
+
+<header class="site-header expanded row">
+<div class="small-12 column">
+<a href="#" class="off-canvas-toggle hide-for-medium" data-toggle="off-canvas-menu"><svg class="svg-icon svg-icon-menu" version="1.1" id="Menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"> <path class="svg-icon-menu-path" fill="#53CDEC" d="M16.4,9H3.6C3.048,9,3,9.447,3,10c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,9.447,16.952,9,16.4,9z M16.4,13
+H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
+C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
+</a>
+<div class="title"><a href="../index.html">Text Analytics Pipeline (TAP)</a></div>
+
+<!--
+<a href="https://www.example.com" class="logo show-for-medium">logo</a>
+-->
+</div>
+</header>
+
+<div class="expanded row">
+
+<div class="medium-3 large-2 show-for-medium column">
+<nav class="site-nav">
+<div class="nav-home">
+<a href="../index.html" >
+<span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
+</a>
+<div class="version-number">
+3.3.0e
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../overview/index.html" class="page">Overview</a>
+  <ul>
+    <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
+    <li><a href="../overview/licensing.html" class="page">License</a></li>
+    <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
+  </ul></li>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
+  <ul>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="active page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
+  </ul></li>
+  <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
+  <ul>
+    <li><a href="../developer/ide_setup.html" class="page">Getting setup with an IDE</a></li>
+    <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
+    <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="small-12 medium-9 large-10 column">
+<section class="site-content">
+
+<span id="version-warning"></span>
+
+<div class="page-header row">
+<div class="medium-12 show-for-medium column">
+<div class="nav-breadcrumbs">
+<ul>
+  <li><a href="../index.html">Text Analytics Pipeline (TAP)</a></li>
+  <li><a href="../user/index.html">I&rsquo;m a User</a></li>
+  <li>Using TAP once it&rsquo;s running</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="page-content row">
+<div class="small-12 large-9 column" id="docs">
+<h3><a href="#using-tap-once-its-running" name="using-tap-once-its-running" class="anchor"><span class="anchor-link"></span></a>Using TAP once it&rsquo;s running</h3>
+<hr/>
+<div class="toc ">
+<ul>
+  <li><a href="../user/using_tap.html#using-the-tap-python-client" class="header">Using the TAP Python Client</a></li>
+  <li><a href="../user/using_tap.html#tap-queries" class="header">TAP Queries</a></li>
+</ul>
+</div>
+<h4><a href="#using-the-tap-python-client" name="using-the-tap-python-client" class="anchor"><span class="anchor-link"></span></a>Using the TAP Python Client</h4>
+<p>Grab the TAP Client from <a href="https://github.com/heta-io/tapclipy">GitHub</a>.</p>
+<p>Check out the <a href="https://github.com/infosci-qut/tapclipy/blob/master/NoteBooks/Get%20Started.ipynb">Getting Started Docs</a> for instructions on how to get setup and how to read text from a variety of file types.</p>
+<p>For help on the list of queries available check out the <a href="https://github.com/infosci-qut/tapclipy/tree/master/NoteBooks/Queries">Queries documents</a></p>
+<p>If you would like to help with this section see <a href="../developer/doc_updates.html">How to edit documentation</a></p>
+<h4><a href="#tap-queries" name="tap-queries" class="anchor"><span class="anchor-link"></span></a>TAP Queries</h4>
+<ol>
+  <li>
+    <p>visible: remove nonstandard characters in the input text.</p>
+    <ul>
+      <li>
+        <p>Analytics feature:</p>
+        <pre><code>text with standard characters
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>clean: replace quotes and hyphens with single byte versions.</p>
+    <ul>
+      <li>
+        <p>Analytics feature:</p>
+        <pre><code>   cleaned text
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>cleanPreserve: replace control characters while preserving length.</p>
+    <ul>
+      <li>
+        <p>Analytics feature:</p>
+        <pre><code>cleaned text
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>cleanMinimal: strip control characters, and reduce whitespace.</p>
+    <ul>
+      <li>
+        <p>Analytics feature:</p>
+        <pre><code>cleaned text
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>cleanAscii: returns ascii safe cleaned text.</p>
+    <ul>
+      <li>
+        <p>Analytics feature:</p>
+        <pre><code>cleaned text
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>annotations: return sentences for text.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>idx: sentence index
+start: index of the start token of the sentence in the paragraph
+end: index of the end token of the sentence in the paragraph
+length: length of the sentence
+tokens: list of tokens
+    - idx: index of token in the sentence
+    - term: token
+    - lemma: the canonical form of the token
+    - postag: a part of speech tag to the token
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>expressions: return expressions for text.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>sentIdx: sentence index
+affect: list of affect expressions
+    - text: affect expression
+epistemic: list of epistemic expressions
+    - text: epistemic expression
+    - startIdx: index of the starting token in the epistemic expression 
+    - endIdx: index of the ending token in the epistemic expression
+modal: list of modal expressions
+    - text: modal expression
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>syllables: count syllables in words and calculates averages for sentences.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>sentIdx: sentence index
+avgSyllables: average syllables in the sentence
+counts: list of syllables count for each word in the sentence
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>spelling: return spelling errors and suggestions for each sentence.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>sentIdx: sentence index
+spelling: list of spelling errors and suggestions
+    message: return message
+    suggestions: list of suggestions
+    start: index of the starting character of the error in the sentence
+    end: index of the ending character of the error in the sentence
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>vocabulary: return vocabulary for text.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>unique: number of unique vocabolaries
+terms: list of vocabolaries
+    term: vocabulary
+    count: number of the vocabolary in the text
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>metrics: return metrics for text.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>sentences: number of sentences in the text
+tokens: total number of tokens
+words: total number of words
+characters: total number of characters
+punctuation: total number of punctuations
+whitespace: total number of whitespace
+sentWordCounts: list of word counts of each sentence
+averageSentWordCount: average word count per sentence
+wordLengths: list of word lengths of each sentence
+averageWordLength: average word length in the text
+averageSentWordLength: average word length per sentence
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>posStats: return posStats for text.</p>
+    <ul>
+      <li>
+        <p>Analytics features:</p>
+        <pre><code>verbNounRatio: number of verb/ number of noun
+futurePastRatio: number of future/ number of past
+adjectiveWordRatio: number of adjective/ number of word
+namedEntityWordRatio: number of named entity/ number of word
+nounDistribution: list of noun distributions of each sentence
+verbDistribution: list of verb distributions of each sentence
+adjectiveDistribution: list of adjective distributions of each sentence
+</code></pre>
+      </li>
+    </ul>
+  </li>
+</ol>
+<div class="source-github">
+The source code for this page can be found <a href="https://github.com/heta-io/tap/tree/master/project_docs/src/main/paradox/user/using_tap.md">here</a>.
+</div>
+
+<div class="nav-next">
+<p><strong>Next:</strong> <a href="../user/graphql.html">Using the GraphQL Interface</a></p>
+</div>
+</div>
+<div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../user/using_tap.html#using-tap-once-its-running" class="header">Using TAP once it&rsquo;s running</a>
+  <ul>
+    <li><a href="../user/using_tap.html#using-the-tap-python-client" class="header">Using the TAP Python Client</a></li>
+    <li><a href="../user/using_tap.html#tap-queries" class="header">TAP Queries</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</div>
+
+</section>
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<section class="site-footer-nav">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 medium-4 large-3 text-center column">
+<div class="nav-links">
+<ul>
+<!-- <li><a href="https://www.example.com/products/">Products</a> -->
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+
+<section class="site-footer-base">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 text-center large-9 column">
+
+<!--
+<div class="copyright">
+<span class="text">&copy; 2019</span>
+<a href="https://www.example.com" class="logo">logo</a>
+</div>
+-->
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</footer>
+
+</div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="../lib/foundation/dist/foundation.min.js"></script>
+<script type="text/javascript">jQuery(document).foundation();</script>
+<script type="text/javascript" src="../js/magellan.js"></script>
+
+<style type="text/css">@import "../lib/prettify/prettify.css";</style>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '3.3.0e', '')});</script>
+
+
+</html>

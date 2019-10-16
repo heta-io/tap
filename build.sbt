@@ -16,100 +16,216 @@
 
 import LocalSbtSettings._
 
-name := "tap"
+//Project details
+lazy val projectName = "tap"
+lazy val projectOrg = "io.heta"
+lazy val projectVersion = "3.3.0e"
 
-version := "3.1.2"
+lazy val serverName = s"${projectName}_server"
+lazy val clientName = s"${projectName}_client"
+lazy val sharedName = s"${projectName}_shared"
 
-scalaVersion := "2.12.4"
-
-organization := "au.edu.utscic"
+//Versions
+scalaVersion in ThisBuild := "2.12.8"
 
 //Scala library versions
-val nlytxNlpApiV = "1.1.0"
-val nlytxNlpCommonsV = "1.0.0"
-val factorieNlpV = "1.0.4"
-val factorieNlpModelsV = "1.0.3"
+lazy val nlytxNlpApiV = "1.1.2"
+lazy val nlytxNlpExpressionsV = "1.1.2"
+lazy val nlytxNlpCommonsV = "1.1.2"
+lazy val factorieNlpV = "1.0.4"
+lazy val factorieNlpModelsV = "1.0.3"
+lazy val cluLabProcessorV = "7.5.2"
+lazy val tensorFlowV = "0.4.0"
 
-val sangriaVersion = "1.3.2"
-val sangriaJsonVersion = "1.0.4"
-val playJsonVersion = "2.6.7"
-val twirlApiVersion = "1.3.13"
+lazy val sangriaVersion = "1.4.2"
+lazy val sangriaJsonVersion = "1.0.5"
+lazy val playJsonVersion = "2.7.3"
 
-val akkaStreamVersion = "2.5.6"
-val scalatestVersion = "3.0.4"
-val scalatestPlayVersion = "3.1.2"
+lazy val akkaVersion = "2.5.23"
+lazy val alpakkaVersion = "1.0.2"
+lazy val scalatestVersion = "3.0.7"
+lazy val scalatestPlayVersion = "4.0.2"
+
+lazy val vScalaTags = "0.6.8"
+lazy val vXmlBind = "2.3.0"
+lazy val vUpickle = "0.6.6"
 
 //Java library versions
-val openNlpVersion = "1.8.3"
-val langToolVersion = "3.9"
+lazy val openNlpVersion = "1.9.1"
+lazy val langToolVersion = "4.4"
+lazy val deepLearning4jVersion = "0.9.1"
 
-enablePlugins(PlayScala)
-disablePlugins(PlayLayoutPlugin)
-PlayKeys.playMonitoredFiles ++= (sourceDirectories in (Compile, TwirlKeys.compileTemplates)).value
-libraryDependencies += ws     //Http client
-libraryDependencies += guice  //Dependency injection
+//ScalaJS
+lazy val vScalaJsDom = "0.9.7"
+lazy val vWebpack = "4.10.2"
+lazy val vWebpackDevServer = "3.1.4"
+lazy val vSlinky = "0.6.1"
+
+lazy val vBootstrap = "4.1.3"
+lazy val vSjsBootstrap = "2.3.5"
+lazy val vJquery = "3.2.1"
+lazy val vPopper = "1.14.3"
+lazy val vD3 = "5.4.0"
+
+//Settings
+val sharedSettings = Seq(
+  organization := projectOrg,
+  version := projectVersion
+)
+
+//Dependencies
+
+val playDeps = Seq(ws, guice, ehcache, specs2 % Test)
 
 val apiDependencies = Seq(
   "org.sangria-graphql" %% "sangria" % sangriaVersion,
   "com.typesafe.play" %% "play-json" % playJsonVersion,
-  "com.typesafe.play" %% "twirl-api" % twirlApiVersion,
-  "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion
+  //"com.typesafe.play" %% "twirl-api" % twirlApiVersion,
+  "com.lihaoyi" %% "scalatags" % vScalaTags,
+  "org.sangria-graphql" %% "sangria-play-json" % sangriaJsonVersion,
+  "org.portable-scala" %% "portable-scala-reflect" % "0.1.0" // Reflection for batch mode
 )
 
 val analyticsDependencies = Seq(
   "io.nlytx" %% "nlytx-nlp-api" % nlytxNlpApiV,
+  "io.nlytx" %% "nlytx-nlp-expressions" % nlytxNlpExpressionsV,
   "io.nlytx" %% "nlytx-nlp-commons" % nlytxNlpCommonsV,
   "io.nlytx" %% "factorie-nlp" % factorieNlpV,
   "io.nlytx" %% "factorie-nlp-models" % factorieNlpModelsV,
-  "com.typesafe.akka" % "akka-stream_2.12" % akkaStreamVersion,
+  "org.clulab" %% "processors-main" % cluLabProcessorV,
+  "org.clulab" %% "processors-odin" % cluLabProcessorV,
+  "org.clulab" %% "processors-modelsmain" % cluLabProcessorV,
+  "com.typesafe.akka" %% "akka-remote" % akkaVersion, //Used by cluLabProcessor
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+  "com.lightbend.akka" %% "akka-stream-alpakka-s3" % alpakkaVersion,
   "org.apache.opennlp" % "opennlp-tools" % openNlpVersion,
-  "org.languagetool" % "language-en" % langToolVersion
+  "org.languagetool" % "language-en" % langToolVersion,
+  "com.typesafe.play" %% "play-json" % playJsonVersion,
+  //"org.platanios" % "tensorflow" % tensorFlowV,  // http://platanios.org/tensorflow_scala/installation.html
+  //"org.platanios" % "tensorflow" % tensorFlowV classifier "darwin-cpu-x86_64" //"linux-cpu-x86_64"
 )
-resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp")
+
+val dl4jDependencies = Seq(
+  "org.deeplearning4j" % "deeplearning4j-core" % deepLearning4jVersion,
+  "org.deeplearning4j" % "deeplearning4j-nlp" % deepLearning4jVersion,
+  "org.nd4j" % "nd4j-native-platform" % deepLearning4jVersion % Test
+)
+
+val loggingDependencies = Seq(
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+)
 
 val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % scalatestVersion,
   "org.scalatest" %% "scalatest" % scalatestVersion % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlayVersion % "test",
-  "com.typesafe.akka" % "akka-stream-testkit_2.12" % akkaStreamVersion
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 )
 
 
-libraryDependencies ++= apiDependencies ++ analyticsDependencies ++ testDependencies
+lazy val tap = project.in(file("."))
+  .dependsOn(server,client)
+  .aggregate(server,client)
+  .settings(
+    sharedSettings,
+    libraryDependencies ++= playDeps,
+    libraryDependencies ++= apiDependencies,
 
-scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/src/main/scala/root-doc.md")
+    scalaJSProjects := Seq(client),
+    pipelineStages in Assets := Seq(scalaJSPipeline), //Needed for WebScalaJsBundler
 
-//Set the environment variable for hosts allowed in testing
-fork in Test := true
-envVars in Test := Map("TAP_HOSTS" -> "localhost")
+    dockerExposedPorts := Seq(9000,80), // sbt docker:publishLocal
+    dockerRepository := Some(s"$dockerRepoURI"),
+    defaultLinuxInstallLocation in Docker := "/opt/docker",
+    dockerExposedVolumes := Seq("/opt/docker/logs"),
+    dockerBaseImage := "openjdk:11-jdk",
+
+    // Puts unified scaladocs into target/api
+    siteSubdirName in ScalaUnidoc := "api",
+    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), siteSubdirName in ScalaUnidoc)
+
+    
+    
+
+  ).enablePlugins(PlayScala)
+  .enablePlugins(WebScalaJSBundlerPlugin)
+  .enablePlugins(SiteScaladocPlugin,ScalaUnidocPlugin)
 
 
-//Documentation - run ;paradox;copyDocs
-enablePlugins(ParadoxPlugin) //Generate documentation with Paradox
-paradoxTheme := Some(builtinParadoxTheme("generic"))
-paradoxProperties in Compile ++= Map(
-  "github.base_url" -> s"$githubBaseUrl",
-  "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
-)
-//Task for copying to root level docs folder (for GitHub pages)
-val copyDocsTask = TaskKey[Unit]("copyDocs","copies paradox docs to /docs directory")
-copyDocsTask := {
-  val docSource = new File("target/paradox/site/main")
-  val apiSource = new File("target/scala-2.12/api")
+
+lazy val docs = (project in file("project_docs"))
+  .settings(
+    sharedSettings,
+    // sbt-site needs to know where to find the paradox site
+    paradoxTheme := Some(builtinParadoxTheme("generic")),
+    paradoxProperties ++= Map(
+      "github.base_url" -> s"$githubBaseUrl",
+      "scaladoc.api.base_url" -> s"$scaladocApiBaseUrl"
+    ),
+  ).enablePlugins(ParadoxSitePlugin)
+
+lazy val server = (project in file(serverName))
+  .settings(
+    sharedSettings,
+    resolvers += Resolver.bintrayRepo("nlytx", "nlytx-nlp"),
+    resolvers += Resolver.jcenterRepo,
+    libraryDependencies ++= analyticsDependencies ++ dl4jDependencies ++ loggingDependencies ++ testDependencies,
+    libraryDependencies +=  "org.projectlombok" % "lombok" % "1.18.4", //Used by langtool old vers problem with JDK 10 and 11
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := projectOrg,
+    buildInfoOptions += BuildInfoOption.BuildTime,
+  ).enablePlugins(BuildInfoPlugin)
+
+
+lazy val client = project.in(file(clientName))
+  .settings(
+    sharedSettings,
+    scalaJSUseMainModuleInitializer := true,
+    webpackBundlingMode := BundlingMode.LibraryAndApplication(), //Needed for top level exports
+    version in webpack := vWebpack, // Needed for version 4 webpack
+    version in startWebpackDevServer := vWebpackDevServer, // Needed for version 4 webpack
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % vScalaJsDom,
+      //"org.singlespaced" %%% "scalajs-d3" % "0.3.4",
+      "com.github.karasiq" %%% "scalajs-bootstrap-v4" % vSjsBootstrap,
+      "com.lihaoyi" %%% "scalatags" % vScalaTags, //Using ScalaTags instead of Twirl
+      //"com.lihaoyi" %%% "upickle" % vUpickle, //Using uJson for main JSON
+      "me.shadaj" %%% "slinky-core" % vSlinky, // core React functionality, no React DOM
+      "me.shadaj" %%% "slinky-web" % vSlinky // React DOM, HTML and SVG tags
+    ),
+    npmDependencies in Compile ++= Seq(
+      "bootstrap" -> vBootstrap,
+      //"jquery" -> vJquery, //used by bootstrap
+      "popper.js" -> vPopper, //used by bootstrap
+      //"d3" -> vD3,
+      "react" -> "16.8.6",
+      "react-dom" -> "16.8.6",
+      "graphiql" -> "0.13.0",
+      "graphql" -> "14.3.1",
+      "isomorphic-fetch" -> "2.2.1"
+    )
+  ).enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin) // Use fastOptJS::webpack to download NPM libraries and build
+
+
+//Documentation
+//Task for building docs and copying to root level docs folder (for GitHub pages)
+val updateDocsTask = TaskKey[Unit]("updateDocs","copies paradox docs to /docs directory")
+//
+updateDocsTask := {
+  val siteResult = makeSite.value
+  val apiSource = new File("target/site")
+  val paradoxSource = new File("project_docs/target/site")
   val docDest = new File("docs")
-  val apiDest = new File("docs/api")
-  //if(docDest.exists) IO.delete(docDest)
-  IO.copyDirectory(docSource,docDest,overwrite=true,preserveLastModified=true)
-  IO.copyDirectory(apiSource,apiDest,overwrite=true,preserveLastModified=true)
+  IO.copyDirectory(apiSource,docDest,overwrite=true,preserveLastModified=true)
+  IO.copyDirectory(paradoxSource,docDest,overwrite=true,preserveLastModified=true)
 }
 
-enablePlugins(JavaAppPackaging) // sbt universal:packageZipTarball
-dockerExposedPorts := Seq(9000,80) // sbt docker:publishLocal
-dockerRepository := Some(s"$dockerRepoURI")
-defaultLinuxInstallLocation in Docker := "/opt/docker"
-dockerExposedVolumes := Seq("/opt/docker/logs")
 javaOptions in Universal ++= Seq(
   // -J params will be added as jvm parameters
-  "-J-Xmx4g",
+  "-J-Xmx6g",
   "-J-Xms2g"
 )

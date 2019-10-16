@@ -1,14 +1,31 @@
+<!--
+  ~ Copyright (c) 2016-2018 original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under
+  ~ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  ~ CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  ~
+  -->
+
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
 <head>
-<title>IDE Set-up · Text Analytics Pipeline (TAP)</title>
+<title>Getting setup with an IDE · Text Analytics Pipeline (TAP)</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content='tap'/>
+<meta name="description" content='docs'/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../lib/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../js/page.js"></script>
+<script type="text/javascript" src="../js/warnOldVersion.js"></script>
 <script type="text/javascript" src="../js/groups.js"></script>
 <link rel="stylesheet" type="text/css" href="../lib/normalize.css/normalize.css"/>
 <link rel="stylesheet" type="text/css" href="../lib/foundation/dist/foundation.min.css"/>
@@ -30,7 +47,7 @@
 <span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.1.0-RC3
+3.3.0e
 </div>
 </div>
 <div class="nav-toc">
@@ -40,20 +57,21 @@
     <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
     <li><a href="../overview/licensing.html" class="page">License</a></li>
     <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
   </ul></li>
-  <li><a href="../user/index.html" class="page">User</a>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/product_dependencies.html" class="page">Product Dependencies</a></li>
-    <li><a href="../user/source_code.html" class="page">Getting a local copy of TAP</a></li>
-    <li><a href="../user/build_product.html" class="page">Building TAP</a></li>
-    <li><a href="../user/run_product.html" class="page">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
   </ul></li>
-  <li><a href="../developer/index.html" class="page">Developer</a>
+  <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
   <ul>
+    <li><a href="../developer/ide_setup.html" class="active page">Getting setup with an IDE</a></li>
     <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
     <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
-    <li><a href="../developer/ide_setup.html" class="active page">IDE Set-up</a></li>
-    <li><a href="../developer/doc_updates.html" class="page">Documentation Updates</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
   </ul></li>
 </ul>
 </div>
@@ -86,7 +104,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>Text Analytics Pipeline (TAP)
 </a>
 <div class="version-number">
-3.1.0-RC3
+3.3.0e
 </div>
 </div>
 <div class="nav-toc">
@@ -96,20 +114,21 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
     <li><a href="../overview/quick_start.html" class="page">Quick Start</a></li>
     <li><a href="../overview/licensing.html" class="page">License</a></li>
     <li><a href="../overview/bugs.html" class="page">Submitting bugs and suggestions</a></li>
+    <li><a href="../overview/contributing.html" class="page">Contributing</a></li>
   </ul></li>
-  <li><a href="../user/index.html" class="page">User</a>
+  <li><a href="../user/index.html" class="page">I&rsquo;m a User</a>
   <ul>
-    <li><a href="../user/product_dependencies.html" class="page">Product Dependencies</a></li>
-    <li><a href="../user/source_code.html" class="page">Getting a local copy of TAP</a></li>
-    <li><a href="../user/build_product.html" class="page">Building TAP</a></li>
-    <li><a href="../user/run_product.html" class="page">Running TAP</a></li>
+    <li><a href="../user/user_with_code.html" class="page">Building TAP from source code</a></li>
+    <li><a href="../user/user_without_code.html" class="page">Building TAP without source code</a></li>
+    <li><a href="../user/using_tap.html" class="page">Using TAP once it&rsquo;s running</a></li>
+    <li><a href="../user/graphql.html" class="page">Using the GraphQL Interface</a></li>
   </ul></li>
-  <li><a href="../developer/index.html" class="page">Developer</a>
+  <li><a href="../developer/index.html" class="page">I&rsquo;m a Developer</a>
   <ul>
+    <li><a href="../developer/ide_setup.html" class="active page">Getting setup with an IDE</a></li>
     <li><a href="../developer/contributing.html" class="page">Contributing</a></li>
     <li><a href="../developer/project_structure.html" class="page">Project Structure</a></li>
-    <li><a href="../developer/ide_setup.html" class="active page">IDE Set-up</a></li>
-    <li><a href="../developer/doc_updates.html" class="page">Documentation Updates</a></li>
+    <li><a href="../developer/doc_updates.html" class="page">How to edit documentation</a></li>
   </ul></li>
 </ul>
 </div>
@@ -120,13 +139,15 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="small-12 medium-9 large-10 column">
 <section class="site-content">
 
+<span id="version-warning"></span>
+
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
 <div class="nav-breadcrumbs">
 <ul>
   <li><a href="../index.html">Text Analytics Pipeline (TAP)</a></li>
-  <li><a href="../developer/index.html">Developer</a></li>
-  <li>IDE Set-up</li>
+  <li><a href="../developer/index.html">I&rsquo;m a Developer</a></li>
+  <li>Getting setup with an IDE</li>
 </ul>
 </div>
 </div>
@@ -134,51 +155,66 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h2><a href="#ide-set-up" name="ide-set-up" class="anchor"><span class="anchor-link"></span></a>IDE Set-up</h2>
-<p>An IDE provides a more convenient and efficient way of doing development. The Intellij IDEA is preferred because of its Scala support, and relative ease of use.</p>
+<h1><a href="#getting-setup-with-an-ide" name="getting-setup-with-an-ide" class="anchor"><span class="anchor-link"></span></a>Getting setup with an IDE</h1>
+<p>This section will help you get started with the source code on any of the following operating systems.</p>
+<h2><a href="#clone-the-repo" name="clone-the-repo" class="anchor"><span class="anchor-link"></span></a>Clone the repo</h2>
+<p>First clone the latest version of the Dev branch from <a href="https://github.com/infosci-qut/tap/tree/develop">github</a></p>
+<h3><a href="#working-with-windows-7-10-mac-and-linux-ubuntu-desktop-with-idea-ultimate" name="working-with-windows-7-10-mac-and-linux-ubuntu-desktop-with-idea-ultimate" class="anchor"><span class="anchor-link"></span></a>Working with Windows(7,10), Mac and Linux (Ubuntu Desktop) with IDEA Ultimate</h3><div class="callout note "><div class="callout-title">Notice</div>
+<p>It is recommended that you use an IDE to work on this project as it will provide many helper functions and build tools that make working with sbt and scala and lot easier to manage.</p></div>
+<p>The recommended IDE is Intellij IDEA ULTIMATE because of its Scala support, and relative ease of use. If you have any suggestions for alternate ways of working with this project please let us know by opening an issue. Otherwise the following is a guide to getting setup with IntelliJ IDEA Ultimate.</p>
 <ol>
   <li>
-    <p>Check that the Scala and SBT plugins are installed.  Install them if they are missing.</p>
-    <pre><code> File-Settings-Plugins
-</code></pre>
-  </li>
+  <p>When you first open IntelliJ IDEA, We first want to ensure you have the correct plugins. Click configure at the bottom of the start screen and choose Plugins.  Check that you have the &lsquo;Scala&rsquo; and SBT plugins installed. If this is the first time you have run IntelliJ you most likely won&rsquo;t.</p></li>
   <li>
-    <p>Import the project into Intellij IDEA</p>
-    <pre><code> File - New - Project from Existing sources
-
- Navigate to the build.sbt file in the tap directory where you cloned the project source code.
-</code></pre>
-  </li>
+  <p>Click Browse Repositories at the bottom and type in Scala to search for it then click install plugin. Do the same for the plugin called SBT. Below is the plugins that you want to install. <img src="https://i.imgur.com/pKYUqRh.png" alt="Scala" /> <img src="https://i.imgur.com/8jUHUYf.png" alt="SBT" /></p></li>
   <li>
-    <p>Ensure the JVM has enough memory to work with (-Xmx2048M -Xss1M -Xmx512M)</p>
-    <pre><code> File - Settings - Other Settings - SBT - VM Parameters
-</code></pre>
-  </li>
-  <li>
-    <p>Add the library dependencies</p>
-    <pre><code> File - Project Structure - Modules
-
- Point to and add the jars you imported into the lib directory:
-
- cc.factorie.app.nlp.all-models-1.0.0.jar
- nlpfactorie_2.12-0.1.jar
-</code></pre>
-  </li>
-  <li>
-    <p>Run Tap</p>
-    <pre><code>Run - Run Tap
-</code></pre>
-  </li>
+  <p>Once you have installed both plugins it will direct you to restart IntelliJ. Once restarted select &lsquo;Import Project&rsquo; and navigate to the directory where you cloned the repo too and choose the build.sbt file.</p></li>
 </ol>
+<p><img src="https://i.imgur.com/bk03ddL.png" alt="demo1" /></p>
+<ol>
+  <li>
+  <p>Make sure Download library sources is ticked and that your Project JDK is chosen. If not you will need to select your JDK, You will need the 1.8 JRE and JDK <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">found here</a>. Then click the New Button &gt; JDK and navigate to your java JRE In most cases it should be installed to <code>C:\Program Files\Java\jdk1.8.x</code> and click ok. <img src="https://i.imgur.com/RUToHjc.png" alt="demo2" /></p></li>
+  <li>
+  <p>Once you click ok IntelliJ may take a while syncing the project(20-40 minutes for first time) Keep an eye on the progress bar at the bottom and wait until it is complete.</p></li>
+  <li>
+  <p>Once it has synced open the app folder and then open the view folder. Right click on HomePage and select &lsquo;Run Play 2 App&rsquo; this will automatically generate your run configuration. It may also download a number of files that SBT needs which may take some time. Once it has compiled and built you may find it will crash with an Out Of Memory Error. Let&rsquo;s fix that now.</p></li>
+  <li>
+    <p>Go to the Run Menu at the top and choose &lsquo;Edit Configuration&rsquo;, There are a few things we want to change here.</p>
+    <ol>
+      <li>First we want to check that the URL to open is <code>http://localhost:9000</code></li>
+      <li>Then we want to enter some custom JVM Options <code>-Xms512M -Xmx6000M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M</code> replacing whatever is already there.</li>
+      <li>Lastly we want to enter some Environment Variables click the folder icon then the + symbol under &lsquo;Name&rsquo; enter <code>TAP_HOSTS</code> and under &lsquo;Value&rsquo; enter <code>localhost:9000</code></li>
+      <li>Click Apply then ok.</li>
+    </ol>
+  </li>
+  <li>
+  <p>Great now you can right click HomePage again and select &lsquo;Run Play 2 App&rsquo; and it should compile and load up the homepage. </p></li>
+  <li>
+  <p>You are good to go! Try visiting the graphql interface and see what it can do!</p></li>
+</ol>
+<p><strong>Document Last Updated on 21/11/2018</strong></p>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/uts-cic/tap/tree/master/src/main/paradox/developer/ide_setup.md">here</a>.
+The source code for this page can be found <a href="https://github.com/heta-io/tap/tree/master/project_docs/src/main/paradox/developer/ide_setup.md">here</a>.
 </div>
 
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="../developer/doc_updates.html">Documentation Updates</a></p>
+<p><strong>Next:</strong> <a href="../developer/contributing.html">Contributing</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../developer/ide_setup.html#getting-setup-with-an-ide" class="header">Getting setup with an IDE</a>
+  <ul>
+    <li><a href="../developer/ide_setup.html#clone-the-repo" class="header">Clone the repo</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
 </div>
 </div>
 
@@ -216,7 +252,7 @@ The source code for this page can be found <a href="https://github.com/uts-cic/t
 
 <!--
 <div class="copyright">
-<span class="text">&copy; 2017</span>
+<span class="text">&copy; 2019</span>
 <a href="https://www.example.com" class="logo">logo</a>
 </div>
 -->
@@ -241,5 +277,7 @@ The source code for this page can be found <a href="https://github.com/uts-cic/t
 <script type="text/javascript" src="../lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '3.3.0e', '')});</script>
+
 
 </html>
