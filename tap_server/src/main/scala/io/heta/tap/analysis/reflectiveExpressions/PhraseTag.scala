@@ -26,6 +26,13 @@ import scala.collection.mutable.ArrayBuffer
  * Created by Andrew Gibson on 3/07/15.
  *
  */
+
+/**
+  * A bag of phrases that can be used to extract finer meaning
+  * Phrase tags defines the structural meaning of a block of text or semantics of text
+  * Phrase tags used such as outcome, temporal, pertains, consider, anticipate ..etc
+  */
+
 object PhraseTag {
 
   val posPattern = List(
@@ -72,6 +79,13 @@ object PhraseTag {
   private val generalPreposition = List("compare", "temporal", "pertains", "manner", "outcome").map(termFilter.apply(_).asInstanceOf[(String, List[String])]._2).reduce(_ ++ _)
   termFilter += "generalPreposition" ->("containsNone", generalPreposition)
 
+  /**
+    * Filter a list of phrases for finer grained meaning.
+    *
+    * @param phraseTag Type of Phrase
+    * @param phrase Phrase
+    * @return phrases for finer grained meaning
+    */
   def filter(phraseTag:String,phrase:String) = {
     if(phraseTag.contains("Reflexive")) { // This type has 2 lists - one for the start and a different one for the end
     val filterData = PhraseTag.termFilter.apply(phraseTag).asInstanceOf[(String,(List[String],List[String]))]
@@ -90,6 +104,12 @@ object PhraseTag {
     }
   }
 
+  /**
+    * Subordinate to phraseTag
+    *
+    * @param phraseTags Type of Phrase
+    * @return
+    */
   def subTags(phraseTags:Seq[String]):Seq[String] = {
     val mcTags = ArrayBuffer[String]()
     if(phraseTags.contains("outcome")) mcTags += "trigger"
@@ -100,6 +120,12 @@ object PhraseTag {
     mcTags.distinct
   }
 
+  /**
+    * Meta information for the subTags
+    *
+    * @param subTags Subordinate to phraseTag
+    * @return meta information about the subTags
+    */
   def metaTags(subTags:Seq[String]):Seq[String] = {
     val mTags = ArrayBuffer[String]()
     if (subTags.contains("monitorControl") && (subTags.contains("trigger") || subTags.contains("goal"))) mTags += "regulation"

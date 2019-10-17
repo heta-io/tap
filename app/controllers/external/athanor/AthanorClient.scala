@@ -30,6 +30,16 @@ import scala.concurrent.duration._ // scalastyle:ignore
   * Created by andrew@andrewresearch.net on 6/11/17.
   */
 
+/**
+  * Controller for client and Athanor Server.
+  *
+  * An `ExecutionContext` can execute program logic asynchronously, typically but not necessarily on a thread pool.
+  *
+  * @param wsClient a Play specific WS client that can use Play specific classes in the request and response building.
+  *                 * WS (“WebService”) library, which provides a way to make asynchronous HTTP calls through a WSClient instance.
+  * @param config holds Aws configuration information
+  * @param ec an `ExecutionContext` can execute program logic asynchronously, typically but not necessarily on a thread pool.
+  */
 class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec: ExecutionContext) {
 
   val logger: Logger = Logger(this.getClass)
@@ -39,6 +49,14 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
     case None => ""
   }
 
+  /**
+    * Handles request and reponse process of Athanor.
+    *
+    * @param text the text that is going to be analysed.
+    * @param parameter Parameters
+    * @param start "Long" type
+    * @return A [[scala.concurrent.Future Future]] of [[StringListResult]] type
+    */
   def process(text:String,parameter:String,start:Long):Future[StringListResult] = {
     //logger.info(s"Analysing with athanor: $text")
     if (athanorURL.isEmpty) {
@@ -81,6 +99,12 @@ class AthanorClient @Inject()(wsClient: WSClient, config: AppConfig)(implicit ec
 
   case class AthanorMsg(message: String, results: Vector[Vector[String]])
 
+  /**
+    * Handles the response operation of Athanor.
+    *
+    * @param response Response
+    * @return
+    */
   def decodeRepsonse(response:WSResponse): Vector[Vector[String]] = {
     val resBody = response.body
     if(resBody.nonEmpty && resBody.contains(":[[")) {

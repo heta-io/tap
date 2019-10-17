@@ -31,14 +31,14 @@ abstract class AbstractShape {
 
   val splitPattern:String = "[\n]+"
 
-  //Split the document into chunks
+  /** Split the document into chunks */
   def chunk(doc:String):List[String] = doc.split(splitPattern).toList
 
-  //Return a distribution (list of normalised values) for a list of chunks
+  /** Return a distribution (list of normalised values) for a list of chunks */
   def density(chunks:List[String],findIntensities: (List[String],Boolean,Double) => List[Map[String,Double]]):List[Double]
   //intensity:(String,Option[String]) => Double):List[Double]
 
-  // The degree of similarity from 0 (none) to 1 (match)
+  /** The degree of similarity from 0 (none) to 1 (match) */
   def compare(testDistribution:List[Double],referenceDistribution:List[Double]): Double
 
 }
