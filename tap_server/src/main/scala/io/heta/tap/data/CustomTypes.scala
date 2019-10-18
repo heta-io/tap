@@ -22,6 +22,8 @@ import io.heta.tap.data.doc.expression.Expression
   * Created by andrew@andrewresearch.net on 30/6/17.
   */
 
+
+/** data structure of CustomTypes such as Document, Section, and Sentence */
 object CustomTypes {
 
   type DocumentStr = String

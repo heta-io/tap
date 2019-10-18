@@ -19,6 +19,7 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.{Metrics, Sentence}
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of MetricsResult */
 object MetricsResult {
   implicit val mWrites: OWrites[MetricsResult] = Json.writes[MetricsResult]
 }

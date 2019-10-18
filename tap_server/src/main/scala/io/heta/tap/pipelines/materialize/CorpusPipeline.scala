@@ -29,6 +29,14 @@ import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+/**
+  * Takes in corpus and run the pipeline
+  *
+  * @param source set of stream processing steps that has one open output
+  * @param flow set of stream processing steps that has one open input and one open output
+  * @tparam A
+  * @tparam B
+  */
 case class CorpusPipeline[A,B](source:Source[Path,A],flow:Flow[Path,Future[Local.CorpusFile],B]) extends Pipeline {
   val sink = Sink.seq[Future[Local.CorpusFile]].mapMaterializedValue(_.map(Future.sequence(_)).flatten)
   val pipeline =  source.via(flow).toMat(sink)(Keep.right)

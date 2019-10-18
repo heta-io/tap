@@ -22,7 +22,7 @@ package tap.services.corpora.gradebook.data
   * Created by andrew@andrewresearch.net on 12/05/2016.
   */
 
-
+/** File meta data such as unit id, subject code, assignment name, submit datetime, user grade, and doc file */
 case class FileMetadata(uid:String,subjectCode:String,assignmentName:String,submitDateTime:String,userGrade:String,docFile:String)
 /*
 object FileMetadataJsonProtocol extends DefaultJsonProtocol {

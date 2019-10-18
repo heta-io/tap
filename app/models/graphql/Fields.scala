@@ -31,11 +31,17 @@ import io.heta.tap.data.results._
 
 import scala.concurrent.Future
 
+
+/**
+  * Provides all different field types.
+  */
+
 object Fields {
 
 
-
-
+  /**
+    * Field for "clean"
+    */
   object CleanField {
     import Fields.FieldTypes._
     val name ="clean"
@@ -46,7 +52,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "annotations"
+    */
   object AnnotationsField {
     import Fields.FieldTypes._
     val name ="annotations"
@@ -57,7 +65,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "vocabulary"
+    */
   object VocabularyField {
     import Fields.FieldTypes._
     val name ="vocabulary"
@@ -68,7 +78,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "metrics"
+    */
   object MetricsField {
     import Fields.FieldTypes._
     val name ="metrics"
@@ -79,7 +91,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "posStats"
+    */
   object PosStatsField {
     import Fields.FieldTypes._
     val name ="posStats"
@@ -90,7 +104,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "syllables"
+    */
   object SyllablesField {
     import Fields.FieldTypes._
     val name ="syllables"
@@ -101,7 +117,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "spelling"
+    */
   object SpellingField {
     import Fields.FieldTypes._
     val name ="spelling"
@@ -112,7 +130,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "expressions"
+    */
   object ExpressionsField {
     import Fields.FieldTypes._
     val name ="expressions"
@@ -123,7 +143,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "reflectExpressions"
+    */
   object ReflectExpressionsField {
     import Fields.FieldTypes._
     val name ="reflectExpressions"
@@ -134,7 +156,9 @@ object Fields {
   }
 
 
-
+  /**
+    * Field for "affectExpressions"
+    */
   object AffectExpressionsField {
     import Fields.FieldTypes._
     val name = "affectExpressions"
@@ -144,7 +168,9 @@ object Fields {
     def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.affectExpressions(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
   }
 
-
+  /**
+    * Field for "moves"
+    */
   object RhetoricalMovesField {
     import Fields.FieldTypes._
     val name ="moves"
@@ -154,7 +180,9 @@ object Fields {
     def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.moves(actions.argOpt(TEXT),actions.argOpt(PARAMETERS))
   }
 
-
+  /**
+    * Field for "batch"
+    */
   object BatchField {
     import Fields.FieldTypes._
     val name = "batch"
@@ -164,7 +192,9 @@ object Fields {
     def resolver(actions: Context[GraphqlActions,Unit]) = actions.ctx.batch(actions.argOpt(PARAMETERS))
   }
 
-
+  /**
+    * Different field types
+    */
   object FieldTypes {
 
     val TEXT = "text"

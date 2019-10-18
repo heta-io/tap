@@ -20,6 +20,8 @@ import io.heta.tap.data.doc.Analytics
 import io.heta.tap.data.doc.expression.Expression
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+
+/** Data object of AffectExpression that gets returned to the browser */
 object AffectExpression {
   implicit val ttWrites: OWrites[AffectExpression] = Json.writes[AffectExpression]
 }

@@ -19,6 +19,7 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.PosStats
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of PosStatsResult */
 object PosStatsResult {
   implicit val pWrites: OWrites[PosStatsResult] = Json.writes[PosStatsResult]
 }

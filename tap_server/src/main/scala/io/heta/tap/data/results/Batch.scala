@@ -18,6 +18,7 @@ package io.heta.tap.data.results
 
 import play.api.libs.json.JsValue
 
+/** Batch in json value */
 trait Batch {
   val analytics:AnyRef
   val name:String

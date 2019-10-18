@@ -22,7 +22,7 @@ import akka.stream.ActorMaterializer
 /**
   * Created by andrew@andrewresearch.net on 6/9/17.
   */
-
+/** Pipeline Context */
 object PipelineContext {
   implicit val system = ActorSystem()
   implicit val executor = system.dispatcher

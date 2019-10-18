@@ -19,6 +19,10 @@ package io.heta.tap.message
 /**
   * Created by andrew@andrewresearch.net on 1/3/17.
   */
+
+/**
+  * Produce a message when encounter unknown analysis type
+  */
 object Exception {
 
   case class UnknownAnalysisType(message: String) extends Exception(message)

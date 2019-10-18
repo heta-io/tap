@@ -17,7 +17,7 @@
 package io.heta.tap.client
 
 
-
+/** Client Application */
 object ClientApp {
 
   def main(args: Array[String]): Unit = {

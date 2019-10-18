@@ -22,6 +22,7 @@ package tap.services.corpora.gradebook.data
   * Created by andrew@andrewresearch.net on 13/05/2016.
   */
 
+/** File text that accepts meta file, and text */
 case class FileText(metaFile:String,text:String)
 
 /*
