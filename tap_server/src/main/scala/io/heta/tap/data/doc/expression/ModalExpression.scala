@@ -19,6 +19,7 @@ package io.heta.tap.data.doc.expression
 import io.heta.tap.data.doc.Analytics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of ModalExpression that gets returned to the browser */
 object ModalExpression {
   implicit val ttWrites: OWrites[ModalExpression] = Json.writes[ModalExpression]
 }

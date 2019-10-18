@@ -27,7 +27,7 @@ import scalatags.Text.{TypedTag, tags, tags2}
   */
 
 /**
-  * Provides TAP Example Queries HTML. [models.graphql.FieldDocs]
+  * Provides TAP Example Queries HTML. [[models.graphql.FieldDocs]]
   */
 object QueriesPage extends GenericPage {
 

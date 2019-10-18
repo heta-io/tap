@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of PhraseTagSummary that gets returned to the browser */
 object PhraseTagSummary {
   implicit val tsWrites: OWrites[PhraseTagSummary] = Json.writes[PhraseTagSummary]
 }

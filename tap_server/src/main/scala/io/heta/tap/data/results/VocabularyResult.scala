@@ -19,6 +19,7 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.vocabulary.Vocabulary
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of VocabularyResult that gets returned to the browser */
 object VocabularyResult {
   implicit val ctsWrites: OWrites[VocabularyResult] = Json.writes[VocabularyResult]
 }

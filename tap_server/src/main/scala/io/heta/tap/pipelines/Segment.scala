@@ -167,7 +167,7 @@ object Segment {
       }
       Future.sequence(results).map(r => ExpressionsResult(r,name=res.name))
   }
-
+  /** Affect Expression on Sentences */
   def Sentences_AffectExpressions(thresholds:Option[AffectThresholds] = None): Flow[SentencesResult, AffectExpressionsResult, NotUsed] = {
     val th = thresholds.getOrElse(AffectThresholds(arousal=4.95,valence = 0.0,dominance = 0.0))
     Flow[SentencesResult].map[AffectExpressionsResult] { sents =>
@@ -185,6 +185,7 @@ object Segment {
     ReflectExpressionsResult(reflectExpressions,name=doc.id.getOrElse(""))
   }
 
+  /** Get various stats about the text */
   private def getReflect(doc: Document): WordSentenceCounts = {
     val sents = doc.sentences.toVector
     val words = sents.map(s => s.words)
@@ -196,6 +197,7 @@ object Segment {
     WordSentenceCounts(wc, awl, sc, asl)
   }
 
+  /** Get summary  */
   private def getSummary(codedSents: Seq[CodedSentence]): Summary = {
     var mts: Map[String, Int] = codedSents.flatMap(_.metacognitionTags).groupBy(identity).mapValues(_.size)
     mts += "none" -> codedSents.count(_.metacognitionTags.length < 1)
@@ -219,6 +221,7 @@ object Segment {
     Summary(metaTagSummary, phraseTagSummary)
   }
 
+  /** Analyse the part of speech tag */
   private def getCodedSents(doc: Document): Seq[CodedSentence] = {
     val docSentences = doc.sentences.toSeq
     val sentencePosTags = docSentences.map(_.tags.getOrElse(Array()).toSeq)
@@ -226,6 +229,7 @@ object Segment {
     PosTagAnalyser.analyse(sentencePosTags,sentenceWords)
   }
 
+  /** Get coded */
   private def getCoded(codedSentences: Seq[CodedSentence]): Seq[SentencePhrasesTags] = {
     codedSentences.map { cs =>
       SentencePhrasesTags(
@@ -238,6 +242,7 @@ object Segment {
     }
   }
 
+  /** Filters affect thresholds */
   private def filterAffectThresholds(affectExpressions:Vector[AffectExpression], thresholds:AffectThresholds) = {
     affectExpressions.filter{ ae =>
       ae.valence >= thresholds.valence &&
@@ -246,6 +251,7 @@ object Segment {
     }
   }
 
+  /** get TAP Tokens */
   private def getTokens(start:Array[Int],words:Array[String],
                         lemmas:Option[Array[String]],posTags:Option[Array[String]],nerTags:Option[Array[String]]) = {
     val numTokens = words.length

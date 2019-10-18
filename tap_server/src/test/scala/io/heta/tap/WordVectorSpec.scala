@@ -21,6 +21,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+/** Word vector specification */
 class WordVectorSpec extends PlaySpec{
 
   //dependency injection

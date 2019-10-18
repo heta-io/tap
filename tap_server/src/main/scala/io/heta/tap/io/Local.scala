@@ -31,10 +31,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by andrew@andrewresearch.net on 1/3/17.
   */
+
+/**
+  * Local
+  */
 object Local {
 
   import akka.stream.scaladsl._
 
+  /** directory source of the file */
   def directorySource(directory: String):Source[Path,NotUsed] = {
 
     val dir = new File(getClass.getResource(directory).getPath)
@@ -44,11 +49,12 @@ object Local {
     Source(files)
   }
 
+  /** A file of text corpus */
   case class CorpusFile(name:String,contents:String)
 
   val fileFlow:Flow[Path,Future[CorpusFile],NotUsed] = Flow[Path].map( path =>fileSource(path).toMat(Sink.head[ByteString])(Keep.right).run().map(contents => CorpusFile(path.getFileName.toString,contents.utf8String)))
 
-
+  /** file source */
   def fileSource(path:Path):Source[ByteString,Future[IOResult]] = FileIO.fromPath(path)
 
  val pipeline = directorySource("/").via(fileFlow)

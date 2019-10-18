@@ -133,8 +133,13 @@ object PhraseTag {
     if (subTags.contains("knowledge")) mTags += "knowledge"
     mTags.distinct
   }
-  
 
+  /**
+    * Ratio between the self-count and total-count
+    *
+    * @param phraseTags Type of Phrase
+    * @return selfCount/totalCount if Seq[String] length > 0
+    */
   def selfRatio(phraseTags:Seq[String]):Double = {
     var selfCount = 0.0
     val totalCount = phraseTags.length
@@ -145,6 +150,12 @@ object PhraseTag {
     else -1.0
   }
 
+  /**
+    * Ratio between the other-count and total-count
+    *
+    * @param phraseTags Type of Phrase
+    * @return othersCount/totalCount if Seq[String] length > 0
+    */
   def othersRatio(phraseTags:Seq[String]):Double = {
     var othersCount = 0.0
     val totalCount = phraseTags.length
@@ -155,6 +166,4 @@ object PhraseTag {
     if(totalCount>0) othersCount / totalCount
     else -1.0
   }
-
-
 }

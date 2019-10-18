@@ -24,6 +24,7 @@ import play.api.Play
   * Created by andrew@andrewresearch.net on 25/8/17.
   */
 
+/** Functional specification testing */
 class FunctionalSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   /* Application start */

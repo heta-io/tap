@@ -20,6 +20,8 @@ package io.heta.tap.client
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
+/** Setup of the GraphiQL */
+
 @JSImport("./graphiqlsetup", JSImport.Namespace)
 @js.native
 object GraphiqlSetup extends js.Object {

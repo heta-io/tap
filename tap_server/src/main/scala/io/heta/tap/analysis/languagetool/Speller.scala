@@ -40,7 +40,8 @@ object Speller {
   langTool.getLanguage.isInstanceOf[BritishEnglish]
 
   /**
-    * Checks the spelling
+    * Checks the spellings
+    *
     * @param sentences input sentence
     * @return spelling mistakes and possible suggestions for what the intended word was
     */

@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, OWrites}
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
-
+/** Data object of Syllables */
 object Syllables {
   implicit val pWrites: OWrites[Syllables] = Json.writes[Syllables]
 }

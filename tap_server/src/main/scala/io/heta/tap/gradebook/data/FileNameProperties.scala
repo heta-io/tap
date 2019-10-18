@@ -21,9 +21,10 @@ import java.time.LocalDateTime
 /**
   * Created by andrew@andrewresearch.net on 13/05/2016.
   */
-
+/** properties of the file */
 trait FileNameProperties
 
+/** properties of the archive file */
 case class ArchiveFileNameProperties(name:String,subjectCode:String,assignmentName:String,downloadDateTime:LocalDateTime) extends FileNameProperties
 
 /*
@@ -37,6 +38,7 @@ val splitName = fileName.substring(10).split("_").toList
         //.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) //datetime downloaded
  */
 
+/** properties of the user file */
 case class UserFileNameProperties(name:String,personId:String,assignmentName:String,submitDateTime:LocalDateTime) extends FileNameProperties
 
 /*

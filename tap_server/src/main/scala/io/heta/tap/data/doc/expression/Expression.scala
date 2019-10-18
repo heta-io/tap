@@ -22,6 +22,7 @@ import play.api.libs.json.JsValue
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
 
+/** Expression in json value */
 trait Expression {
   val text:String
   val startIdx:Int

@@ -19,6 +19,7 @@ package io.heta.tap.data.results
 import io.heta.tap.data.doc.Sentence
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of SentencesResult that gets returned to the browser */
 object SentencesResult {
   implicit val ctsWrites: OWrites[SentencesResult] = Json.writes[SentencesResult]
 }

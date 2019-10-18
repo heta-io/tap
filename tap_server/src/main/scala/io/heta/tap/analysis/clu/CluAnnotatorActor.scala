@@ -70,7 +70,8 @@ class CluAnnotatorActor extends Actor {
 
   /**
     * Create an annotated Document
-    * @param annotate
+    *
+    * @param annotate Annotate request
     * @return Stores all annotations for one document
     */
   def createAnnotatedDoc(annotate:AnnotateRequest):Document = {
