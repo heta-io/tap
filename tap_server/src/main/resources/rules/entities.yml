@@ -1,0 +1,33 @@
+- name: "ner-person"
+  label: Person
+  priority: ${rulepriority}
+  type: token
+  pattern: |
+   [entity="PERSON"]+
+- name: "ner-location"
+  label: Location
+  priority: ${rulepriority}
+  type: token
+  pattern: |
+    [entity="LOCATION"]+
+- name: "ner-org"
+  label: Organization
+  priority: ${rulepriority}
+  type: token
+  pattern: |
+    [entity="ORGANIZATION"]+
+
+- name: pronominal
+  label: Pronoun
+  priority: ${rulepriority}
+  type: token
+  pattern: |
+    [tag=PRP & !lemma=it]
+
+- name: "canonical-arg"
+  label: Entity
+  priority: 2
+  type: token
+  unit: "tag"
+  pattern: |
+    /^N/* [incoming=/nsubj|obj|xcomp|adj/ & !mention=/./] /^N/*

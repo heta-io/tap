@@ -1,0 +1,59 @@
+vars:
+  emotionverb: "/feel|be/"
+  joywords: "/nice|happy|excited|(great)+|enjoy|good|nice|fine|smile|fun/"
+  fearwords: "/nervous|^(fright)|fear|scare/"
+  sadwords: "/sad|unhappy|devastated|cry|lonely|depressed/"
+  angrywords: "/mad|sad|furious|rampage|offensive|upset/"
+  confusionwords: "/doubt|(confus)+|perplex/"
+  trustwords: "/trust|admire/"
+  disgustwords: "/sick|uncomfortable/"
+
+rules:
+  - name: Joy
+    label: JoyLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${joywords}]
+      agent: Person = nsubj | nn
+
+  - name: Fear
+    label: FearLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${fearwords}]
+      agent: Person = nsubj
+
+  - name: Sad
+    label: SadLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${sadwords}]
+      agent: Person = nsubj
+
+  - name: Anger
+    label: AngerLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${angrywords}]
+      agent: Person = nsubj
+
+  - name: Confusion
+    label: ConfussionLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${confusionwords}]
+      agent: Person = nsubj
+
+  - name: Trust
+    label: TrustLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${trustwords}]
+      agent: Person = nsubj
+
+  - name: Disgust
+    label: DisgustLabel
+    priority: ${rulepriority}
+    pattern: |
+      trigger = [lemma=${disgustwords}]
+      agent: Person = nsubj

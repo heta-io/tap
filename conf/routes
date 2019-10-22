@@ -20,3 +20,5 @@ POST  /graphql  controllers.GraphQlController.graphql()
 GET /assets/*file           controllers.Assets.at(file)
 GET /versionedAssets/*file  controllers.Assets.versioned(file)
 POST  /upload controllers.FileController.upload
+
+GET /test controllers.OdinController.test()
