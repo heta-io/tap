@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of SentencePhrase that gets returned to the browser */
 object SentencePhrase {
   implicit val spWrites: OWrites[SentencePhrase] = Json.writes[SentencePhrase]
 }

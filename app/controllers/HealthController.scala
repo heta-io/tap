@@ -25,10 +25,19 @@ import play.api.mvc.{Action, AnyContent, InjectedController}
   * Created by quanie on 06/10/2017.
   */
 
+/**
+  * REST API for performing DBI Health related tasks.
+  * Render the health page.
+  *
+  * @param assets used to find assets according to configured base path and URL base.
+  */
 class HealthController @Inject() (assets: AssetsFinder) extends InjectedController {
 
   implicit val subWrites:Writes[HealthStatus] = Json.writes[HealthStatus]
 
+  /**
+    * Shows health message of the current health status
+    */
   def health:Action[AnyContent] = Action {
     val healthMessage = HealthStatus(200)
     Ok(Json.toJson(healthMessage))

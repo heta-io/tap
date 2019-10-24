@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of CodedSentence that gets returned to the browser */
 object CodedSentence {
   implicit val csWrites: OWrites[CodedSentence] = Json.writes[CodedSentence]
 }

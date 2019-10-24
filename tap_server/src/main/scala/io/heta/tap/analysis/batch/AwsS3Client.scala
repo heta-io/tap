@@ -26,6 +26,9 @@ import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
 import scala.concurrent.Future
 
+/**
+  * Provides access to amazon-specific S3 features
+  */
 
 class AwsS3Client { //@Inject() (config:AppConfig) {
 
@@ -33,13 +36,34 @@ class AwsS3Client { //@Inject() (config:AppConfig) {
 
   //lazy val client: S3Client = this.instance.get
 
+  /**
+    * Return a source of object metadata for a given bucket with optional prefix using version 2 of the List Bucket API.
+    * This will automatically page through all keys with the given parameters.
+    *
+    * @param bucket the s3 bucket name
+    * @param prefix Prefix of the keys you want to list under passed bucket
+    * @return A [[akka.stream.scaladsl.Source Source]] of [[ListBucketResultContents]]
+    */
   def getContentsForBucket(bucket:String,prefix:Option[String]=None): Source[ListBucketResultContents, NotUsed] = S3.listBucket(bucket,prefix)
 
+  /**
+    * Downloads a S3 Object
+    * @param bucket the s3 bucket name
+    * @param fileName the s3 file name
+    * @return A [[akka.stream.scaladsl.Source Source]] which upon materializes will
+    *         return a [[scala.concurrent.Future Future]] containing [[ByteString]]
+    */
   def sourceFileFromBucket(bucket:String,fileName:String): Source[Future[ByteString], NotUsed] = {
     S3.download(bucket,fileName)
       .map[Future[ByteString]](f => f.getOrElse((Source.empty[ByteString],0))._1.runWith(Sink.head[ByteString]))
   }
 
+  /**
+    * Uploads a S3 Object by making multiple requests
+    * @param bucket the s3 bucket name
+    * @param fileName the s3 file name
+    * @return A [[akka.stream.scaladsl.Sink Sink]] that accepts [[ByteString]]'s and materializes to a [[scala.concurrent.Future Future]] of [[MultipartUploadResult]]
+    */
   def sinkfileToBucket(bucket:String,fileName:String): Sink[ByteString, Future[MultipartUploadResult]] = {
     S3.multipartUpload(bucket,fileName)
     //S3.multipartUpload(bucket,fileName)

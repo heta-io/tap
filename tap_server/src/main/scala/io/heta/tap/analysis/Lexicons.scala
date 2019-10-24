@@ -24,10 +24,15 @@ import com.typesafe.scalalogging.Logger
 /**
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
+
+/**
+  * Checks with a collection of input strings, if True go to epistemicVerbLemmas, else epistemicVerbTerms
+  */
 object Lexicons {
 
   val logger: Logger = Logger(this.getClass)
 
+  /** Checks if a term match with EpistemicVerb if True epistemicVerbLemmas, else epistemicVerbTerms*/
   def matchEpistemicVerbs(terms:Vector[String],useLemmas:Boolean = false):Vector[String] = terms
     .intersect(if (useLemmas) epistemicVerbLemmas else epistemicVerbTerms)
 

@@ -23,6 +23,7 @@ import play.api.libs.json.{JsValue, Json, OWrites}
   * Created by andrew@andrewresearch.net on 17/10/17.
   */
 
+/** Data object of Spelling that gets returned to the browser */
 object Spelling {
   implicit val tsWrites: OWrites[Spelling] = Json.writes[Spelling]
 }

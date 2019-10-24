@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.expression.reflect
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of WordSentenceCounts that gets returned to the browser */
 object WordSentenceCounts {
   implicit val refWrites: OWrites[WordSentenceCounts] = Json.writes[WordSentenceCounts]
 }

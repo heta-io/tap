@@ -22,6 +22,10 @@ import io.heta.tap.analysis.batch.BatchActor
 import io.heta.tap.analysis.clu.CluAnnotatorActor
 import play.api.libs.concurrent.AkkaGuiceSupport
 
+/**
+  * An actor that can asynchronously obtain data to initialize itself.
+  */
+
 class AsyncAnalysisActorInitialiser extends AbstractModule with AkkaGuiceSupport {
 
   val logger: Logger = Logger(this.getClass)

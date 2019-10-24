@@ -18,6 +18,7 @@ package io.heta.tap.data.doc.vocabulary
 
 import play.api.libs.json.{Json, OWrites}
 
+/** Data object of TermCount that gets returned to the browser */
 object TermCount {
   implicit val ctsWrites: OWrites[TermCount] = Json.writes[TermCount]
 }

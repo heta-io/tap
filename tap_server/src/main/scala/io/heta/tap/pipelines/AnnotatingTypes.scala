@@ -30,6 +30,9 @@ import io.heta.tap.data.doc.{Metrics, PosStats, Sentence, Syllables} // scalasty
   * Created by andrew@andrewresearch.net on 6/11/17.
   */
 
+/**
+  * Different types of annotating analysis type
+  */
 object AnnotatingTypes {
   /* pipetype values */
   val STANDARD = "standard"

@@ -20,6 +20,8 @@ import io.heta.tap.data.doc.spell.Spelling
 import io.heta.tap.data.doc.Metrics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+
+/** Data object of SpellingResult that gets returned to the browser */
 object SpellingResult {
   implicit val mWrites: OWrites[SpellingResult] = Json.writes[SpellingResult]
 }

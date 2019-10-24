@@ -24,14 +24,30 @@ import views.{HomePage, QueriesPage}
   * Created by andrew@andrewresearch.net on 22/8/17.
   */
 
+/**
+  * Handles all requests to root site. [views.HomePage$] and [views.QueriesPage$]
+  *
+  * @param assets used to find assets according to configured base path and URL base.
+  */
+
 class DefaultController @Inject() (assets: AssetsFinder) extends InjectedController {
 
 
+  /**
+    * Provide or GET HomePage to client
+    *
+    * @return [[play.api.mvc.Action Action]] of type [[AnyContent]]
+    */
   def index:Action[AnyContent] = Action {
     //Ok(views.html.index())
     Ok(HomePage.render("TAP - Text Analytics Pipeline"))
   }
 
+  /**
+    * Provide or GET QueriesPage to client
+    *
+    * @return [[play.api.mvc.Action Action]] of type [[AnyContent]]
+    */
   def queries:Action[AnyContent] = Action {
     Ok(QueriesPage.render("TAP - Example Queries"))
   }

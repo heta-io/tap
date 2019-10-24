@@ -26,6 +26,10 @@ import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
 import scala.concurrent.Future
 
+/**
+  * File pipeline
+  */
+
 object FilePipeline {
   case class FileInfo(name:String,size:Long,lastModified:Instant)
   case class File(name:String,contents:ByteString)

@@ -19,6 +19,10 @@ package io.heta.tap.analysis
 /**
   * Created by andrew@andrewresearch.net on 21/10/17.
   */
+
+/**
+  * English Syllables (Vowels)
+  */
 object Syllable {
 
    def count(word:String): Int = {

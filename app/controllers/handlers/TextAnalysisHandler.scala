@@ -36,6 +36,14 @@ import scala.util.Success
 /**
   * Created by andrew@andrewresearch.net on 20/2/17.
   */
+
+/**
+  * TextAnalysisHandler handles all text analysis requests
+  *
+  * @param clean a query that will clean and format the text depending on which parameters you pass
+  * @param cluAnnotator support sending messages to the actor it represents
+  */
+
 class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
 
   import io.heta.tap.pipelines.materialize.PipelineContext.executor
@@ -58,6 +66,14 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
     }
   }
 
+  /**
+    * Clean is a query that will clean and format the text depending on which parameters you pass
+    *
+    * @param text Optional version texts
+    * @param parameters Optional version parameters
+    * @param start
+    * @return A [[scala.concurrent.Future Future]] of with type [[StringResult]]
+    */
   def clean(text: Option[String], parameters: Option[String], start:Long): Future[StringResult] = {
     Logger.warn(s"TEXT: $text")
     val inputStr = text.getOrElse("")
@@ -74,6 +90,15 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
     outputStr.map(StringResult(_,querytime = queryTime(start)))
   }
 
+  /**
+    * Annotation is a query that will splitup the text into json data,
+    * including seperating the sentences into their own array and providing various stats on each word.
+    *
+    * @param text Optional version texts
+    * @param parameters Optional version parameters
+    * @param start
+    * @return A [[scala.concurrent.Future Future]] of with type [[SentencesResult]]
+    */
   def annotations(text:Option[String],parameters:Option[String],start:Long):Future[SentencesResult] = {
     val inputStr = text.getOrElse("")
     val pipeType = extractParameter[String]("pipeType",parameters)
@@ -88,35 +113,37 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
     analysis.map(SentencesResult(_,querytime = queryTime(start)))
   }
 
-
+  /** A query that will extract the epistemic expressions of a sentence @See [[models.graphql.FieldDocs]*/
   def expressions(text:Option[String],parameters:Option[String],start:Long):Future[ExpressionsResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.expressions)).run
       .map(ExpressionsResult(_,querytime = queryTime(start)))
-
+  /** A query that will return the syllable count for each word in a sentence and group each sentence into its own array @See [[models.graphql.FieldDocs]*/
   def syllables(text:Option[String],parameters:Option[String],start:Long):Future[SyllablesResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.syllables)).run
       .map(SyllablesResult(_,querytime = queryTime(start)))
-
+  /** A query that will return the spelling mistakes and possible suggestions for what the intended word was @See [[models.graphql.FieldDocs] */
   def spelling(text:Option[String],parameters:Option[String],start:Long):Future[SpellingResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.spelling)).run
       .map(SpellingResult(_,querytime = queryTime(start)))
-
+  /** A query that returns the stats on the vocabulary used, it groups them by unique words and how many times they were used
+    * @See [[models.graphql.FieldDocs]*/
   def vocabulary(text:Option[String],parameters:Option[String],start:Long):Future[VocabularyResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.vocab)).run
       .map(VocabularyResult(_,querytime = queryTime(start)))
-
+  /** A query that will return various stats on the text that was parsed @See [[models.graphql.FieldDocs] */
   def metrics(text:Option[String],parameters:Option[String],start:Long):Future[MetricsResult]  =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.metrics)).run
       .map(MetricsResult(_,querytime = queryTime(start)))
-
+  /** A query that will return the verb, noun and adjective distribution ratios of the sentences @See [[models.graphql.FieldDocs]*/
   def posStats(text:Option[String],parameters:Option[String],start:Long):Future[PosStatsResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.posStats)).run
       .map(PosStatsResult(_,querytime = queryTime(start)))
-
+  /** a query that will return various stats about the text @See [[models.graphql.FieldDocs] */
   def reflectExpressions(text:Option[String],parameters:Option[String],start:Long):Future[ReflectExpressionsResult] =
     TextPipeline(text.getOrElse(""),annotate.build(DEFAULT,pipe.reflectExpress)).run
     .map(ReflectExpressionsResult(_, querytime = queryTime(start)))
 
+  /** Affect Expressions is a query that will return stats about the valence, arousal and dominance language used @See [[models.graphql.FieldDocs]*/
   def affectExpressions(text:Option[String],parameters:Option[String] = None,start:Long): Future[AffectExpressionsResult] = {
     val thresholds = extractAffectThresholds(parameters)
     Logger.info(s"thresholds: $thresholds")
@@ -125,6 +152,12 @@ class TextAnalysisHandler @Inject() (clean: Cleaning, @Named("cluAnnotator")cluA
   }
 
 
+  /**
+    * Extracts different affect thresholds to describe and measure emotional states (valence, arousal, dominance)
+    *
+    * @param parameters Opetional version parameters
+    * @return A [[scala.Option Option]] of type [[AffectThresholds]]
+    */
   private def extractAffectThresholds(parameters:Option[String]):Option[AffectThresholds] = {
     for {
       v <- extractParameter[Double]("valence",parameters)

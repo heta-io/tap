@@ -16,4 +16,5 @@
 
 package io.heta.tap.data.results
 
+/** List of string result */
 case class StringListResult(analytics: Vector[Vector[String]], message:String = "", querytime:Int = -1) extends Result

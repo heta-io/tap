@@ -25,8 +25,13 @@ import scalatags.Text.{TypedTag, tags, tags2}
 /**
   * Created by andrew@andrewresearch.net on 20/11/17.
   */
+
+/**
+  * Provides TAP Example Queries HTML. [[models.graphql.FieldDocs]]
+  */
 object QueriesPage extends GenericPage {
 
+  /** Renders HTML page data */
   override def page(titleStr:String):TypedTag[String] = tags.html(
     head(
       tags2.title(titleStr),
@@ -50,6 +55,7 @@ object QueriesPage extends GenericPage {
     )
   )
 
+  /** Renders queryCard data */
   def queryCard(title:String,description:String,parameters:Map[String,String],query:String, notebook:String): TypedTag[String] = div(`class`:="card card-light",
     div(`class`:="card-header", h4(title)),
     div(`class`:="card-body",

@@ -38,6 +38,13 @@ s3bucket: any valid s3 bucket name which TAP has been given access to
 progressCheck: batchId [UUID]
  */
 
+/**
+  * Handles batch queries where input files are drawn from an S3 bucket rather than sent via the query.
+  *
+  * @param awsS3Client provides access to amazon-specific S3 features
+  * @param batch supports sending messages to the actor it represents in batch
+  * @param cluAnnotator annotates sentences with parts of speech, lemmas and dependencies
+  */
 
 class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")batch:ActorRef, @Named("cluAnnotator")cluAnnotator:ActorRef) extends GenericHandler {
 
@@ -57,6 +64,13 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
     }
   }
 
+  /**
+    * Performs the batch analysis with parameters
+    *
+    * @param parameters Optional version parameters of the object
+    * @param start "Long" type
+    * @return A [[scala.concurrent.Future Future]] with type [[BatchResult]] which returns Right or Left
+    */
   def analyse(parameters:Option[String],start:Long):Future[BatchResult] = {
     logger.info(s"Batch analysis with parameters: $parameters")
     process(parameters) match {
@@ -65,6 +79,12 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
     }
   }
 
+  /**
+    * Handles the process of batchanalysis
+    *
+    * @param parameters Optional version parameters of the object
+    * @return Detects whether a received input is a [[Throwable]] or [[scala.concurrent.Future Future]] of [[ResultMessage]]
+    */
   def process(parameters:Option[String]): Either[Throwable,Future[ResultMessage]] = try {
     val bucket = extractParameter[String]("s3bucket",parameters)
     if(bucket.nonEmpty) {
@@ -84,6 +104,14 @@ class BatchAnalysisHandler @Inject()(awsS3Client: AwsS3Client, @Named("batch")ba
     case error => Left(error)
   }
 
+  /**
+    * Operation of sending requests to client
+    *
+    * @param requestType Request type
+    * @param bucket the s3 bucket name
+    * @param payLoad
+    * @return Detects whether a received input is a [[Throwable]] or [[scala.concurrent.Future Future]] of [[ResultMessage]]
+    */
   def sendRequest(requestType:RequestType,bucket:String,payLoad:String):Either[Throwable,Future[ResultMessage]] = {
     implicit val timeout: Timeout = 5.seconds
 

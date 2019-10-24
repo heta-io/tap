@@ -25,10 +25,24 @@ import scala.concurrent.Future
 /**
   * Created by andrew@andrewresearch.net on 19/9/17.
   */
+
+/**
+  * Handles all client's text analysing requests with Athanor Server
+  *
+  * @param athanorClient is a controller for client and Athanor Server
+  */
 class ExternalAnalysisHandler @Inject() (athanorClient: AthanorClient) extends GenericHandler {
 
   val logger: Logger = Logger(this.getClass)
 
+  /**
+    * Performs analysis request with Athanor
+    *
+    * @param text Optional version text
+    * @param parameters Optional version parameters
+    * @param start Long type
+    * @return A [[scala.concurrent.Future Future]] with type [[StringListResult]]
+    */
   def analyseWithAthanor(text:Option[String],parameters:Option[String],start:Long):Future[StringListResult] = {
     val inputText = text.getOrElse("")
     val grammar = extractParameter[String]("grammar",parameters)

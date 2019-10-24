@@ -26,13 +26,14 @@ import scala.concurrent.duration._
   * Created by andrew@andrewresearch.net on 4/7/17.
   */
 
+/** Cleaning pipeline specification */
 class CleaningPipelineSpec extends UnitSpec {
 
   import io.heta.tap.pipelines.materialize.PipelineContext._
 
   val cleaning = new Cleaning
 
-
+  /** Source of testing */
   def testSource(input:String) = Source.single(input)
   val testSink = Flow[String].toMat(Sink.head[String])(Keep.right)
 

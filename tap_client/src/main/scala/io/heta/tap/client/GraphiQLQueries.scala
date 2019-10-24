@@ -16,6 +16,7 @@
 
 package io.heta.tap.client
 
+/** GraphiQL Queries */
 object GraphiQLQueries {
 
   lazy val allQueries:String = empty //affectExpressions + rhetoricalMoves

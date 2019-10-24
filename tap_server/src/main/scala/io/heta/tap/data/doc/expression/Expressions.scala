@@ -24,6 +24,7 @@ import play.api.libs.json.{JsValue, Json, OWrites}
   * Created by andrew@andrewresearch.net on 16/10/17.
   */
 
+/** Data object of Expression that gets returned to the browser */
 object Expressions {
   implicit val tsWrites: OWrites[Expressions] = Json.writes[Expressions]
 }

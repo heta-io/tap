@@ -19,6 +19,7 @@ package io.heta.tap.client
 import org.scalajs.dom
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
+/** GraphiQL Client */
 @JSExportTopLevel("io.heta.tap.client.GraphiQLClient")
 object GraphiQLClient {
 

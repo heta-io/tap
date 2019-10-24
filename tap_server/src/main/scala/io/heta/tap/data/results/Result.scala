@@ -18,6 +18,7 @@ package io.heta.tap.data.results
 
 import java.time.OffsetDateTime
 
+/** Result of analytics, message, querytime, timestap, id, and authority */
 trait Result {
   val analytics: Any
   val message: String

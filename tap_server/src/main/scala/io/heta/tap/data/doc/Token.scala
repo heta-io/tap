@@ -21,6 +21,14 @@ import play.api.libs.json.{JsValue, Json, OWrites}
 /**
   * Created by andrew@andrewresearch.net on 29/8/17.
   */
+
+/**
+  * JSON Web Token (JWT) allows tokens to be easily transmitted via query strings,
+  * header attributes and within the body of a POST request.
+  *
+  * Data object of Token that gets returned to the browser
+  */
+
 object Token {
   implicit val ttWrites: OWrites[Token] = Json.writes[Token]
 }

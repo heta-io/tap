@@ -23,7 +23,7 @@ package tap.services.corpora.gradebook.data
   */
 
 
-
+/** Archive the meta data */
 case class ArchiveMetadata(subjectCode:String,assignmentName:String,
                            metaDocCount:Int,textDocCount:Int,userDocCount:Int,excludedDocCount:Int,
                            earliestDate:String,latestDate:String)

@@ -22,6 +22,7 @@ import play.api.libs.json.{Json, OWrites}
   * Created by andrew@andrewresearch.net on 26/10/17.
   */
 
+/** Data object of Part of Speech Statistics that gets returned to the browser */
 object PosStats {
   implicit val pWrites: OWrites[PosStats] = Json.writes[PosStats]
 }

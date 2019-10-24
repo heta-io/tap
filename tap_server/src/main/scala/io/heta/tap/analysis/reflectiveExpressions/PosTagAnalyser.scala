@@ -26,8 +26,12 @@ import scala.collection.mutable.ArrayBuffer
  * Created by Andrew Gibson on 15/07/15.
  */
 
+/**
+  * Returns the part of speech tag for the specific word
+  */
 object PosTagAnalyser {
 
+  /** Analysation of the sentence words */
   def analyse(sentenceTags:Seq[Seq[String]],sentenceWords:Seq[Seq[String]]): Seq[CodedSentence] = {
     //For each sentence number (idx) analyse the sequence of tags
     sentenceTags.zipWithIndex.map { case (tags, idx) =>
@@ -56,6 +60,7 @@ object PosTagAnalyser {
   //def getCodedSentences:Seq[CodedSentence] = this.codedSentences
 
 
+  /** Return pattern type */
   private def findPositionsForPattern(tagList:(String,List[String]),tags:Seq[String]):Seq[(Int,Int)] = {
     val patternType = tagList._1
     val pattern = tagList._2
@@ -64,7 +69,7 @@ object PosTagAnalyser {
     else Seq()
   }
 
-  //Given the start and end positions extract the words as a phrase
+  /** Given the start and end positions extract the words as a phrase */
   private def findPhrases(textWords:Seq[String],positions:Seq[(Int,Int)]): Seq[String] = {
     val phrases: ArrayBuffer[String] = ArrayBuffer()
     positions.foreach { case (start, end) =>
@@ -77,7 +82,7 @@ object PosTagAnalyser {
     phrases
   }
 
-  //Filter a list of phrases for finer grained meaning of phraseTags
+  /** Filter a list of phrases for finer grained meaning of phraseTags */
   private def filterSentencePhrase(patternType:String,phraseTags:List[String],phrases:Seq[String],positions:Seq[(Int,Int)]):Seq[SentencePhrase] = {
     val sentencePhrases = new ArrayBuffer[SentencePhrase]()
     phraseTags.foreach { phraseTag =>
@@ -89,7 +94,7 @@ object PosTagAnalyser {
   }
 
 
-  // Get the start and end positions of the postag pattern
+  /** Get the start and end positions of the postag pattern */
   private def findStartRepeatPatterns(tags: Seq[String], tagList: List[String]): Seq[(Int, Int)] = {
     val startTag = tagList.apply(0)
     val repeatTags = tagList.drop(1)
@@ -114,7 +119,7 @@ object PosTagAnalyser {
     patterns
   }
 
-  // Get the start and end positions of the postag pattern
+  /** Get the start and end positions of the postag pattern */
   private def findStartEndPatterns(tags: Seq[String], tagList: List[String]): Seq[(Int, Int)] = {
     val startTag = tagList.apply(0)
     val endTag = tagList.apply(1)
@@ -141,6 +146,7 @@ object PosTagAnalyser {
     patterns
   }
 
+  /** Matching tags */
   private def matchAny(tag: String, repeatTags: List[String], exact: Boolean) = {
     var found = false
     repeatTags.foreach { rep =>
@@ -149,6 +155,7 @@ object PosTagAnalyser {
     found
   }
 
+  /** Compare tags */
   private def compare(tag1: String, tag2: String, exact: Boolean) = {
     if (exact) tag1.equalsIgnoreCase(tag2)
     else tag1.contains(tag2)

@@ -19,6 +19,7 @@ package io.heta.tap.data.doc.expression
 import io.heta.tap.data.doc.Analytics
 import play.api.libs.json.{JsValue, Json, OWrites}
 
+/** Data object of EpistemicExpression that gets returned to the browser */
 object EpistemicExpression {
   implicit val ttWrites: OWrites[EpistemicExpression] = Json.writes[EpistemicExpression]
 }

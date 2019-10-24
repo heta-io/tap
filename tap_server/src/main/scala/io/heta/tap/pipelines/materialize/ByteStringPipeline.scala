@@ -27,7 +27,12 @@ import io.heta.tap.pipelines.materialize.PipelineContext.materializer
 
 import scala.concurrent.Future
 
-
+/**
+  * Takes in ByteString as source and run the pipeline
+  *
+  * @param source set of stream processing steps that has one open output
+  * @param sink set of stream processing steps that has one open input
+  */
 case class ByteStringPipeline(source:Source[ByteString,NotUsed], sink:Sink[ByteString,Future[Any]]) extends Pipeline {
   private val pipeline =  source.toMat(sink)(Keep.right)
   def run: Future[Any] = pipeline.run()
