@@ -1,0 +1,23 @@
+taxonomy:
+  - Entity:
+    - Person:
+      - Pronoun
+    - Organization
+  - Location
+  - Event:
+    - JoyLabel
+    - FearLabel
+    - SadLabel
+    - AngerLabel
+    - ConfussionLabel
+    - TrustLabel
+    - DisgustLabel
+
+rules:
+  - import: rules/entities.yml
+    vars:
+      rulepriority: "1"
+
+  - import: rules/events.yml
+    vars:
+      rulepriority: "3+"
